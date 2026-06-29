@@ -651,7 +651,7 @@
         <div class="plan-sel-period">para siempre</div>
         <div class="plan-sel-feat">Plan IA básico · 1 vez · Sin renovación</div>
       </div>
-      <div class="plan-sel featured" id="plan-19" onclick="selectPlan('19')">
+      <div class="plan-sel featured selected" id="plan-19" onclick="selectPlan('19')">
         <div class="plan-sel-badge">⭐ Popular</div>
         <div class="plan-sel-name">Transformación</div>
         <div class="plan-sel-price">$19</div>
@@ -757,7 +757,7 @@
 <script>
   let currentStep = 1;
   const totalSteps = 7;
-  let selectedPlan = null;
+  let selectedPlan = '19'; // Plan popular preseleccionado por defecto
 
   const stepNames = [
     'Datos personales',
@@ -786,6 +786,11 @@
   function showStep(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step-' + n).classList.add('active');
+    // Show renewal banner on step 7 since $19 is preselected
+    if (n === 7) {
+      document.getElementById('renewal-banner').style.display = 'flex';
+      document.getElementById('recurring-note').style.display = 'flex';
+    }
     const navButtons = document.getElementById('nav-buttons');
     if (n === 'success') {
       navButtons.style.display = 'none';
@@ -811,6 +816,8 @@
       const sexo = document.getElementById('sexo').value;
       if (!nombre) { markError('nombre', 'Por favor ingresa tu nombre completo'); valid = false; }
       if (!email || !email.includes('@')) { markError('email', 'Ingresa un correo electrónico válido'); valid = false; }
+      const telefono = document.getElementById('telefono').value.trim();
+      if (!telefono) { markError('telefono', 'Ingresa tu número de WhatsApp'); valid = false; }
       if (!ciudad) { markError('ciudad', 'Ingresa tu ciudad de residencia'); valid = false; }
       if (!edad || edad < 18 || edad > 80) { markError('edad', 'Ingresa una edad válida (18-80 años)'); valid = false; }
       if (!sexo) { markError('sexo', 'Selecciona tu sexo biológico'); valid = false; }
@@ -952,7 +959,7 @@
   function checkConsent() {
     const checked = document.getElementById('consent-check').checked;
     const btn = document.getElementById('btn-activar');
-    btn.disabled = !(checked && selectedPlan !== null);
+    btn.disabled = !checked; // plan always selected (default $19)
   }
 
   function activar() {
