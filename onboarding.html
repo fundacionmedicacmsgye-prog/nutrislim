@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriSLIM — Crea tu plan personalizado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green:     #1A7A52;
+    --green-mid: #25A96E;
+    --green-lt:  #E6F5EE;
+    --green-xlt: #F2FAF6;
+    --ink:       #0F1A14;
+    --ink-mid:   #3D5446;
+    --ink-lt:    #7A9487;
+    --bone:      #F7F9F7;
+    --white:     #FFFFFF;
+    --rule:      #D6E8DE;
+    --amber:     #E8800A;
+    --amber-lt:  #FEF3E2;
+    --red:       #DC2626;
+    --red-lt:    #FEE2E2;
+    --syne:      'Syne', sans-serif;
+    --inter:     'Inter', sans-serif;
+    --r:         12px;
+    --r-lg:      20px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--inter);
+    background: var(--bone);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo { font-family: var(--syne); font-size: 20px; font-weight: 800; color: var(--green); text-decoration: none; }
+  .nav-logo span { color: var(--ink); }
+  .nav-back { font-size: 13px; color: var(--ink-lt); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+  .nav-back:hover { color: var(--green); }
+
+  /* LAYOUT */
+  .layout {
+    max-width: 680px; margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* PROGRESS */
+  .progress-header { margin-bottom: 32px; }
+  .progress-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+  }
+  .progress-label { font-size: 13px; color: var(--ink-lt); }
+  .progress-step { font-size: 13px; font-weight: 600; color: var(--green); }
+  .progress-track {
+    height: 6px; background: var(--rule);
+    border-radius: 50px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--green-mid);
+    border-radius: 50px;
+    transition: width 0.4s ease;
+  }
+
+  /* STEP */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--green);
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-family: var(--syne); font-size: 26px; font-weight: 800;
+    color: var(--ink); line-height: 1.15; margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .step-sub {
+    font-size: 14px; color: var(--ink-lt);
+    margin-bottom: 28px; line-height: 1.6;
+  }
+
+  /* FORM ELEMENTS */
+  .field-group { margin-bottom: 18px; }
+  .field-label {
+    display: block; font-size: 13px; font-weight: 500;
+    color: var(--ink-mid); margin-bottom: 7px;
+  }
+  .field-label span { color: var(--ink-lt); font-weight: 400; }
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  select {
+    width: 100%; padding: 12px 14px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r);
+    font-family: var(--inter); font-size: 14px;
+    color: var(--ink); background: var(--white);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 3px rgba(37,169,110,0.12);
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  /* OPTION BUTTONS */
+  .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 6px; }
+  .opt-grid-1 { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 6px; }
+  .opt-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+  .opt-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+
+  .opt-btn {
+    padding: 11px 14px;
+    border: 1px solid var(--rule);
+    border-radius: var(--r);
+    background: var(--white);
+    color: var(--ink-mid);
+    font-family: var(--inter); font-size: 13px;
+    cursor: pointer; text-align: left;
+    transition: all 0.15s; line-height: 1.4;
+  }
+  .opt-btn:hover { border-color: var(--green-mid); background: var(--green-xlt); }
+  .opt-btn.selected {
+    border-color: var(--green);
+    background: var(--green-lt);
+    color: var(--green);
+    font-weight: 500;
+  }
+  .opt-btn .opt-icon { font-size: 16px; display: block; margin-bottom: 4px; }
+
+  /* IMC BOX */
+  .imc-box {
+    background: var(--green-xlt);
+    border: 1px solid var(--rule);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    margin-top: 14px;
+    display: none;
+  }
+  .imc-box.show { display: flex; align-items: center; gap: 14px; }
+  .imc-val { font-family: var(--syne); font-size: 28px; font-weight: 800; color: var(--green); }
+  .imc-label { font-size: 12px; color: var(--ink-lt); }
+  .imc-cat { font-size: 14px; font-weight: 600; color: var(--ink); }
+
+  /* CMS BANNER */
+  .cms-banner {
+    background: var(--amber-lt);
+    border: 1px solid #F5C842;
+    border-radius: var(--r);
+    padding: 14px 16px;
+    margin-top: 14px;
+    display: none;
+    gap: 12px; align-items: flex-start;
+  }
+  .cms-banner.show { display: flex; }
+  .cms-banner-icon { font-size: 20px; flex-shrink: 0; }
+  .cms-banner-text { font-size: 13px; color: #854F0B; line-height: 1.5; }
+  .cms-banner-text strong { color: #633806; display: block; margin-bottom: 2px; }
+
+  /* CONSENT */
+  .consent-box {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .consent-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 10px; }
+  .consent-text {
+    font-size: 12px; color: var(--ink-lt); line-height: 1.65;
+    max-height: 140px; overflow-y: auto;
+    padding-right: 8px; margin-bottom: 14px;
+  }
+  .consent-check {
+    display: flex; align-items: flex-start; gap: 10px;
+    cursor: pointer; font-size: 13px; color: var(--ink-mid);
+  }
+  .consent-check input { margin-top: 2px; accent-color: var(--green); width: 16px; height: 16px; flex-shrink: 0; }
+
+  /* SUMMARY */
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-lg);
+    overflow: hidden; margin-bottom: 20px;
+  }
+  .summary-header {
+    background: var(--green);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .summary-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--syne); font-weight: 800; font-size: 16px;
+    color: var(--white); flex-shrink: 0;
+  }
+  .summary-name { font-family: var(--syne); font-size: 17px; font-weight: 700; color: var(--white); }
+  .summary-plan { font-size: 12px; color: rgba(255,255,255,0.75); }
+  .summary-rows { padding: 4px 0; }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 11px 20px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: var(--ink-lt); flex-shrink: 0; width: 140px; }
+  .summary-val { color: var(--ink); font-weight: 500; text-align: right; flex: 1; }
+
+  /* PLAN SELECTOR */
+  .plan-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 6px; }
+  .plan-sel {
+    border: 2px solid var(--rule);
+    border-radius: var(--r-lg);
+    padding: 18px 14px;
+    cursor: pointer; text-align: center;
+    transition: all 0.15s; background: var(--white);
+  }
+  .plan-sel:hover { border-color: var(--green-mid); }
+  .plan-sel.selected { border-color: var(--green); background: var(--green-lt); }
+  .plan-sel.featured { border-color: var(--green); }
+  .plan-sel-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--green);
+    margin-bottom: 6px;
+  }
+  .plan-sel-name { font-family: var(--syne); font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .plan-sel-price { font-family: var(--syne); font-size: 24px; font-weight: 800; color: var(--green); }
+  .plan-sel-period { font-size: 11px; color: var(--ink-lt); }
+  .plan-sel-feat { font-size: 11px; color: var(--ink-mid); margin-top: 10px; line-height: 1.5; }
+
+  /* NAV BUTTONS */
+  .nav-buttons {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 32px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .btn-back {
+    padding: 12px 24px;
+    border: 1px solid var(--rule);
+    border-radius: 50px;
+    background: var(--white); color: var(--ink-mid);
+    font-family: var(--inter); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-back:hover { border-color: var(--ink-lt); }
+  .btn-back:disabled { opacity: 0.3; cursor: default; }
+  .btn-next {
+    padding: 13px 32px;
+    border: none; border-radius: 50px;
+    background: var(--green); color: var(--white);
+    font-family: var(--inter); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s;
+    box-shadow: 0 4px 16px rgba(26,122,82,0.3);
+  }
+  .btn-next:hover { background: var(--green-mid); transform: translateY(-1px); }
+  .btn-next:disabled { background: var(--rule); box-shadow: none; cursor: default; transform: none; }
+
+  /* SUCCESS */
+  .success-screen {
+    text-align: center; padding: 60px 20px;
+  }
+  .success-icon {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--green-lt);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; margin: 0 auto 24px;
+  }
+  .success-title {
+    font-family: var(--syne); font-size: 28px; font-weight: 800;
+    color: var(--ink); margin-bottom: 12px;
+  }
+  .success-sub { font-size: 15px; color: var(--ink-mid); line-height: 1.65; margin-bottom: 32px; }
+  .success-steps {
+    background: var(--white); border: 1px solid var(--rule);
+    border-radius: var(--r-lg); padding: 20px;
+    text-align: left; margin-bottom: 28px;
+  }
+  .success-step {
+    display: flex; gap: 14px; padding: 10px 0;
+    border-bottom: 1px solid var(--rule); font-size: 13px; color: var(--ink-mid);
+  }
+  .success-step:last-child { border-bottom: none; }
+  .ss-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--green-lt); color: var(--green);
+    font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .btn-payphone {
+    display: inline-block; padding: 15px 36px;
+    background: var(--green); color: var(--white);
+    border-radius: 50px; font-size: 15px; font-weight: 600;
+    text-decoration: none; transition: all 0.15s;
+    box-shadow: 0 4px 20px rgba(26,122,82,0.35);
+  }
+  .btn-payphone:hover { background: var(--green-mid); transform: translateY(-2px); }
+  .btn-free {
+    display: inline-block; margin-top: 12px;
+    font-size: 13px; color: var(--ink-lt); text-decoration: underline; cursor: pointer;
+  }
+
+  @media (max-width: 600px) {
+    .field-row, .field-row-3 { grid-template-columns: 1fr; }
+    .opt-grid { grid-template-columns: 1fr; }
+    .opt-grid-3, .opt-grid-4 { grid-template-columns: 1fr 1fr; }
+    .plan-cards { grid-template-columns: 1fr; }
+    .step-title { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Nutri<span>SLIM</span></a>
+  <a href="index.html" class="nav-back">← Volver al inicio</a>
+</nav>
+
+<div class="layout">
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-header">
+    <div class="progress-top">
+      <span class="progress-label" id="prog-label">Paso 1 de 7</span>
+      <span class="progress-step" id="prog-name">Datos personales</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width: 14%"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 1: DATOS PERSONALES ═══════════════ -->
+  <div class="step active" id="step-1">
+    <div class="step-eyebrow">Paso 1 de 7</div>
+    <h1 class="step-title">Cuéntanos sobre ti</h1>
+    <p class="step-sub">Tus datos personales nos ayudan a personalizar tu experiencia.</p>
+
+    <div class="field-group">
+      <label class="field-label">Nombre completo</label>
+      <input type="text" id="nombre" placeholder="Ej: María González">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Correo electrónico</label>
+      <input type="email" id="email" placeholder="correo@ejemplo.com">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Teléfono / WhatsApp</label>
+      <input type="text" id="telefono" placeholder="Ej: +593 99 123 4567">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Ciudad de residencia</label>
+      <input type="text" id="ciudad" placeholder="Ej: Guayaquil, Quito, Miami..." oninput="checkCiudad(this.value)">
+      <div class="cms-banner" id="cms-banner">
+        <div class="cms-banner-icon">🏥</div>
+        <div class="cms-banner-text">
+          <strong>¡Eres de Guayaquil!</strong>
+          Tu programa incluye controles médicos presenciales en Fundación Médica CMS — el centro clínico oficial de NutriSLIM en Guayaquil.
+        </div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Edad</label>
+        <input type="number" id="edad" placeholder="Ej: 35" min="18" max="80">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Sexo biológico</label>
+        <select id="sexo">
+          <option value="">Selecciona...</option>
+          <option value="femenino">Femenino</option>
+          <option value="masculino">Masculino</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 2: MEDIDAS ═══════════════ -->
+  <div class="step" id="step-2">
+    <div class="step-eyebrow">Paso 2 de 7</div>
+    <h1 class="step-title">Tu punto de partida</h1>
+    <p class="step-sub">Con estas medidas calculamos tu metabolismo basal y el plan calórico exacto para ti.</p>
+
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Peso actual (kg)</label>
+        <input type="number" id="peso" placeholder="Ej: 82" oninput="calcIMC()">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Estatura (cm)</label>
+        <input type="number" id="talla" placeholder="Ej: 165" oninput="calcIMC()">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Cintura (cm) <span>— opcional</span></label>
+        <input type="number" id="cintura" placeholder="Ej: 90">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Cadera (cm) <span>— opcional</span></label>
+        <input type="number" id="cadera" placeholder="Ej: 100">
+      </div>
+    </div>
+
+    <div class="imc-box" id="imc-box">
+      <div>
+        <div class="imc-val" id="imc-val">—</div>
+        <div class="imc-label">Tu IMC</div>
+      </div>
+      <div>
+        <div class="imc-cat" id="imc-cat">—</div>
+        <div class="imc-label">Clasificación</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 3: OBJETIVO ═══════════════ -->
+  <div class="step" id="step-3">
+    <div class="step-eyebrow">Paso 3 de 7</div>
+    <h1 class="step-title">¿Qué quieres lograr?</h1>
+    <p class="step-sub">Puedes elegir más de un objetivo. El plan de IA se ajusta a todos ellos.</p>
+
+    <label class="field-label">Objetivos principales</label>
+    <div class="opt-grid" id="obj-grid">
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Bajar de peso</button>
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Perder grasa corporal</button>
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Ganar masa muscular</button>
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Mejorar mi energía</button>
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Controlar glucosa / colesterol</button>
+      <button class="opt-btn" onclick="toggleMulti('obj-grid', this)">Mejorar hábitos alimenticios</button>
+    </div>
+
+    <div class="field-group" style="margin-top: 18px;">
+      <label class="field-label">¿Cuántos kg deseas perder? <span>— si aplica</span></label>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <input type="number" id="meta-kg" placeholder="Ej: 10" style="width: 120px;">
+        <span style="font-size: 14px; color: var(--ink-lt);">kg en total</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿En cuánto tiempo quieres lograrlo?</label>
+      <div class="opt-grid-3" id="plazo-grid">
+        <button class="opt-btn" onclick="selectOne('plazo-grid', this)">1-3 meses</button>
+        <button class="opt-btn" onclick="selectOne('plazo-grid', this)">3-6 meses</button>
+        <button class="opt-btn" onclick="selectOne('plazo-grid', this)">6+ meses</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 4: SALUD ═══════════════ -->
+  <div class="step" id="step-4">
+    <div class="step-eyebrow">Paso 4 de 7</div>
+    <h1 class="step-title">Tu historial de salud</h1>
+    <p class="step-sub">Esta información es confidencial y permite al médico y a la IA adaptar tu plan de forma segura.</p>
+
+    <label class="field-label">¿Tienes alguna de estas condiciones? <span>— marca las que aplican</span></label>
+    <div class="opt-grid" id="condicion-grid">
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Diabetes tipo 2</button>
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Hipertensión arterial</button>
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Colesterol / triglicéridos altos</button>
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Hipotiroidismo</button>
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Síndrome ovario poliquístico</button>
+      <button class="opt-btn" onclick="toggleMulti('condicion-grid', this)">Ninguna condición</button>
+    </div>
+
+    <div class="field-group" style="margin-top: 18px;">
+      <label class="field-label">¿Tomas algún medicamento actualmente?</label>
+      <input type="text" id="medicamentos" placeholder="Ej: Metformina, Eutirox... o escribe Ninguno">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Alergias o intolerancias alimentarias</label>
+      <input type="text" id="alergias" placeholder="Ej: lactosa, gluten, mariscos... o Ninguna">
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 5: HÁBITOS ═══════════════ -->
+  <div class="step" id="step-5">
+    <div class="step-eyebrow">Paso 5 de 7</div>
+    <h1 class="step-title">Tu estilo de vida</h1>
+    <p class="step-sub">Así calculamos exactamente cuántas calorías necesitas y cómo distribuir tu plan.</p>
+
+    <div class="field-group">
+      <label class="field-label">Nivel de actividad física actual</label>
+      <div class="opt-grid-1" id="actividad-grid">
+        <button class="opt-btn" onclick="selectOne('actividad-grid', this)">🪑 Sedentario — trabajo de oficina, me muevo poco</button>
+        <button class="opt-btn" onclick="selectOne('actividad-grid', this)">🚶 Ligero — camino o hago algo 2-3 veces por semana</button>
+        <button class="opt-btn" onclick="selectOne('actividad-grid', this)">🏃 Moderado — ejercicio 3-4 veces por semana</button>
+        <button class="opt-btn" onclick="selectOne('actividad-grid', this)">💪 Intenso — entreno 5 o más veces por semana</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿Cuántas comidas haces al día habitualmente?</label>
+      <div class="opt-grid-4" id="comidas-grid">
+        <button class="opt-btn" onclick="selectOne('comidas-grid', this)">1-2</button>
+        <button class="opt-btn" onclick="selectOne('comidas-grid', this)">3</button>
+        <button class="opt-btn" onclick="selectOne('comidas-grid', this)">4-5</button>
+        <button class="opt-btn" onclick="selectOne('comidas-grid', this)">Irregular</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿Consumes bebidas alcohólicas?</label>
+      <div class="opt-grid-3" id="alcohol-grid">
+        <button class="opt-btn" onclick="selectOne('alcohol-grid', this)">No consumo</button>
+        <button class="opt-btn" onclick="selectOne('alcohol-grid', this)">Ocasionalmente</button>
+        <button class="opt-btn" onclick="selectOne('alcohol-grid', this)">Frecuentemente</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿Cuántas horas duermes por noche aproximadamente?</label>
+      <div class="opt-grid-3" id="sueno-grid">
+        <button class="opt-btn" onclick="selectOne('sueno-grid', this)">Menos de 6h</button>
+        <button class="opt-btn" onclick="selectOne('sueno-grid', this)">6-8 horas</button>
+        <button class="opt-btn" onclick="selectOne('sueno-grid', this)">Más de 8h</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 6: ALIMENTACIÓN ═══════════════ -->
+  <div class="step" id="step-6">
+    <div class="step-eyebrow">Paso 6 de 7</div>
+    <h1 class="step-title">Tu relación con la comida</h1>
+    <p class="step-sub">El plan usa ingredientes reales que consigues en cualquier mercado de Ecuador o tu ciudad.</p>
+
+    <div class="field-group">
+      <label class="field-label">Tipo de alimentación</label>
+      <div class="opt-grid" id="tipo-grid">
+        <button class="opt-btn" onclick="selectOne('tipo-grid', this)">🍗 Omnívoro — como de todo</button>
+        <button class="opt-btn" onclick="selectOne('tipo-grid', this)">🥦 Vegetariano</button>
+        <button class="opt-btn" onclick="selectOne('tipo-grid', this)">🌱 Vegano</button>
+        <button class="opt-btn" onclick="selectOne('tipo-grid', this)">🔄 Sin restricción — me adapto</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Alimentos que NO te gustan o no comes</label>
+      <input type="text" id="no-gusta" placeholder="Ej: hígado, brócoli, pescado crudo... o Ninguno">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">¿Cocinas en casa?</label>
+      <div class="opt-grid-3" id="cocina-grid">
+        <button class="opt-btn" onclick="selectOne('cocina-grid', this)">Sí, siempre</button>
+        <button class="opt-btn" onclick="selectOne('cocina-grid', this)">A veces</button>
+        <button class="opt-btn" onclick="selectOne('cocina-grid', this)">Casi nunca</button>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Presupuesto semanal para alimentación</label>
+      <div class="opt-grid-3" id="presupuesto-grid">
+        <button class="opt-btn" onclick="selectOne('presupuesto-grid', this)">Bajo — menos de $30</button>
+        <button class="opt-btn" onclick="selectOne('presupuesto-grid', this)">Medio — $30 a $60</button>
+        <button class="opt-btn" onclick="selectOne('presupuesto-grid', this)">Sin restricción</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PASO 7: PLAN + CONSENTIMIENTO ═══════════════ -->
+  <div class="step" id="step-7">
+    <div class="step-eyebrow">Paso 7 de 7</div>
+    <h1 class="step-title">Tu perfil está listo</h1>
+    <p class="step-sub">Elige tu plan y activa NutriSLIM. La IA genera tu plan personalizado en segundos.</p>
+
+    <!-- RESUMEN -->
+    <div class="summary-card" id="summary-card">
+      <div class="summary-header">
+        <div class="summary-avatar" id="sum-avatar">--</div>
+        <div>
+          <div class="summary-name" id="sum-nombre">—</div>
+          <div class="summary-plan">Perfil NutriSLIM</div>
+        </div>
+      </div>
+      <div class="summary-rows">
+        <div class="summary-row"><span class="summary-key">Ciudad</span><span class="summary-val" id="sum-ciudad">—</span></div>
+        <div class="summary-row"><span class="summary-key">Edad / Sexo</span><span class="summary-val" id="sum-edad">—</span></div>
+        <div class="summary-row"><span class="summary-key">IMC</span><span class="summary-val" id="sum-imc">—</span></div>
+        <div class="summary-row"><span class="summary-key">Objetivo</span><span class="summary-val" id="sum-obj">—</span></div>
+        <div class="summary-row"><span class="summary-key">Condiciones</span><span class="summary-val" id="sum-condicion">—</span></div>
+        <div class="summary-row"><span class="summary-key">Actividad</span><span class="summary-val" id="sum-actividad">—</span></div>
+      </div>
+    </div>
+
+    <!-- SELECTOR DE PLAN -->
+    <label class="field-label" style="margin-bottom: 12px;">Elige tu plan</label>
+    <div class="plan-cards">
+      <div class="plan-sel" id="plan-free" onclick="selectPlan('free')">
+        <div class="plan-sel-badge">Gratuito</div>
+        <div class="plan-sel-name">Inicio</div>
+        <div class="plan-sel-price">$0</div>
+        <div class="plan-sel-period">para siempre</div>
+        <div class="plan-sel-feat">Plan IA básico · 1 vez · Sin renovación</div>
+      </div>
+      <div class="plan-sel featured" id="plan-19" onclick="selectPlan('19')">
+        <div class="plan-sel-badge">⭐ Popular</div>
+        <div class="plan-sel-name">Transformación</div>
+        <div class="plan-sel-price">$19</div>
+        <div class="plan-sel-period">por mes</div>
+        <div class="plan-sel-feat">Plan renovado · Fotos · Desafíos · Emails</div>
+      </div>
+      <div class="plan-sel" id="plan-49" onclick="selectPlan('49')">
+        <div class="plan-sel-badge">VIP Clínico</div>
+        <div class="plan-sel-name">Médico + IA</div>
+        <div class="plan-sel-price">$49</div>
+        <div class="plan-sel-period">por mes</div>
+        <div class="plan-sel-feat">Todo + teleconsulta médica + exámenes</div>
+      </div>
+    </div>
+
+    <!-- CONSENTIMIENTO -->
+    <div class="consent-box" style="margin-top: 20px;">
+      <div class="consent-title">Consentimiento informado</div>
+      <div class="consent-text">
+        Al registrarme en NutriSLIM, acepto y entiendo lo siguiente:<br><br>
+        <strong>1. Naturaleza del servicio:</strong> Los planes de alimentación generados por inteligencia artificial en NutriSLIM son orientativos y de carácter educativo. No reemplazan la consulta médica presencial ni el diagnóstico clínico de un profesional de salud.<br><br>
+        <strong>2. Supervisión médica:</strong> Los planes son revisados por médicos de Fundación Médica CMS. Sin embargo, si presento condiciones médicas preexistentes, me comprometo a informar a mi médico tratante antes de iniciar el programa.<br><br>
+        <strong>3. Datos personales y de salud:</strong> Autorizo a NutriSLIM / Fundación Médica CMS a almacenar y procesar mis datos personales y de salud con el único propósito de personalizar mi plan nutricional y dar seguimiento a mi progreso, de acuerdo a la Ley Orgánica de Protección de Datos Personales del Ecuador.<br><br>
+        <strong>4. Publicación en redes sociales:</strong> Autorizo expresamente a NutriSLIM a publicar mis fotos de avance, estadísticas de progreso y testimonios en redes sociales (Instagram, Facebook, TikTok) únicamente cuando yo haga clic en el botón "Compartir mi avance". Puedo revocar esta autorización en cualquier momento desde mi perfil.<br><br>
+        <strong>5. Derivación a laboratorios:</strong> Entiendo que NutriSLIM puede derivarme a laboratorios clínicos partner para la realización de exámenes de laboratorio. El pago de dichos exámenes se realiza a través de la plataforma y el laboratorio asignado es el de mayor cercanía a mi ubicación.<br><br>
+        <strong>6. Teleconsultas:</strong> Las teleconsultas con médicos de Fundación Médica CMS son realizadas a través de videollamada. Una teleconsulta mensual está incluida en el plan VIP Clínico. Las consultas adicionales tienen un costo de $25 cada una.<br><br>
+        <strong>7. Cancelación:</strong> Puedo cancelar mi suscripción en cualquier momento desde mi perfil sin penalidades. Los pagos realizados no son reembolsables una vez generado el plan.
+      </div>
+      <label class="consent-check">
+        <input type="checkbox" id="consent-check" onchange="checkConsent()">
+        He leído y acepto los términos del consentimiento informado. Entiendo que este programa no reemplaza la atención médica presencial.
+      </label>
+    </div>
+
+    <button class="btn-next" id="btn-activar" onclick="activar()" disabled style="width:100%; padding: 16px; font-size: 15px;">
+      Activar mi plan NutriSLIM →
+    </button>
+  </div>
+
+  <!-- PANTALLA DE ÉXITO -->
+  <div class="step" id="step-success">
+    <div class="success-screen">
+      <div class="success-icon">✓</div>
+      <h2 class="success-title">¡Bienvenido a NutriSLIM, <span id="success-nombre">—</span>!</h2>
+      <p class="success-sub">Tu perfil fue registrado. En los próximos minutos recibirás tu plan personalizado generado por IA en tu correo <strong id="success-email">—</strong>.</p>
+
+      <div class="success-steps">
+        <div class="success-step">
+          <div class="ss-num">1</div>
+          <div>Revisa tu correo — llega tu plan de 7 días completo con calorías y recetas.</div>
+        </div>
+        <div class="success-step">
+          <div class="ss-num">2</div>
+          <div>Completa tu pago para activar todas las funciones de tu plan elegido.</div>
+        </div>
+        <div class="success-step">
+          <div class="ss-num">3</div>
+          <div id="step3-text">Agenda tus exámenes de laboratorio — tu orden médica ya está lista para descargar.</div>
+        </div>
+      </div>
+
+      <div id="pago-section">
+        <a href="#" id="payphone-link" class="btn-payphone">Completar pago con PayPhone →</a>
+        <br>
+        <div id="lab-btn-section" style="display:none; margin-top: 16px;">
+          <a href="https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw" target="_blank" style="display:inline-block; padding: 13px 28px; background: var(--amber); color: white; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(232,128,10,0.3);">
+            🔬 Pagar paquete de laboratorio $96 →
+          </a>
+          <div style="font-size: 12px; color: var(--ink-lt); margin-top: 8px;">Incluye 12 exámenes base · Orden médica digital incluida</div>
+        </div>
+        <br>
+        <span class="btn-free" onclick="quedarseFree()">Continuar con el plan gratuito por ahora</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION BUTTONS -->
+  <div class="nav-buttons" id="nav-buttons">
+    <button class="btn-back" id="btn-back" onclick="prevStep()" disabled>← Atrás</button>
+    <button class="btn-next" id="btn-next" onclick="nextStep()">Siguiente →</button>
+  </div>
+
+</div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 7;
+  let selectedPlan = null;
+
+  const stepNames = [
+    'Datos personales',
+    'Medidas corporales',
+    'Tu objetivo',
+    'Historial de salud',
+    'Estilo de vida',
+    'Alimentación',
+    'Plan y consentimiento'
+  ];
+
+  const payphoneLinks = {
+    '19': 'https://ppls.me/baX1wJbGggDwz9Fdp61NOg',
+    '49': 'https://ppls.me/mneM389JQbvFMnfGx19ig',
+    'free': '#'
+    ,'96': 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw'
+  };
+
+  function updateProgress() {
+    const pct = Math.round((currentStep / totalSteps) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-label').textContent = 'Paso ' + currentStep + ' de ' + totalSteps;
+    document.getElementById('prog-name').textContent = stepNames[currentStep - 1];
+  }
+
+  function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    const navButtons = document.getElementById('nav-buttons');
+    if (n === 'success') {
+      navButtons.style.display = 'none';
+    } else {
+      navButtons.style.display = 'flex';
+      document.getElementById('btn-back').disabled = n === 1;
+      document.getElementById('btn-next').style.display = n === 7 ? 'none' : 'inline-block';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps) {
+      if (currentStep === totalSteps - 1) buildSummary();
+      currentStep++;
+      showStep(currentStep);
+      updateProgress();
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 1) {
+      currentStep--;
+      showStep(currentStep);
+      updateProgress();
+    }
+  }
+
+  function toggleMulti(gridId, btn) {
+    btn.classList.toggle('selected');
+  }
+
+  function selectOne(gridId, btn) {
+    document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  function getSelected(gridId) {
+    const selected = [...document.querySelectorAll('#' + gridId + ' .opt-btn.selected')];
+    return selected.map(b => b.textContent.trim().replace(/^[^\w]+/, '')).join(', ') || '—';
+  }
+
+  function checkCiudad(val) {
+    const isGye = val.toLowerCase().includes('guaya') || val.toLowerCase().includes('gye');
+    document.getElementById('cms-banner').classList.toggle('show', isGye);
+  }
+
+  function calcIMC() {
+    const p = parseFloat(document.getElementById('peso').value);
+    const t = parseFloat(document.getElementById('talla').value);
+    if (!p || !t || t < 100) return;
+    const imc = p / ((t / 100) ** 2);
+    const box = document.getElementById('imc-box');
+    box.classList.add('show');
+    document.getElementById('imc-val').textContent = imc.toFixed(1);
+    let cat = imc < 18.5 ? 'Bajo peso' : imc < 25 ? 'Peso normal' : imc < 30 ? 'Sobrepeso' : 'Obesidad';
+    document.getElementById('imc-cat').textContent = cat;
+  }
+
+  function buildSummary() {
+    const nombre = document.getElementById('nombre').value || '—';
+    const initials = nombre.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+    document.getElementById('sum-avatar').textContent = initials || 'NS';
+    document.getElementById('sum-nombre').textContent = nombre;
+    document.getElementById('sum-ciudad').textContent = document.getElementById('ciudad').value || '—';
+    const edad = document.getElementById('edad').value;
+    const sexo = document.getElementById('sexo').value;
+    document.getElementById('sum-edad').textContent = (edad || '—') + ' años · ' + (sexo || '—');
+    const p = parseFloat(document.getElementById('peso').value);
+    const t = parseFloat(document.getElementById('talla').value);
+    if (p && t && t >= 100) {
+      const imc = (p / ((t / 100) ** 2)).toFixed(1);
+      document.getElementById('sum-imc').textContent = imc + ' kg/m²';
+    }
+    document.getElementById('sum-obj').textContent = getSelected('obj-grid');
+    document.getElementById('sum-condicion').textContent = getSelected('condicion-grid');
+    document.getElementById('sum-actividad').textContent = getSelected('actividad-grid');
+  }
+
+  function selectPlan(plan) {
+    selectedPlan = plan;
+    document.querySelectorAll('.plan-sel').forEach(c => c.classList.remove('selected'));
+    document.getElementById('plan-' + plan).classList.add('selected');
+    checkConsent();
+  }
+
+  function checkConsent() {
+    const checked = document.getElementById('consent-check').checked;
+    const btn = document.getElementById('btn-activar');
+    btn.disabled = !(checked && selectedPlan !== null);
+  }
+
+  function activar() {
+    const nombre = document.getElementById('nombre').value || 'Paciente';
+    const email = document.getElementById('email').value || '—';
+    document.getElementById('success-nombre').textContent = nombre.split(' ')[0];
+    document.getElementById('success-email').textContent = email;
+
+    if (selectedPlan === 'free') {
+      document.getElementById('pago-section').style.display = 'none';
+      document.getElementById('step3-text').textContent = 'Accede a tu dashboard — tu plan básico ya está activo.';
+    } else {
+      document.getElementById('payphone-link').href = payphoneLinks[selectedPlan];
+      document.getElementById('payphone-link').textContent =
+        selectedPlan === '19'
+          ? 'Pagar $19 con PayPhone →'
+          : 'Pagar $49 con PayPhone →';
+      // Show lab button for VIP plan
+      if (selectedPlan === '49') {
+        document.getElementById('lab-btn-section').style.display = 'block';
+      }
+    }
+
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-success').classList.add('active');
+    document.getElementById('nav-buttons').style.display = 'none';
+    document.getElementById('prog-fill').style.width = '100%';
+    document.getElementById('prog-label').textContent = '¡Completado!';
+    document.getElementById('prog-name').textContent = 'Perfil registrado';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function quedarseFree() {
+    alert('¡Listo! Tu plan gratuito está activo. Revisa tu correo para ver tu plan de 7 días.');
+  }
+</script>
+
+</body>
+</html>
