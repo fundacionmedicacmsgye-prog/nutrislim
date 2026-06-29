@@ -321,6 +321,43 @@
     font-size: 13px; color: var(--ink-lt); text-decoration: underline; cursor: pointer;
   }
 
+  /* VALIDATION */
+  .field-error {
+    border-color: var(--red) !important;
+    box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
+  }
+  .error-msg {
+    font-size: 12px; color: var(--red);
+    margin-top: 5px; display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* RENEWAL BANNER */
+  .renewal-banner {
+    background: var(--amber-lt);
+    border: 1px solid var(--amber);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .renewal-banner-icon { font-size: 20px; flex-shrink: 0; }
+  .renewal-banner-text { font-size: 13px; color: #633806; line-height: 1.5; }
+  .renewal-banner-text strong { display: block; font-size: 14px; margin-bottom: 3px; color: #4A2800; }
+
+  /* RECURRING NOTE */
+  .recurring-note {
+    background: var(--bone);
+    border: 1px solid var(--rule);
+    border-radius: var(--r);
+    padding: 12px 14px;
+    margin-top: 12px;
+    font-size: 12px; color: var(--ink-lt);
+    line-height: 1.55;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .recurring-note-icon { font-size: 16px; flex-shrink: 0; }
+
   @media (max-width: 600px) {
     .field-row, .field-row-3 { grid-template-columns: 1fr; }
     .opt-grid { grid-template-columns: 1fr; }
@@ -630,6 +667,21 @@
       </div>
     </div>
 
+    <!-- RENEWAL NOTICE -->
+    <div class="renewal-banner" id="renewal-banner" style="display:none; margin-top: 14px;">
+      <div class="renewal-banner-icon">⏰</div>
+      <div class="renewal-banner-text">
+        <strong>Renovación mensual manual</strong>
+        PayPhone no cobra automáticamente. Cuando falten 8 días para que venza tu plan, recibirás un email recordatorio con el link de pago para renovar. Si no renuevas, tu plan pasa a gratuito automáticamente.
+      </div>
+    </div>
+
+    <!-- RECURRING NOTE -->
+    <div class="recurring-note" id="recurring-note" style="display:none;">
+      <span class="recurring-note-icon">ℹ️</span>
+      <span>Tu suscripción dura <strong>30 días</strong> desde la fecha de pago. <strong>No se cobra automáticamente.</strong> Te enviaremos un recordatorio por email y WhatsApp 8 días antes de que venza para que puedas renovar con un solo clic.</span>
+    </div>
+
     <!-- CONSENTIMIENTO -->
     <div class="consent-box" style="margin-top: 20px;">
       <div class="consent-title">Consentimiento informado</div>
@@ -660,6 +712,9 @@
       <div class="success-icon">✓</div>
       <h2 class="success-title">¡Bienvenido a NutriSLIM, <span id="success-nombre">—</span>!</h2>
       <p class="success-sub">Tu perfil fue registrado. En los próximos minutos recibirás tu plan personalizado generado por IA en tu correo <strong id="success-email">—</strong>.</p>
+    <div id="renewal-success-note" style="display:none; background:#FEF3E2; border:1px solid #F5C842; border-radius:12px; padding:12px 16px; margin-bottom:20px; font-size:13px; color:#633806; text-align:left;">
+      ⏰ <strong>Recuerda:</strong> Tu plan dura 30 días. Te enviaremos un recordatorio por email y WhatsApp 8 días antes de que venza para que puedas renovar fácilmente.
+    </div>
 
       <div class="success-steps">
         <div class="success-step">
@@ -742,7 +797,80 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function validateStep(step) {
+    let valid = true;
+    // Clear previous errors
+    document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+    document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+
+    if (step === 1) {
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const ciudad = document.getElementById('ciudad').value.trim();
+      const edad = document.getElementById('edad').value.trim();
+      const sexo = document.getElementById('sexo').value;
+      if (!nombre) { markError('nombre', 'Por favor ingresa tu nombre completo'); valid = false; }
+      if (!email || !email.includes('@')) { markError('email', 'Ingresa un correo electrónico válido'); valid = false; }
+      if (!ciudad) { markError('ciudad', 'Ingresa tu ciudad de residencia'); valid = false; }
+      if (!edad || edad < 18 || edad > 80) { markError('edad', 'Ingresa una edad válida (18-80 años)'); valid = false; }
+      if (!sexo) { markError('sexo', 'Selecciona tu sexo biológico'); valid = false; }
+    }
+    if (step === 2) {
+      const peso = document.getElementById('peso').value;
+      const talla = document.getElementById('talla').value;
+      if (!peso || peso < 30 || peso > 300) { markError('peso', 'Ingresa un peso válido en kg'); valid = false; }
+      if (!talla || talla < 100 || talla > 250) { markError('talla', 'Ingresa tu estatura en cm (ej: 165)'); valid = false; }
+    }
+    if (step === 3) {
+      const objs = document.querySelectorAll('#obj-grid .opt-btn.selected');
+      if (objs.length === 0) { showGridError('obj-grid', 'Selecciona al menos un objetivo'); valid = false; }
+    }
+    if (step === 4) {
+      const conds = document.querySelectorAll('#condicion-grid .opt-btn.selected');
+      if (conds.length === 0) { showGridError('condicion-grid', 'Selecciona al menos una opción (o "Ninguna condición")'); valid = false; }
+    }
+    if (step === 5) {
+      const act = document.querySelectorAll('#actividad-grid .opt-btn.selected');
+      if (act.length === 0) { showGridError('actividad-grid', 'Selecciona tu nivel de actividad física'); valid = false; }
+    }
+    if (step === 6) {
+      const tipo = document.querySelectorAll('#tipo-grid .opt-btn.selected');
+      if (tipo.length === 0) { showGridError('tipo-grid', 'Selecciona tu tipo de alimentación'); valid = false; }
+    }
+    return valid;
+  }
+
+  function markError(fieldId, msg) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    field.classList.add('field-error');
+    let errEl = field.parentNode.querySelector('.error-msg');
+    if (!errEl) {
+      errEl = document.createElement('div');
+      errEl.className = 'error-msg';
+      field.parentNode.appendChild(errEl);
+    }
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function showGridError(gridId, msg) {
+    const grid = document.getElementById(gridId);
+    if (!grid) return;
+    let errEl = grid.parentNode.querySelector('.error-msg');
+    if (!errEl) {
+      errEl = document.createElement('div');
+      errEl.className = 'error-msg';
+      grid.parentNode.appendChild(errEl);
+    }
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+    grid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   function nextStep() {
+    if (!validateStep(currentStep)) return;
     if (currentStep < totalSteps) {
       if (currentStep === totalSteps - 1) buildSummary();
       currentStep++;
@@ -814,6 +942,10 @@
     selectedPlan = plan;
     document.querySelectorAll('.plan-sel').forEach(c => c.classList.remove('selected'));
     document.getElementById('plan-' + plan).classList.add('selected');
+    // Show renewal notice for paid plans
+    const isPaid = plan === '19' || plan === '49';
+    document.getElementById('renewal-banner').style.display = isPaid ? 'flex' : 'none';
+    document.getElementById('recurring-note').style.display = isPaid ? 'flex' : 'none';
     checkConsent();
   }
 
@@ -832,7 +964,9 @@
     if (selectedPlan === 'free') {
       document.getElementById('pago-section').style.display = 'none';
       document.getElementById('step3-text').textContent = 'Accede a tu dashboard — tu plan básico ya está activo.';
+      document.getElementById('renewal-success-note').style.display = 'none';
     } else {
+      document.getElementById('renewal-success-note').style.display = 'block';
       document.getElementById('payphone-link').href = payphoneLinks[selectedPlan];
       document.getElementById('payphone-link').textContent =
         selectedPlan === '19'
