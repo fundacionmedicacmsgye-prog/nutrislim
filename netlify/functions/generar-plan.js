@@ -35,7 +35,7 @@ DATOS DEL PACIENTE:
 
 INSTRUCCIONES:
 1. Calcula calorias con Harris-Benedict + factor actividad, aplica deficit de 500 kcal/dia.
-2. Genera plan de 7 dias con desayuno, merienda manana, almuerzo, merienda tarde y cena.
+2. Genera plan de 7 dias completos (Lunes a Domingo) con desayuno, merienda manana, almuerzo, merienda tarde y cena.
 3. Usa alimentos ecuatorianos: arroz, verde, yuca, menestra, pollo, pescado, frutas tropicales.
 4. NO uses alimentos de la lista de no-gusta ni alergias.
 5. Si hay condicion medica (diabetes, hipertension, hipotiroidismo), aplica restricciones clinicas.
@@ -46,8 +46,8 @@ INSTRUCCIONES:
 
 RESPONDE SOLO CON JSON PURO. Sin markdown, sin explicaciones, sin bloques de codigo.
 {
-  "perfil_calculado": {"geb": 0, "get": 0, "calorias_objetivo": 0, "proteina_g": 0, "grasa_g": 0, "carbohidratos_g": 0},
-  "plan_7_dias": [
+  "perfil_calculado": {"calorias_objetivo": 0, "proteina_g": 0, "grasa_g": 0, "carbohidratos_g": 0},
+  "plan_dias": [
     {"dia": "Lunes", "total_calorias": 0, "comidas": {
       "desayuno": {"descripcion": "", "calorias": 0},
       "merienda_manana": {"descripcion": "", "calorias": 0},
@@ -93,7 +93,7 @@ RESPONDE SOLO CON JSON PURO. Sin markdown, sin explicaciones, sin bloques de cod
         proteina_g: planData.perfil_calculado?.proteina_g,
         grasa_g: planData.perfil_calculado?.grasa_g,
         carbohidratos_g: planData.perfil_calculado?.carbohidratos_g,
-        plan_7_dias: planData.plan_7_dias,
+        plan_7_dias: planData.plan_dias,
         metas_semana: planData.metas_semana,
         desafio_semana: planData.desafio_semana,
         nota_clinica: planData.nota_clinica,
@@ -120,7 +120,7 @@ RESPONDE SOLO CON JSON PURO. Sin markdown, sin explicaciones, sin bloques de cod
 };
 
 async function enviarEmailBienvenida(datos, plan, esGuayaquil) {
-  const dia1 = plan.plan_7_dias && plan.plan_7_dias[0];
+  const dia1 = plan.plan_dias && plan.plan_dias[0];
   const meta1 = plan.metas_semana && plan.metas_semana[0];
   const desafio = plan.desafio_semana;
   const calorias = plan.perfil_calculado ? plan.perfil_calculado.calorias_objetivo : null;
