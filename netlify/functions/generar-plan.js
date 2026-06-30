@@ -8,7 +8,7 @@ exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method not allowed' };
 
   try {
-    const { pacienteId, datos, imc, numeroDia } = JSON.parse(event.body);
+    const { pacienteId, datos, imc, numeroDia, passwordTemporal } = JSON.parse(event.body);
     const d = datos;
     const esGuayaquil = d.ciudad.toLowerCase().includes('guaya');
     const diaActual = numeroDia || 1;
@@ -68,7 +68,7 @@ JSON COMPACTO SIN SALTOS DE LINEA:
 
     if (planError) throw planError;
 
-    await enviarEmailBienvenida(d, planData, esGuayaquil);
+    await enviarEmailBienvenida(d, planData, esGuayaquil, passwordTemporal);
 
     return {
       statusCode: 200,
@@ -81,7 +81,7 @@ JSON COMPACTO SIN SALTOS DE LINEA:
   }
 };
 
-async function enviarEmailBienvenida(datos, plan, esGuayaquil) {
+async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal) {
   const comidas = plan.comidas || {};
   let comidasHtml = '';
   const tipos = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena' };
@@ -131,6 +131,7 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil) {
     '<div class="body">' +
     '<h2>Hola, ' + datos.nombre.split(' ')[0] + '!</h2>' +
     '<p>Aqui esta tu menu personalizado de ' + plan.dia + ', generado por IA y supervisado por Fundacion Medica CMS:</p>' +
+    (passwordTemporal ? '<div style="background:#E6F1FB;border:1px solid #85B7EB;border-radius:10px;padding:16px;margin-bottom:16px"><strong style="color:#0C447C;display:block;margin-bottom:8px">Tu acceso a NutriSLIM</strong><p style="margin:0;font-size:13px;color:#0C447C">Correo: ' + datos.email + '<br>Contrasena temporal: <strong>' + passwordTemporal + '</strong></p><p style="margin:8px 0 0;font-size:12px;color:#185FA5">Ingresa a nutrislimed.netlify.app/portal y cambia tu contrasena en tu perfil.</p></div>' : '') +
     '<div class="stat-grid">' +
     '<div class="stat"><div class="stat-val">' + (plan.calorias_objetivo || '-') + '</div><div class="stat-label">kcal hoy</div></div>' +
     '<div class="stat"><div class="stat-val">' + (plan.proteina_g || '-') + 'g</div><div class="stat-label">proteina</div></div>' +
