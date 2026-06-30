@@ -33,6 +33,7 @@ exports.handler = async (event) => {
     }
     const passwordGenerada = generarPassword();
 
+    let authUserId;
     const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
       email: data.email,
       password: passwordGenerada,
@@ -40,8 +41,21 @@ exports.handler = async (event) => {
     });
 
     if (authError) {
-      console.error('Error creando usuario auth:', authError);
-      throw new Error('No se pudo crear la cuenta: ' + authError.message);
+      if (authError.message && authError.message.includes('already been registered')) {
+        const { data: listaUsuarios } = await supabase.auth.admin.listUsers();
+        const usuarioExistente = listaUsuarios.users.find(u => u.email === data.email);
+        if (usuarioExistente) {
+          authUserId = usuarioExistente.id;
+          await supabase.auth.admin.updateUserById(usuarioExistente.id, { password: passwordGenerada });
+        } else {
+          throw new Error('No se pudo crear ni encontrar la cuenta del paciente');
+        }
+      } else {
+        console.error('Error creando usuario auth:', authError);
+        throw new Error('No se pudo crear la cuenta: ' + authError.message);
+      }
+    } else {
+      authUserId = authUser.user.id;
     }
     const esGuayaquil = data.ciudad.toLowerCase().includes('guaya');
 
@@ -89,7 +103,7 @@ exports.handler = async (event) => {
         plan_vence_en: planVence,
         teleconsultas_disponibles: teleconsultasIniciales,
         teleconsultas_usadas: 0,
-        auth_user_id: authUser.user.id,
+        auth_user_id: authUserId,
         consentimiento_aceptado: true,
         consentimiento_fecha: new Date().toISOString()
       }])
