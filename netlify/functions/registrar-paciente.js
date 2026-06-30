@@ -118,6 +118,53 @@ exports.handler = async (event) => {
       user_agent: event.headers['user-agent'] || 'unknown'
     }]);
 
+    // Notificar al administrador de NutriSLIM del nuevo registro
+    const nombresPlan = { free: 'Gratuito', '19': 'Transformación $19', '49': 'VIP Clínico $49' };
+    const planNombre = nombresPlan[data.planElegido] || 'Gratuito';
+    const emailAdmin = `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="font-family:Arial,sans-serif;background:#f5f5f5;padding:20px">
+<div style="max-width:500px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden">
+<div style="background:#1A7A52;padding:20px;text-align:center">
+<h2 style="color:#fff;margin:0">NutriSLIM — Nuevo paciente registrado</h2>
+</div>
+<div style="padding:24px">
+<p style="font-size:15px;color:#333;margin-bottom:16px">Se acaba de registrar un nuevo paciente en la plataforma:</p>
+<table style="width:100%;border-collapse:collapse;font-size:14px">
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666;width:140px">Nombre</td><td style="padding:10px;font-weight:500">${data.nombre}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">Email</td><td style="padding:10px">${data.email}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">WhatsApp</td><td style="padding:10px">${data.telefono}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">Ciudad</td><td style="padding:10px">${data.ciudad}${esGuayaquil ? ' 🏥 (Guayaquil - CMS)' : ''}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">Plan elegido</td><td style="padding:10px;font-weight:500;color:#1A7A52">${planNombre}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">Condiciones</td><td style="padding:10px">${(data.condiciones || []).join(', ') || 'Ninguna'}</td></tr>
+<tr style="border-bottom:1px solid #eee"><td style="padding:10px;color:#666">Objetivo</td><td style="padding:10px">${(data.objetivos || []).join(', ') || 'No especificado'}</td></tr>
+<tr><td style="padding:10px;color:#666">IMC</td><td style="padding:10px">${imc || 'No calculado'}</td></tr>
+</table>
+${data.planElegido !== 'free' ? `<div style="background:#FEF3E2;border-radius:8px;padding:14px;margin-top:16px;font-size:13px;color:#633806">⚠️ Este paciente eligió el plan <strong>${planNombre}</strong>. Verifica el pago en PayPhone y activa su plan en Supabase.</div>` : ''}
+<div style="margin-top:20px;text-align:center">
+<a href="https://supabase.com/dashboard/project/shgwgpvhkperagkzlzuy/editor" style="background:#1A7A52;color:#fff;padding:10px 20px;border-radius:50px;text-decoration:none;font-size:13px;font-weight:500">Ver en Supabase →</a>
+</div>
+</div>
+<div style="background:#f5f5f5;padding:14px;text-align:center;font-size:12px;color:#999">NutriSLIM · Fundación Médica CMS · Sistema de notificaciones automáticas</div>
+</div>
+</body></html>`;
+
+    try {
+      await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'NutriSLIM Sistema', email: process.env.BREVO_FROM_EMAIL },
+          to: [{ email: 'fundacionmedicacmsgye@gmail.com', name: 'Admin NutriSLIM' }],
+          subject: '🆕 Nuevo paciente: ' + data.nombre + ' — Plan ' + planNombre,
+          htmlContent: emailAdmin
+        })
+      });
+    } catch (emailErr) {
+      console.error('Error enviando notificacion admin:', emailErr);
+    }
+
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
