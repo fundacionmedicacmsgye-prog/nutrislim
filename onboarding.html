@@ -1044,7 +1044,7 @@
         await fetch('/.netlify/functions/generar-plan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pacienteId: result.pacienteId, datos: datos, imc: imc, numeroDia: 1 })
+          body: JSON.stringify({ pacienteId: result.pacienteId, datos: datos, imc: imc, numeroDia: 1, passwordTemporal: result.passwordTemporal })
         });
       } catch (planErr) {
         console.error('Error generando plan (no bloquea el registro):', planErr);
