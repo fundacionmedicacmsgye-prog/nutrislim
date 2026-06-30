@@ -403,7 +403,32 @@
     </div>
     <div class="field-group">
       <label class="field-label">Teléfono / WhatsApp</label>
-      <input type="text" id="telefono" placeholder="Ej: +593 99 123 4567">
+      <div style="display: flex; gap: 8px;">
+        <select id="codigo-pais" style="width: 160px; flex-shrink: 0;">
+          <option value="+1">🇺🇸 +1 (Estados Unidos)</option>
+          <option value="+1" data-country="CA">🇨🇦 +1 (Canadá)</option>
+          <option value="+52">🇲🇽 +52 (México)</option>
+          <option value="+502">🇬🇹 +502 (Guatemala)</option>
+          <option value="+503">🇸🇻 +503 (El Salvador)</option>
+          <option value="+504">🇭🇳 +504 (Honduras)</option>
+          <option value="+505">🇳🇮 +505 (Nicaragua)</option>
+          <option value="+506">🇨🇷 +506 (Costa Rica)</option>
+          <option value="+507">🇵🇦 +507 (Panamá)</option>
+          <option value="+53">🇨🇺 +53 (Cuba)</option>
+          <option value="+1809">🇩🇴 +1809 (Rep. Dominicana)</option>
+          <option value="+57">🇨🇴 +57 (Colombia)</option>
+          <option value="+58">🇻🇪 +58 (Venezuela)</option>
+          <option value="+593" selected>🇪🇨 +593 (Ecuador)</option>
+          <option value="+51">🇵🇪 +51 (Perú)</option>
+          <option value="+591">🇧🇴 +591 (Bolivia)</option>
+          <option value="+595">🇵🇾 +595 (Paraguay)</option>
+          <option value="+598">🇺🇾 +598 (Uruguay)</option>
+          <option value="+54">🇦🇷 +54 (Argentina)</option>
+          <option value="+56">🇨🇱 +56 (Chile)</option>
+          <option value="+55">🇧🇷 +55 (Brasil)</option>
+        </select>
+        <input type="text" id="telefono" placeholder="99 123 4567" style="flex: 1;">
+      </div>
     </div>
     <div class="field-group">
       <label class="field-label">Ciudad de residencia</label>
@@ -973,7 +998,7 @@
     const datos = {
       nombre: nombre,
       email: email,
-      telefono: document.getElementById('telefono').value.trim(),
+      telefono: document.getElementById('codigo-pais').value + ' ' + document.getElementById('telefono').value.trim(),
       ciudad: document.getElementById('ciudad').value.trim(),
       edad: document.getElementById('edad').value,
       sexo: document.getElementById('sexo').value,
@@ -1019,7 +1044,7 @@
         await fetch('/.netlify/functions/generar-plan', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pacienteId: result.pacienteId, datos: datos, imc: imc })
+          body: JSON.stringify({ pacienteId: result.pacienteId, datos: datos, imc: imc, numeroDia: 1 })
         });
       } catch (planErr) {
         console.error('Error generando plan (no bloquea el registro):', planErr);
