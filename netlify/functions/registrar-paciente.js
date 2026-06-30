@@ -24,6 +24,25 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
+
+    function generarPassword() {
+      const chars = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      let pass = '';
+      for (let i = 0; i < 8; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
+      return pass;
+    }
+    const passwordGenerada = generarPassword();
+
+    const { data: authUser, error: authError } = await supabase.auth.admin.createUser({
+      email: data.email,
+      password: passwordGenerada,
+      email_confirm: true
+    });
+
+    if (authError) {
+      console.error('Error creando usuario auth:', authError);
+      throw new Error('No se pudo crear la cuenta: ' + authError.message);
+    }
     const esGuayaquil = data.ciudad.toLowerCase().includes('guaya');
 
     const imc = data.peso && data.talla
@@ -70,6 +89,7 @@ exports.handler = async (event) => {
         plan_vence_en: planVence,
         teleconsultas_disponibles: teleconsultasIniciales,
         teleconsultas_usadas: 0,
+        auth_user_id: authUser.user.id,
         consentimiento_aceptado: true,
         consentimiento_fecha: new Date().toISOString()
       }])
@@ -90,7 +110,8 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         success: true,
         pacienteId: paciente.id,
-        esGuayaquil
+        esGuayaquil,
+        passwordTemporal: passwordGenerada
       })
     };
 
