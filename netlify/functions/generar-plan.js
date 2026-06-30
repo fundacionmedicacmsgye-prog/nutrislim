@@ -22,14 +22,14 @@ Objetivo: ${(d.objetivos||[]).join(', ')}. Condiciones: ${(d.condiciones||[]).jo
 Alergias/no come: ${d.alergias || 'Ninguna'} / ${d.noGusta || 'Ninguno'}.
 Actividad: ${d.actividad || 'No especificado'}. Tipo dieta: ${d.tipoAlimentacion || 'Omnivoro'}.
 
-INSTRUCCIONES:
+INSTRUCCIONES OBLIGATORIAS:
 1. Calcula calorias objetivo con Harris-Benedict + actividad, deficit 500kcal.
-2. SOLO 3 comidas para hoy (` + nombreDiaActual + `): desayuno, almuerzo, cena. Alimentos ecuatorianos (arroz, verde, pollo, pescado, menestra). Descripcion breve, max 8 palabras.
+2. DEBES incluir LAS 3 comidas, sin excepcion: desayuno, almuerzo Y cena. NUNCA omitas ninguna. Alimentos ecuatorianos (arroz, verde, pollo, pescado, menestra). Descripcion de 5 a 8 palabras cada una.
 3. Respeta alergias y condiciones medicas.
-4. 1 meta corta para hoy.
+4. 1 meta corta para hoy (maximo 10 palabras).
 5. Si es Guayaquil, 1 frase breve de derivacion a CMS.
-6. Mensaje motivacional de 1 frase.
-SE EXTREMADAMENTE BREVE Y RAPIDO.
+6. Mensaje motivacional de 1 frase corta.
+IMPORTANTE: las 3 comidas (desayuno, almuerzo, cena) son obligatorias en el JSON. No las omitas por brevedad.
 
 JSON COMPACTO SIN SALTOS DE LINEA:
 {"dia":"` + nombreDiaActual + `","numero_dia":${diaActual},"calorias_objetivo":0,"proteina_g":0,"comidas":{"desayuno":{"descripcion":"","calorias":0},"almuerzo":{"descripcion":"","calorias":0},"cena":{"descripcion":"","calorias":0}},"meta_hoy":"","derivacion_cms":{"aplica":false,"mensaje":""},"alerta_medica":"","mensaje_motivacional":""}`;
