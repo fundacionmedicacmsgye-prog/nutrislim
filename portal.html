@@ -153,6 +153,10 @@
         <div class="section-title">
           <span>Menú de hoy</span>
         </div>
+        <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:14px;text-align:center;font-size:13px;color:var(--ink-lt)">
+          Tu acceso a generar menús diarios ha vencido. Renueva tu plan para continuar.
+          <br><a href="onboarding.html" style="color:var(--green);font-weight:500;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
+        </div>
         <div id="plan-hoy-vacio">
           <button class="btn-action primary" style="width:100%" onclick="generarMenuHoy()" id="btn-generar-menu">
             Generar mi menú de hoy →
@@ -164,6 +168,7 @@
             <div class="activity-title">Meta de hoy</div>
             <div class="activity-desc" id="meta-hoy-texto"></div>
           </div>
+          <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center">Ya generaste tu menú de hoy. Vuelve mañana para uno nuevo.</p>
         </div>
       </div>
 
@@ -363,7 +368,26 @@ async function registrarPeso() {
   }
 }
 
+async function verificarAccesoVigente() {
+  const fechaInicio = new Date(pacienteActual.created_at);
+  const hoy = new Date();
+  const diasTranscurridos = Math.floor((hoy - fechaInicio) / (1000*60*60*24));
+
+  const limiteDias = pacienteActual.plan_elegido === 'free' ? 7 : 30;
+
+  if (diasTranscurridos >= limiteDias) {
+    document.getElementById('plan-vencido-msg').classList.remove('hidden');
+    document.getElementById('plan-hoy-vacio').classList.add('hidden');
+    document.getElementById('plan-hoy-contenido').classList.add('hidden');
+    return false;
+  }
+  return true;
+}
+
 async function cargarPlanHoy(pacienteId) {
+  const accesoVigente = await verificarAccesoVigente();
+  if (!accesoVigente) return;
+
   const { data: planes } = await supabaseClient
     .from('planes')
     .select('*')
@@ -372,7 +396,19 @@ async function cargarPlanHoy(pacienteId) {
     .limit(1);
 
   if (planes && planes.length > 0 && planes[0].plan_7_dias) {
+    const fechaPlan = new Date(planes[0].created_at);
+    const hoy = new Date();
+    const esMismoDia = fechaPlan.toDateString() === hoy.toDateString();
+
     mostrarPlanDelDia(planes[0].plan_7_dias[0]);
+
+    if (esMismoDia) {
+      document.getElementById('plan-hoy-vacio').classList.add('hidden');
+      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
+    } else {
+      document.getElementById('plan-hoy-vacio').classList.remove('hidden');
+      document.getElementById('ya-generado-hoy-msg').style.display = 'none';
+    }
   }
 }
 
