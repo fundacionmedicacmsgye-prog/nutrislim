@@ -205,13 +205,18 @@
 </div>
 
 <script>
-const SUPABASE_URL = 'https://shgwgpvhkperagkzlzuy.supabase.co';
-const SUPABASE_ANON_KEY =  'sb_publishable_5LEsnGCMmLhVG33_GKJS9Q_MdmHkiAm';
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+let supabaseClient = null;
 let pacienteActual = null;
 let planActual = null;
+let configCargada = false;
+
+async function inicializarSupabase() {
+  if (configCargada) return;
+  const resp = await fetch('/.netlify/functions/get-config');
+  const config = await resp.json();
+  supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+  configCargada = true;
+}
 
 async function hacerLogin() {
   const email = document.getElementById('login-email').value.trim();
@@ -224,6 +229,7 @@ async function hacerLogin() {
   btn.textContent = 'Ingresando...';
 
   try {
+    await inicializarSupabase();
     const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
@@ -470,6 +476,7 @@ function mostrarBloqueosPorPlan(plan) {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  await inicializarSupabase();
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     mostrarPortal();
