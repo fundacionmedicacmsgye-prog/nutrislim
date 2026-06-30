@@ -126,6 +126,10 @@
         <a href="onboarding.html" class="renewal-btn">Renovar</a>
       </div>
 
+      <div id="reconexion-banner" class="hidden" style="border-radius:14px;padding:16px 18px;margin-bottom:20px">
+        <p id="reconexion-texto" style="font-size:14px;margin:0"></p>
+      </div>
+
       <div class="greeting">
         <div class="avatar" id="avatar-iniciales">--</div>
         <div>
@@ -149,26 +153,40 @@
         </div>
       </div>
 
-      <div class="section-card">
-        <div class="section-title">
-          <span>Menú de hoy</span>
+      <div class="section-card" style="padding:0;overflow:hidden">
+        <div style="background:#1A7A52;padding:16px 20px;color:#fff">
+          <div style="font-size:11px;font-weight:500;opacity:0.85;text-transform:uppercase;letter-spacing:0.04em" id="dia-programa-label">Tu día de programa</div>
+          <div style="font-size:16px;font-weight:500;margin-top:4px">Menú de hoy</div>
         </div>
-        <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:14px;text-align:center;font-size:13px;color:var(--ink-lt)">
-          Tu acceso a generar menús diarios ha vencido. Renueva tu plan para continuar.
-          <br><a href="onboarding.html" style="color:var(--green);font-weight:500;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
-        </div>
-        <div id="plan-hoy-vacio">
-          <button class="btn-action primary" style="width:100%" onclick="generarMenuHoy()" id="btn-generar-menu">
-            Generar mi menú de hoy →
-          </button>
-        </div>
-        <div id="plan-hoy-contenido" class="hidden">
-          <div class="meal-list" id="lista-comidas"></div>
-          <div class="activity-card" id="meta-hoy-card" style="display:none">
-            <div class="activity-title">Meta de hoy</div>
-            <div class="activity-desc" id="meta-hoy-texto"></div>
+        <div style="padding:18px 20px">
+          <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:14px;text-align:center;font-size:13px;color:var(--ink-lt)">
+            Tu acceso a generar menús diarios ha vencido. Renueva tu plan para continuar.
+            <br><a href="onboarding.html" style="color:var(--green);font-weight:500;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
           </div>
-          <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center">Ya generaste tu menú de hoy. Vuelve mañana para uno nuevo.</p>
+          <div id="plan-hoy-vacio">
+            <button class="btn-action primary" style="width:100%" onclick="generarMenuHoy()" id="btn-generar-menu">
+              Generar mi menú de hoy →
+            </button>
+          </div>
+          <div id="plan-hoy-contenido" class="hidden">
+            <div class="meal-list" id="lista-comidas"></div>
+            <div class="activity-card" id="meta-hoy-card" style="display:none">
+              <div class="activity-title">Meta de hoy</div>
+              <div class="activity-desc" id="meta-hoy-texto"></div>
+            </div>
+            <div style="background:#E6F1FB;border-radius:10px;padding:14px;margin-top:12px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <i class="ti ti-walk" style="font-size:16px;color:#185FA5"></i>
+                <span style="font-size:13px;font-weight:500;color:#0C447C">Rutina sugerida de hoy</span>
+              </div>
+              <p style="font-size:12px;color:#185FA5;margin:0" id="rutina-hoy-texto"></p>
+            </div>
+            <div style="background:#E1F5EE;border-radius:10px;padding:14px;margin-top:12px;text-align:center">
+              <div style="font-size:11px;color:#0F6E56;margin-bottom:2px">Si mantienes este ritmo</div>
+              <div style="font-size:14px;font-weight:500;color:#085041" id="proyeccion-texto">Calculando proyección...</div>
+            </div>
+            <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center">Ya generaste tu menú de hoy. Vuelve mañana para uno nuevo.</p>
+          </div>
         </div>
       </div>
 
@@ -191,12 +209,32 @@
 
       <div class="section-card">
         <div class="section-title">Teleconsulta médica</div>
-        <p style="font-size:13px;color:var(--ink-mid);margin-bottom:12px">
+        <p style="font-size:13px;color:var(--ink-mid);margin-bottom:12px" id="tele-texto-disponible">
           Tienes <strong id="teleconsultas-disponibles">0</strong> teleconsulta(s) disponible(s) este mes.
         </p>
         <a id="btn-whatsapp-tele" href="#" target="_blank" class="btn-action primary" style="width:100%;text-decoration:none">
           Agendar mi teleconsulta →
         </a>
+        <div id="tele-vip-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;text-align:center;font-size:12px;color:var(--ink-lt)">
+          Ya usaste tus 2 teleconsultas de este mes. Se renuevan en tu próximo ciclo.
+        </div>
+      </div>
+
+      <div class="section-card" id="examenes-card" style="border-color:#F5C842">
+        <div class="section-title">
+          <span style="display:flex;align-items:center;gap:8px"><i class="ti ti-flask" style="font-size:18px;color:#854F0B"></i>Exámenes de laboratorio</span>
+          <span id="examenes-badge" style="font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px"></span>
+        </div>
+        <p id="examenes-texto" style="font-size:13px;color:var(--ink-mid);margin-bottom:14px">
+          Para que tu plan funcione con datos reales de tu salud, necesitas realizarte tus exámenes base. Esto es parte obligatoria de tu programa.
+        </p>
+        <div id="examenes-lista" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--ink-mid);line-height:1.7">
+          Glucosa en ayunas · Hemoglobina glicosilada · Perfil lipídico · TSH · Hemograma completo · Ácido úrico · Insulina basal · Creatinina
+        </div>
+        <a id="btn-examenes" href="#" target="_blank" class="btn-action" style="width:100%;text-decoration:none;background:#E8800A;color:#fff">
+          Agendar mis exámenes →
+        </a>
+        <p id="examenes-estado" style="font-size:11px;color:var(--ink-lt);margin-top:8px;text-align:center">Pendiente de realizar</p>
       </div>
 
       <div class="section-card" id="seccion-bloqueada">
@@ -296,13 +334,11 @@ async function cargarDatosPaciente() {
       }
     }
 
-    document.getElementById('teleconsultas-disponibles').textContent =
-      (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0);
+    configurarExamenesLaboratorio(paciente);
+    configurarTeleconsulta(paciente, nombresPlan);
 
-    const telefonoFMC = '593990932502';
-    const mensajeWhatsapp = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan ' + (nombresPlan[paciente.plan_elegido] || 'Gratuito') + ', quiero agendar mi teleconsulta médica con NutriSLIM.');
-    document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensajeWhatsapp;
-
+    mostrarDiaDePrograma(paciente);
+    verificarReconexion(paciente);
     mostrarActividadSugerida(paciente.actividad);
     cargarSeguimientoPeso(paciente.id, paciente.peso);
     cargarPlanHoy(paciente.id);
@@ -312,6 +348,140 @@ async function cargarDatosPaciente() {
     console.error('Error cargando paciente:', err);
     document.getElementById('loading-msg').textContent = 'No pudimos cargar tu información. Intenta cerrar sesión y entrar de nuevo.';
   }
+}
+
+const LINK_PAGO_TELECONSULTA = 'https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ';
+
+function configurarTeleconsulta(paciente, nombresPlan) {
+  const disponibles = (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0);
+  const telefonoFMC = '593990932502';
+  const nombrePlan = nombresPlan[paciente.plan_elegido] || 'Gratuito';
+
+  document.getElementById('teleconsultas-disponibles').textContent = Math.max(disponibles, 0);
+
+  if (paciente.plan_elegido === '49') {
+    if (disponibles > 0) {
+      const mensaje = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan VIP, quiero agendar mi teleconsulta médica con NutriSLIM.');
+      document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensaje;
+      document.getElementById('btn-whatsapp-tele').classList.remove('hidden');
+      document.getElementById('tele-vip-agotado').classList.add('hidden');
+    } else {
+      document.getElementById('btn-whatsapp-tele').classList.add('hidden');
+      document.getElementById('tele-texto-disponible').classList.add('hidden');
+      document.getElementById('tele-vip-agotado').classList.remove('hidden');
+    }
+  } else {
+    if (disponibles > 0) {
+      const mensaje = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan ' + nombrePlan + ', quiero agendar mi teleconsulta médica con NutriSLIM.');
+      document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensaje;
+      document.getElementById('btn-whatsapp-tele').textContent = 'Agendar mi teleconsulta →';
+    } else {
+      document.getElementById('tele-texto-disponible').innerHTML = 'No tienes teleconsultas incluidas. Cada sesión adicional cuesta <strong>$35</strong>.';
+      document.getElementById('btn-whatsapp-tele').href = LINK_PAGO_TELECONSULTA;
+      document.getElementById('btn-whatsapp-tele').target = '_self';
+      document.getElementById('btn-whatsapp-tele').textContent = 'Pagar $35 y agendar →';
+    }
+  }
+}
+
+const LINK_PAGO_EXAMENES = 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw';
+
+function configurarExamenesLaboratorio(paciente) {
+  const btnExamenes = document.getElementById('btn-examenes');
+  const textoExamenes = document.getElementById('examenes-texto');
+  const badge = document.getElementById('examenes-badge');
+  const estado = document.getElementById('examenes-estado');
+
+  const fechaRegistro = new Date(paciente.created_at);
+  const hoy = new Date();
+  const mesesTranscurridos = (hoy.getFullYear() - fechaRegistro.getFullYear()) * 12 + (hoy.getMonth() - fechaRegistro.getMonth());
+  const cicloActual = Math.floor(mesesTranscurridos / 3);
+  const esPrimerCiclo = cicloActual === 0;
+
+  const proximaFecha = new Date(fechaRegistro);
+  proximaFecha.setMonth(proximaFecha.getMonth() + (cicloActual + 1) * 3);
+  const diasParaProximo = Math.ceil((proximaFecha - hoy) / (1000*60*60*24));
+
+  let lugarTexto = '';
+  let linkAccion = '';
+  if (paciente.es_guayaquil) {
+    lugarTexto = 'Tus exámenes se pagan aquí y se realizan presencialmente en Fundación Médica CMS.';
+    linkAccion = LINK_PAGO_EXAMENES;
+  } else {
+    lugarTexto = 'Tus exámenes se pagan aquí y se realizan en el laboratorio partner más cercano a ' + (paciente.ciudad || 'tu ciudad') + '.';
+    linkAccion = LINK_PAGO_EXAMENES;
+  }
+
+  if (esPrimerCiclo) {
+    textoExamenes.textContent = 'Examen inicial obligatorio. ' + lugarTexto;
+    badge.textContent = 'Pendiente';
+    badge.style.background = '#FEF3E2';
+    badge.style.color = '#854F0B';
+    estado.textContent = 'Examen base aún no realizado';
+  } else if (diasParaProximo <= 14) {
+    textoExamenes.textContent = 'Tu examen de seguimiento (cada 3 meses) está por vencer. ' + lugarTexto;
+    badge.textContent = 'Vence pronto';
+    badge.style.background = '#FEE2E2';
+    badge.style.color = '#DC2626';
+    estado.textContent = 'Vence en ' + diasParaProximo + ' día(s)';
+  } else {
+    textoExamenes.textContent = 'Tu próximo examen de seguimiento (cada 3 meses) es en ' + diasParaProximo + ' días. ' + lugarTexto;
+    badge.textContent = 'Al día';
+    badge.style.background = '#E6F5EE';
+    badge.style.color = '#085041';
+    estado.textContent = 'Próximo seguimiento en ' + diasParaProximo + ' días';
+  }
+
+  btnExamenes.href = linkAccion;
+}
+
+function mostrarDiaDePrograma(paciente) {
+  const fechaInicio = new Date(paciente.created_at);
+  const hoy = new Date();
+  const diaPrograma = Math.floor((hoy - fechaInicio) / (1000*60*60*24)) + 1;
+  document.getElementById('dia-programa-label').textContent = 'Día ' + diaPrograma + ' de tu programa';
+}
+
+function verificarReconexion(paciente) {
+  const ultimaActividad = paciente.ultima_conexion ? new Date(paciente.ultima_conexion) : new Date(paciente.created_at);
+  const hoy = new Date();
+  const diasSinConectar = Math.floor((hoy - ultimaActividad) / (1000*60*60*24));
+
+  const banner = document.getElementById('reconexion-banner');
+  const texto = document.getElementById('reconexion-texto');
+  const nombre = paciente.nombre.split(' ')[0];
+
+  if (diasSinConectar >= 14) {
+    banner.style.background = '#FEE2E2';
+    banner.style.border = '0.5px solid #F09595';
+    texto.style.color = '#791F1F';
+    texto.innerHTML = '2 semanas de ausencia, ' + nombre + '. Es momento de decidir: retomas hoy o el objetivo se aleja más. Tu equipo médico está aquí cuando estés listo.';
+    banner.classList.remove('hidden');
+  } else if (diasSinConectar >= 5) {
+    banner.style.background = '#FEF3E2';
+    banner.style.border = '0.5px solid #F5C842';
+    texto.style.color = '#633806';
+    texto.innerHTML = 'Una semana sin registrar, ' + nombre + '. Los resultados se construyen con constancia, no con perfección. Vuelve hoy y retoma el ritmo.';
+    banner.classList.remove('hidden');
+  } else if (diasSinConectar >= 2) {
+    banner.style.background = 'var(--color-background-primary)';
+    banner.style.border = '0.5px solid var(--rule)';
+    texto.style.color = 'var(--ink)';
+    texto.innerHTML = nombre + ', llevas ' + diasSinConectar + ' días sin entrar. Tu menú de hoy está listo en 30 segundos — no dejes que se enfríe el progreso.';
+    banner.classList.remove('hidden');
+  }
+
+  supabaseClient.from('pacientes').update({ ultima_conexion: hoy.toISOString() }).eq('id', paciente.id);
+}
+
+function calcularProyeccion(caloriasObjetivo, pesoActual, actividad) {
+  const caloriasMantenimiento = actividad && actividad.includes('Sedentario') ? caloriasObjetivo + 350 :
+                                  actividad && actividad.includes('Intenso') ? caloriasObjetivo + 700 :
+                                  caloriasObjetivo + 500;
+  const deficitDiario = caloriasMantenimiento - caloriasObjetivo;
+  const kgPorSemana = (deficitDiario * 7) / 7700;
+  const proyeccion4Semanas = (kgPorSemana * 4).toFixed(1);
+  return proyeccion4Semanas;
 }
 
 function mostrarActividadSugerida(nivelActividad) {
@@ -431,6 +601,25 @@ function mostrarPlanDelDia(diaData) {
   if (diaData.meta_hoy) {
     document.getElementById('meta-hoy-card').style.display = 'block';
     document.getElementById('meta-hoy-texto').textContent = diaData.meta_hoy;
+  }
+
+  const sugerenciasRutina = {
+    'Sedentario': 'Caminata de 15-20 min a paso firme + estiramientos suaves.',
+    'Ligero': 'Caminata rápida de 25 min o bicicleta suave + estiramientos.',
+    'Moderado': 'Cardio 30 min + ejercicios de fuerza básica.',
+    'Intenso': 'Mantén tu rutina habitual, prioriza hidratación y recuperación.'
+  };
+  let nivelRutina = 'Ligero';
+  if (pacienteActual && pacienteActual.actividad) {
+    for (const key in sugerenciasRutina) {
+      if (pacienteActual.actividad.includes(key)) { nivelRutina = key; break; }
+    }
+  }
+  document.getElementById('rutina-hoy-texto').textContent = sugerenciasRutina[nivelRutina];
+
+  if (diaData.calorias_objetivo && pacienteActual) {
+    const proyeccion = calcularProyeccion(diaData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
+    document.getElementById('proyeccion-texto').innerHTML = 'Podrías perder <span style="font-size:18px">' + proyeccion + ' kg</span> en las próximas 4 semanas';
   }
 }
 
