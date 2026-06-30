@@ -22,14 +22,23 @@ Objetivo: ${(d.objetivos||[]).join(', ')}. Condiciones: ${(d.condiciones||[]).jo
 Alergias/no come: ${d.alergias || 'Ninguna'} / ${d.noGusta || 'Ninguno'}.
 Actividad: ${d.actividad || 'No especificado'}. Tipo dieta: ${d.tipoAlimentacion || 'Omnivoro'}.
 
+BANCO DE OPCIONES - elige UNA distinta de cada categoria, varia siempre, evita repetir combinaciones obvias:
+
+DESAYUNOS (elige 1, varia el patron usado): avena con leche y fruta / huevos revueltos con tostada integral / batido de banano con avena / tortilla de claras con espinaca / yogur griego con granola y fruta / pan integral con aguacate y huevo / bolon de verde con queso / sanduche de huevo y tomate / quinua con leche y canela / fruta picada con yogur natural / huevos pochados con tostada / smoothie verde con proteina
+
+ALMUERZOS (elige 1, varia la proteina y acompanante): pollo a la plancha con arroz integral y ensalada / pescado al horno con menestra y patacon / lomo salteado con verduras y arroz / pechuga a la plancha con quinua y vegetales / tilapia al vapor con arroz integral y ensalada / cerdo magro a la plancha con menestra / pollo al curry con arroz integral / camaron salteado con vegetales y arroz / atun a la plancha con ensalada y verde / pavo a la plancha con pure de camote
+
+CENAS (elige 1, mas ligera que el almuerzo): sopa de verduras con pollo desmenuzado / pescado al vapor con ensalada verde / tortilla de claras con vegetales / crema de zapallo con pechuga / ensalada de atun con vegetales / pollo a la plancha con ensalada simple / caldo de pescado liviano / wrap integral de pollo y vegetales / sopa de lentejas con verduras / salmon o tilapia al horno con esparragos
+
 INSTRUCCIONES OBLIGATORIAS:
 1. Calcula calorias objetivo con Harris-Benedict + actividad, deficit 500kcal.
-2. DEBES incluir LAS 3 comidas, sin excepcion: desayuno, almuerzo Y cena. NUNCA omitas ninguna. Alimentos ecuatorianos (arroz, verde, pollo, pescado, menestra). Descripcion de 5 a 8 palabras cada una.
-3. Respeta alergias y condiciones medicas.
-4. 1 meta corta para hoy (maximo 10 palabras).
-5. Si es Guayaquil, 1 frase breve de derivacion a CMS.
-6. Mensaje motivacional de 1 frase corta.
-IMPORTANTE: las 3 comidas (desayuno, almuerzo, cena) son obligatorias en el JSON. No las omitas por brevedad.
+2. Elige al azar UNA opcion de cada categoria del banco de arriba (desayuno, almuerzo, cena), respetando alergias y no-gusta. Adapta cantidades y agrega un detalle (vegetal o acompanante) para variar. Descripcion de 5 a 8 palabras.
+3. DEBES incluir LAS 3 comidas, sin excepcion. NUNCA omitas ninguna.
+4. Respeta alergias y condiciones medicas.
+5. 1 meta corta para hoy (maximo 10 palabras), variada cada vez (no siempre "caminar").
+6. Si es Guayaquil, 1 frase breve de derivacion a CMS.
+7. Mensaje motivacional de 1 frase corta, variado cada vez.
+IMPORTANTE: las 3 comidas (desayuno, almuerzo, cena) son obligatorias en el JSON. Elige opciones DIFERENTES del banco cada vez que te llamen, no repitas siempre las mismas 3 primeras opciones.
 
 JSON COMPACTO SIN SALTOS DE LINEA:
 {"dia":"` + nombreDiaActual + `","numero_dia":${diaActual},"calorias_objetivo":0,"proteina_g":0,"comidas":{"desayuno":{"descripcion":"","calorias":0},"almuerzo":{"descripcion":"","calorias":0},"cena":{"descripcion":"","calorias":0}},"meta_hoy":"","derivacion_cms":{"aplica":false,"mensaje":""},"alerta_medica":"","mensaje_motivacional":""}`;
