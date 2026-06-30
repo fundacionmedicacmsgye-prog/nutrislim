@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriSLIM — Mi Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --green:#1A7A52;--green-mid:#25A96E;--green-lt:#E6F5EE;--green-xlt:#F2FAF6;
+    --ink:#0F1A14;--ink-mid:#3D5446;--ink-lt:#7A9487;
+    --bone:#F7F9F7;--white:#fff;--rule:#D6E8DE;
+    --amber:#E8800A;--amber-lt:#FEF3E2;
+    --red:#DC2626;--red-lt:#FEE2E2;
+    --syne:'Syne',sans-serif;--inter:'Inter',sans-serif;
+    --r:12px;--r-lg:20px;
+  }
+  body{font-family:var(--inter);background:var(--bone);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .hidden{display:none !important}
+
+  /* LOGIN SCREEN */
+  .login-wrap{max-width:400px;margin:0 auto;padding:60px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+  .login-logo{font-family:var(--syne);font-size:28px;font-weight:800;color:var(--green);text-align:center;margin-bottom:8px}
+  .login-logo span{color:var(--ink)}
+  .login-sub{text-align:center;font-size:14px;color:var(--ink-lt);margin-bottom:32px}
+  .login-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:28px}
+  .field-label{display:block;font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:7px}
+  input[type=email],input[type=password],input[type=number],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:var(--r);font-family:var(--inter);font-size:14px;margin-bottom:16px}
+  input:focus{outline:none;border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(37,169,110,0.12)}
+  .btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn-primary:hover{background:var(--green-mid)}
+  .btn-primary:disabled{background:var(--rule);cursor:default}
+  .login-error{background:var(--red-lt);color:var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+  .login-error.show{display:block}
+
+  /* NAV */
+  nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:60px}
+  .nav-logo{font-family:var(--syne);font-size:20px;font-weight:800;color:var(--green)}
+  .nav-logo span{color:var(--ink)}
+  .nav-logout{font-size:13px;color:var(--ink-lt);background:none;border:none;cursor:pointer}
+
+  /* LAYOUT */
+  .layout{max-width:600px;margin:0 auto;padding:24px 20px 100px}
+  .renewal-banner{background:var(--amber-lt);border:1px solid #F5C842;border-radius:var(--r);padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
+  .renewal-banner.show{display:flex}
+  .renewal-banner-text{font-size:13px;color:#854F0B;line-height:1.5}
+  .renewal-banner-text strong{display:block;margin-bottom:2px;color:#633806}
+  .renewal-btn{margin-left:auto;flex-shrink:0;background:var(--amber-lt);border:1px solid #F5C842;color:#633806;font-size:12px;padding:6px 12px;border-radius:var(--r);cursor:pointer;font-weight:500;text-decoration:none}
+
+  .greeting{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+  .avatar{width:48px;height:48px;border-radius:50%;background:var(--green-lt);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:var(--green);flex-shrink:0}
+  .greeting-name{font-size:16px;font-weight:500}
+  .greeting-sub{font-size:13px;color:var(--ink-lt)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+  .stat{background:var(--bone);border-radius:var(--r);padding:14px;text-align:center}
+  .stat-val{font-size:22px;font-weight:500;color:var(--green)}
+  .stat-val.neutral{color:var(--ink)}
+  .stat-label{font-size:11px;color:var(--ink-lt);margin-top:3px}
+
+  .section-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
+  .section-title{font-size:14px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+  .btn-action{padding:12px;border:none;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+  .btn-action.primary{background:var(--green);color:#fff}
+  .btn-action.secondary{background:var(--bone);color:var(--ink);border:1px solid var(--rule)}
+  .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  .meal-list{display:flex;flex-direction:column;gap:6px}
+  .meal-item{padding:10px 12px;background:var(--bone);border-radius:var(--r);font-size:13px;display:flex;justify-content:space-between}
+  .meal-cal{color:var(--green);font-weight:500;font-size:12px}
+
+  .activity-card{background:var(--green-xlt);border:1px solid var(--rule);border-radius:var(--r);padding:14px;margin-top:10px}
+  .activity-title{font-size:13px;font-weight:500;color:var(--green);margin-bottom:4px}
+  .activity-desc{font-size:12px;color:var(--ink-mid)}
+
+  .week-input{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+  .week-input input{margin-bottom:0;flex:1}
+
+  .lock-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--bone);border-radius:var(--r);opacity:0.65}
+  .lock-row i{color:var(--ink-lt)}
+  .lock-text{flex:1;font-size:13px;color:var(--ink-lt)}
+
+  .footer-nav{position:sticky;bottom:0;display:flex;border-top:1px solid var(--rule);background:var(--white);padding:8px 0}
+  .footer-nav div{flex:1;text-align:center;font-size:10px;color:var(--ink-lt)}
+  .footer-nav i{font-size:18px;display:block;margin-bottom:2px}
+  .footer-nav .active{color:var(--green)}
+
+  .loading-text{text-align:center;padding:60px 20px;color:var(--ink-lt);font-size:14px}
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-wrap">
+  <div class="login-logo">Nutri<span>SLIM</span></div>
+  <p class="login-sub">Tu portal de seguimiento personalizado</p>
+  <div class="login-card">
+    <div class="login-error" id="login-error"></div>
+    <label class="field-label">Correo electrónico</label>
+    <input type="email" id="login-email" placeholder="tu@correo.com">
+    <label class="field-label">Contraseña</label>
+    <input type="password" id="login-password" placeholder="••••••••">
+    <button class="btn-primary" id="btn-login" onclick="hacerLogin()">Ingresar a mi portal</button>
+  </div>
+</div>
+
+<div id="portal-screen" class="hidden">
+  <nav>
+    <div class="nav-logo">Nutri<span>SLIM</span></div>
+    <button class="nav-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+  </nav>
+
+  <div class="layout">
+
+    <div class="loading-text" id="loading-msg">Cargando tu información...</div>
+
+    <div id="contenido-portal" class="hidden">
+
+      <div class="renewal-banner" id="renewal-banner">
+        <i class="ti ti-clock" style="font-size:18px;color:#854F0B;flex-shrink:0;margin-top:1px"></i>
+        <div class="renewal-banner-text">
+          <strong id="renewal-dias">Tu plan vence pronto</strong>
+          Renueva ahora para no perder tu seguimiento.
+        </div>
+        <a href="onboarding.html" class="renewal-btn">Renovar</a>
+      </div>
+
+      <div class="greeting">
+        <div class="avatar" id="avatar-iniciales">--</div>
+        <div>
+          <p class="greeting-name">Hola, <span id="nombre-paciente">—</span></p>
+          <p class="greeting-sub" id="plan-paciente">—</p>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-val" id="stat-perdidos">—</div>
+          <div class="stat-label">kg perdidos</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val neutral" id="stat-imc">—</div>
+          <div class="stat-label">IMC actual</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val neutral" id="stat-semana">—</div>
+          <div class="stat-label">semana activa</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">
+          <span>Menú de hoy</span>
+        </div>
+        <div id="plan-hoy-vacio">
+          <button class="btn-action primary" style="width:100%" onclick="generarMenuHoy()" id="btn-generar-menu">
+            Generar mi menú de hoy →
+          </button>
+        </div>
+        <div id="plan-hoy-contenido" class="hidden">
+          <div class="meal-list" id="lista-comidas"></div>
+          <div class="activity-card" id="meta-hoy-card" style="display:none">
+            <div class="activity-title">Meta de hoy</div>
+            <div class="activity-desc" id="meta-hoy-texto"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">Actividad física sugerida</div>
+        <div class="activity-card">
+          <div class="activity-title" id="actividad-titulo">—</div>
+          <div class="activity-desc" id="actividad-desc">—</div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">Registrar mi progreso</div>
+        <div class="week-input">
+          <input type="number" id="peso-input" placeholder="Tu peso de hoy en kg" step="0.1">
+          <button class="btn-action primary" onclick="registrarPeso()">Guardar</button>
+        </div>
+        <p style="font-size:12px;color:var(--ink-lt)">Registra tu peso cada semana para ver tu progreso real.</p>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">Teleconsulta médica</div>
+        <p style="font-size:13px;color:var(--ink-mid);margin-bottom:12px">
+          Tienes <strong id="teleconsultas-disponibles">0</strong> teleconsulta(s) disponible(s) este mes.
+        </p>
+        <a id="btn-whatsapp-tele" href="#" target="_blank" class="btn-action primary" style="width:100%;text-decoration:none">
+          Agendar mi teleconsulta →
+        </a>
+      </div>
+
+      <div class="section-card" id="seccion-bloqueada">
+        <div class="section-title">Funciones de tu plan</div>
+        <div id="lista-bloqueos" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://shgwgpvhkperagkzlzuy.supabase.co';
+const SUPABASE_ANON_KEY =  'sb_publishable_5LEsnGCMmLhVG33_GKJS9Q_MdmHkiAm';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let pacienteActual = null;
+let planActual = null;
+
+async function hacerLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorBox = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+
+  errorBox.classList.remove('show');
+  btn.disabled = true;
+  btn.textContent = 'Ingresando...';
+
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+
+    localStorage.setItem('nutrislim_session', JSON.stringify(data.session));
+    mostrarPortal();
+
+  } catch (err) {
+    errorBox.textContent = 'Correo o contraseña incorrectos. Revisa el email de bienvenida que recibiste.';
+    errorBox.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Ingresar a mi portal';
+  }
+}
+
+function cerrarSesion() {
+  supabaseClient.auth.signOut();
+  localStorage.removeItem('nutrislim_session');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('portal-screen').classList.add('hidden');
+}
+
+async function mostrarPortal() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('portal-screen').classList.remove('hidden');
+  await cargarDatosPaciente();
+}
+
+async function cargarDatosPaciente() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) throw new Error('No hay sesión activa');
+
+    const { data: paciente, error } = await supabaseClient
+      .from('pacientes')
+      .select('*')
+      .eq('auth_user_id', user.id)
+      .single();
+
+    if (error) throw error;
+    pacienteActual = paciente;
+
+    document.getElementById('loading-msg').classList.add('hidden');
+    document.getElementById('contenido-portal').classList.remove('hidden');
+
+    const iniciales = paciente.nombre.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+    document.getElementById('avatar-iniciales').textContent = iniciales;
+    document.getElementById('nombre-paciente').textContent = paciente.nombre.split(' ')[0];
+
+    const nombresPlan = { free: 'Plan Gratuito', '19': 'Plan Transformación', '49': 'Plan VIP Clínico' };
+    document.getElementById('plan-paciente').textContent = nombresPlan[paciente.plan_elegido] || 'Plan Gratuito';
+
+    document.getElementById('stat-imc').textContent = paciente.imc || '—';
+
+    if (paciente.plan_vence_en) {
+      const dias = Math.ceil((new Date(paciente.plan_vence_en) - new Date()) / (1000*60*60*24));
+      if (dias <= 8 && dias > 0) {
+        document.getElementById('renewal-banner').classList.add('show');
+        document.getElementById('renewal-dias').textContent = 'Tu plan vence en ' + dias + ' día(s)';
+      }
+    }
+
+    document.getElementById('teleconsultas-disponibles').textContent =
+      (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0);
+
+    const telefonoFMC = '593987654321';
+    const mensajeWhatsapp = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan ' + (nombresPlan[paciente.plan_elegido] || 'Gratuito') + ', quiero agendar mi teleconsulta médica con NutriSLIM.');
+    document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensajeWhatsapp;
+
+    mostrarActividadSugerida(paciente.actividad);
+    cargarSeguimientoPeso(paciente.id, paciente.peso);
+    cargarPlanHoy(paciente.id);
+    mostrarBloqueosPorPlan(paciente.plan_elegido);
+
+  } catch (err) {
+    console.error('Error cargando paciente:', err);
+    document.getElementById('loading-msg').textContent = 'No pudimos cargar tu información. Intenta cerrar sesión y entrar de nuevo.';
+  }
+}
+
+function mostrarActividadSugerida(nivelActividad) {
+  const sugerencias = {
+    'Sedentario': { titulo: 'Empieza con caminatas suaves', desc: '15-20 minutos de caminata diaria, 4 veces por semana. Sube de a poco.' },
+    'Ligero': { titulo: 'Caminata + estiramientos', desc: '25-30 minutos de caminata rápida o bicicleta suave, 4-5 veces por semana.' },
+    'Moderado': { titulo: 'Entrenamiento mixto', desc: 'Combina cardio (30 min) con fuerza básica 2 veces por semana.' },
+    'Intenso': { titulo: 'Mantén tu rutina con ajustes', desc: 'Continúa tu entrenamiento, prioriza recuperación e hidratación.' }
+  };
+  let nivel = 'Ligero';
+  if (nivelActividad) {
+    for (const key in sugerencias) {
+      if (nivelActividad.includes(key)) { nivel = key; break; }
+    }
+  }
+  const s = sugerencias[nivel];
+  document.getElementById('actividad-titulo').textContent = s.titulo;
+  document.getElementById('actividad-desc').textContent = s.desc;
+}
+
+async function cargarSeguimientoPeso(pacienteId, pesoInicial) {
+  const { data: registros } = await supabaseClient
+    .from('seguimiento_peso')
+    .select('*')
+    .eq('paciente_id', pacienteId)
+    .order('created_at', { ascending: true });
+
+  if (registros && registros.length > 0) {
+    const ultimoPeso = registros[registros.length - 1].peso_kg;
+    const diferencia = (pesoInicial - ultimoPeso).toFixed(1);
+    document.getElementById('stat-perdidos').textContent = diferencia > 0 ? '-' + diferencia : '+' + Math.abs(diferencia);
+    document.getElementById('stat-semana').textContent = registros.length;
+  } else {
+    document.getElementById('stat-perdidos').textContent = '0';
+    document.getElementById('stat-semana').textContent = '1';
+  }
+}
+
+async function registrarPeso() {
+  const peso = document.getElementById('peso-input').value;
+  if (!peso) { alert('Ingresa tu peso'); return; }
+
+  try {
+    await supabaseClient.from('seguimiento_peso').insert([{
+      paciente_id: pacienteActual.id,
+      peso_kg: parseFloat(peso),
+      semana: 1
+    }]);
+    alert('¡Peso registrado correctamente!');
+    document.getElementById('peso-input').value = '';
+    cargarSeguimientoPeso(pacienteActual.id, pacienteActual.peso);
+  } catch (err) {
+    alert('Error al registrar tu peso. Intenta de nuevo.');
+  }
+}
+
+async function cargarPlanHoy(pacienteId) {
+  const { data: planes } = await supabaseClient
+    .from('planes')
+    .select('*')
+    .eq('paciente_id', pacienteId)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  if (planes && planes.length > 0 && planes[0].plan_7_dias) {
+    mostrarPlanDelDia(planes[0].plan_7_dias[0]);
+  }
+}
+
+function mostrarPlanDelDia(diaData) {
+  if (!diaData) return;
+  document.getElementById('plan-hoy-vacio').classList.add('hidden');
+  document.getElementById('plan-hoy-contenido').classList.remove('hidden');
+
+  const lista = document.getElementById('lista-comidas');
+  lista.innerHTML = '';
+  const tipos = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena' };
+  for (const key in (diaData.comidas || {})) {
+    const c = diaData.comidas[key];
+    const item = document.createElement('div');
+    item.className = 'meal-item';
+    item.innerHTML = '<span>' + (tipos[key] || key) + ': ' + c.descripcion + '</span><span class="meal-cal">' + c.calorias + ' kcal</span>';
+    lista.appendChild(item);
+  }
+
+  if (diaData.meta_hoy) {
+    document.getElementById('meta-hoy-card').style.display = 'block';
+    document.getElementById('meta-hoy-texto').textContent = diaData.meta_hoy;
+  }
+}
+
+async function generarMenuHoy() {
+  const btn = document.getElementById('btn-generar-menu');
+  btn.disabled = true;
+  btn.textContent = 'Generando tu menú...';
+
+  try {
+    const datosParaIA = {
+      nombre: pacienteActual.nombre,
+      email: pacienteActual.email,
+      ciudad: pacienteActual.ciudad,
+      edad: pacienteActual.edad,
+      sexo: pacienteActual.sexo,
+      peso: pacienteActual.peso,
+      talla: pacienteActual.talla,
+      objetivos: pacienteActual.objetivos,
+      condiciones: pacienteActual.condiciones,
+      alergias: pacienteActual.alergias,
+      noGusta: pacienteActual.no_gusta,
+      actividad: pacienteActual.actividad,
+      tipoAlimentacion: pacienteActual.tipo_alimentacion
+    };
+
+    const response = await fetch('/.netlify/functions/generar-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        pacienteId: pacienteActual.id,
+        datos: datosParaIA,
+        imc: pacienteActual.imc,
+        numeroDia: 1
+      })
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      cargarPlanHoy(pacienteActual.id);
+    } else {
+      throw new Error(result.error);
+    }
+  } catch (err) {
+    alert('No pudimos generar tu menú. Intenta de nuevo en unos segundos.');
+    btn.disabled = false;
+    btn.textContent = 'Generar mi menú de hoy →';
+  }
+}
+
+function mostrarBloqueosPorPlan(plan) {
+  const lista = document.getElementById('lista-bloqueos');
+  lista.innerHTML = '';
+
+  const features = {
+    free: [
+      { texto: 'Fotos de avance ilimitadas', bloqueado: true },
+      { texto: 'Compartir en redes sociales', bloqueado: true },
+      { texto: 'Teleconsulta médica', bloqueado: true }
+    ],
+    '19': [
+      { texto: 'Certificado de seguimiento médico', bloqueado: true },
+      { texto: 'Exámenes de laboratorio con descuento', bloqueado: true }
+    ],
+    '49': []
+  };
+
+  const lista_feat = features[plan] || features.free;
+  if (lista_feat.length === 0) {
+    document.getElementById('seccion-bloqueada').style.display = 'none';
+    return;
+  }
+
+  lista_feat.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'lock-row';
+    row.innerHTML = '<i class="ti ti-lock" style="font-size:16px"></i><span class="lock-text">' + f.texto + '</span><a href="onboarding.html" style="font-size:12px;color:var(--green);font-weight:500;text-decoration:none">Mejorar →</a>';
+    lista.appendChild(row);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) {
+    mostrarPortal();
+  }
+});
+</script>
+
+</body>
+</html>
