@@ -962,36 +962,92 @@
     btn.disabled = !checked; // plan always selected (default $19)
   }
 
-  function activar() {
-    const nombre = document.getElementById('nombre').value || 'Paciente';
-    const email = document.getElementById('email').value || '—';
-    document.getElementById('success-nombre').textContent = nombre.split(' ')[0];
-    document.getElementById('success-email').textContent = email;
+  async function activar() {
+    const btn = document.getElementById('btn-activar');
+    btn.disabled = true;
+    btn.textContent = 'Registrando tu perfil...';
 
-    if (selectedPlan === 'free') {
-      document.getElementById('pago-section').style.display = 'none';
-      document.getElementById('step3-text').textContent = 'Accede a tu dashboard — tu plan básico ya está activo.';
-      document.getElementById('renewal-success-note').style.display = 'none';
-    } else {
-      document.getElementById('renewal-success-note').style.display = 'block';
-      document.getElementById('payphone-link').href = payphoneLinks[selectedPlan];
-      document.getElementById('payphone-link').textContent =
-        selectedPlan === '19'
-          ? 'Pagar $19 con PayPhone →'
-          : 'Pagar $49 con PayPhone →';
-      // Show lab button for VIP plan
-      if (selectedPlan === '49') {
-        document.getElementById('lab-btn-section').style.display = 'block';
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const datos = {
+      nombre: nombre,
+      email: email,
+      telefono: document.getElementById('telefono').value.trim(),
+      ciudad: document.getElementById('ciudad').value.trim(),
+      edad: document.getElementById('edad').value,
+      sexo: document.getElementById('sexo').value,
+      peso: document.getElementById('peso').value,
+      talla: document.getElementById('talla').value,
+      cintura: document.getElementById('cintura').value,
+      cadera: document.getElementById('cadera').value,
+      objetivos: getSelectedArray('obj-grid'),
+      metaKg: document.getElementById('meta-kg').value,
+      plazo: getSelected('plazo-grid'),
+      condiciones: getSelectedArray('condicion-grid'),
+      medicamentos: document.getElementById('medicamentos').value,
+      alergias: document.getElementById('alergias').value,
+      actividad: getSelected('actividad-grid'),
+      comidasDia: getSelected('comidas-grid'),
+      alcohol: getSelected('alcohol-grid'),
+      sueno: getSelected('sueno-grid'),
+      tipoAlimentacion: getSelected('tipo-grid'),
+      noGusta: document.getElementById('no-gusta').value,
+      cocina: getSelected('cocina-grid'),
+      presupuesto: getSelected('presupuesto-grid'),
+      planElegido: selectedPlan
+    };
+
+    try {
+      const response = await fetch('/.netlify/functions/registrar-paciente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos)
+      });
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Error desconocido');
       }
-    }
 
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step-success').classList.add('active');
-    document.getElementById('nav-buttons').style.display = 'none';
-    document.getElementById('prog-fill').style.width = '100%';
-    document.getElementById('prog-label').textContent = '¡Completado!';
-    document.getElementById('prog-name').textContent = 'Perfil registrado';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.getElementById('success-nombre').textContent = nombre.split(' ')[0];
+      document.getElementById('success-email').textContent = email;
+
+      if (selectedPlan === 'free') {
+        document.getElementById('pago-section').style.display = 'none';
+        document.getElementById('step3-text').textContent = 'Accede a tu dashboard — tu plan básico ya está activo.';
+        document.getElementById('renewal-success-note').style.display = 'none';
+      } else {
+        document.getElementById('renewal-success-note').style.display = 'block';
+        document.getElementById('payphone-link').href = payphoneLinks[selectedPlan];
+        document.getElementById('payphone-link').textContent =
+          selectedPlan === '19'
+            ? 'Pagar $19 con PayPhone →'
+            : 'Pagar $49 con PayPhone →';
+        if (selectedPlan === '49') {
+          document.getElementById('lab-btn-section').style.display = 'block';
+        }
+      }
+
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step-success').classList.add('active');
+      document.getElementById('nav-buttons').style.display = 'none';
+      document.getElementById('prog-fill').style.width = '100%';
+      document.getElementById('prog-label').textContent = '¡Completado!';
+      document.getElementById('prog-name').textContent = 'Perfil registrado';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      console.error('Error al activar:', err);
+      btn.disabled = false;
+      btn.textContent = 'Activar mi plan NutriSLIM →';
+      alert('Ocurrió un error al registrar tu perfil. Por favor intenta de nuevo. Si el problema persiste, contáctanos por WhatsApp.');
+    }
+  }
+
+  function getSelectedArray(gridId) {
+    return [...document.querySelectorAll('#' + gridId + ' .opt-btn.selected')]
+      .map(b => b.textContent.trim().replace(/^[^\w]+/, ''));
   }
 
   function quedarseFree() {
