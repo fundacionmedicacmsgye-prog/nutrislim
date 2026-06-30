@@ -84,12 +84,6 @@ exports.handler = async (event) => {
       user_agent: event.headers['user-agent'] || 'unknown'
     }]);
 
-    fetch(`${process.env.URL}/.netlify/functions/generar-plan`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pacienteId: paciente.id, datos: data, imc })
-    }).catch(err => console.error('Error llamando generar-plan:', err));
-
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
