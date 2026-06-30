@@ -1010,6 +1010,21 @@
         throw new Error(result.error || 'Error desconocido');
       }
 
+      // Llamar a generar-plan directamente desde el navegador (mas confiable)
+      btn.textContent = 'Generando tu plan con IA...';
+      try {
+        const imc = (parseFloat(datos.peso) && parseFloat(datos.talla))
+          ? parseFloat((parseFloat(datos.peso) / ((parseFloat(datos.talla) / 100) ** 2)).toFixed(1))
+          : null;
+        await fetch('/.netlify/functions/generar-plan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pacienteId: result.pacienteId, datos: datos, imc: imc })
+        });
+      } catch (planErr) {
+        console.error('Error generando plan (no bloquea el registro):', planErr);
+      }
+
       document.getElementById('success-nombre').textContent = nombre.split(' ')[0];
       document.getElementById('success-email').textContent = email;
 
