@@ -294,7 +294,7 @@ async function cargarDatosPaciente() {
     document.getElementById('teleconsultas-disponibles').textContent =
       (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0);
 
-    const telefonoFMC = '593987654321';
+    const telefonoFMC = '593990932502';
     const mensajeWhatsapp = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan ' + (nombresPlan[paciente.plan_elegido] || 'Gratuito') + ', quiero agendar mi teleconsulta médica con NutriSLIM.');
     document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensajeWhatsapp;
 
