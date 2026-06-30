@@ -140,7 +140,7 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal)
     metaHtml +
     cmsBoxHtml +
     motivacionalHtml +
-    '<p style="text-align:center"><a href="https://nutrislimed.netlify.app/onboarding" class="btn">Ver mi plan completo</a></p>' +
+    '<p style="text-align:center"><a href="https://nutrislimed.netlify.app/portal" class="btn">Ver mi plan completo</a></p>' +
     alertaHtml +
     '</div>' +
     '<div class="footer">NutriSLIM - Fundacion Medica CMS - Guayaquil, Ecuador<br>Vuelve manana para tu siguiente menu personalizado.</div>' +
