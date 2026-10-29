@@ -4,48 +4,108 @@ const { createClient } = require('@supabase/supabase-js');
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
+const DIAS_ES = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+
 exports.handler = async (event) => {
-  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method not allowed' };
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: ''
+    };
+  }
+
+  if (event.httpMethod !== 'POST') {
+    return { statusCode: 405, body: 'Method not allowed' };
+  }
 
   try {
-    const { pacienteId, datos, imc, numeroDia, passwordTemporal } = JSON.parse(event.body);
-    const d = datos;
-    const esGuayaquil = d.ciudad.toLowerCase().includes('guaya');
-    const diaActual = numeroDia || 1;
-    const nombresDias = ['Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo'];
-    const nombreDiaActual = nombresDias[(diaActual - 1) % 7];
+    const { pacienteId, enviarEmail } = JSON.parse(event.body);
 
-    const prompt = `Eres NutriBot FMC de NutriSLIM / Fundacion Medica CMS. Genera el plan de UN SOLO DIA (` + nombreDiaActual + `) para este paciente. RESPONDE RAPIDO, SE BREVE.
+    if (!pacienteId) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'pacienteId requerido' }) };
+    }
 
-PACIENTE: ${d.nombre}, ${d.edad} anos, ${d.sexo}, ${d.ciudad}. Peso ${d.peso}kg, talla ${d.talla}cm, IMC ${imc}.
-Objetivo: ${(d.objetivos||[]).join(', ')}. Condiciones: ${(d.condiciones||[]).join(', ') || 'Ninguna'}.
-Alergias/no come: ${d.alergias || 'Ninguna'} / ${d.noGusta || 'Ninguno'}.
-Actividad: ${d.actividad || 'No especificado'}. Tipo dieta: ${d.tipoAlimentacion || 'Omnivoro'}.
+    // Leer datos del paciente desde Supabase
+    const { data: paciente, error: pacienteError } = await supabase
+      .from('pacientes')
+      .select('*')
+      .eq('id', pacienteId)
+      .single();
 
-BANCO DE OPCIONES - elige UNA distinta de cada categoria, varia siempre, evita repetir combinaciones obvias:
+    if (pacienteError || !paciente) {
+      throw new Error('Paciente no encontrado: ' + (pacienteError?.message || 'sin datos'));
+    }
 
-DESAYUNOS (elige 1, varia el patron usado): avena con leche y fruta / huevos revueltos con tostada integral / batido de banano con avena / tortilla de claras con espinaca / yogur griego con granola y fruta / pan integral con aguacate y huevo / bolon de verde con queso / sanduche de huevo y tomate / quinua con leche y canela / fruta picada con yogur natural / huevos pochados con tostada / smoothie verde con proteina
+    const d = paciente;
+    const esGuayaquil = (d.ciudad || '').toLowerCase().includes('guaya');
 
-ALMUERZOS (elige 1, varia la proteina y acompanante): pollo a la plancha con arroz integral y ensalada / pescado al horno con menestra y patacon / lomo salteado con verduras y arroz / pechuga a la plancha con quinua y vegetales / tilapia al vapor con arroz integral y ensalada / cerdo magro a la plancha con menestra / pollo al curry con arroz integral / camaron salteado con vegetales y arroz / atun a la plancha con ensalada y verde / pavo a la plancha con pure de camote
+    const hoy = new Date();
+    const diaSemana = DIAS_ES[hoy.getDay()];
+    const fechaISO = hoy.toISOString().split('T')[0]; // YYYY-MM-DD
 
-CENAS (elige 1, mas ligera que el almuerzo): sopa de verduras con pollo desmenuzado / pescado al vapor con ensalada verde / tortilla de claras con vegetales / crema de zapallo con pechuga / ensalada de atun con vegetales / pollo a la plancha con ensalada simple / caldo de pescado liviano / wrap integral de pollo y vegetales / sopa de lentejas con verduras / salmon o tilapia al horno con esparragos
+    const imc = d.imc || (d.peso && d.talla
+      ? parseFloat((d.peso / ((d.talla / 100) ** 2)).toFixed(1))
+      : null);
 
-INSTRUCCIONES OBLIGATORIAS:
-1. Calcula calorias objetivo con Harris-Benedict + actividad, deficit 500kcal.
-2. Elige al azar UNA opcion de cada categoria del banco de arriba (desayuno, almuerzo, cena), respetando alergias y no-gusta. Adapta cantidades y agrega un detalle (vegetal o acompanante) para variar. Descripcion de 5 a 8 palabras.
-3. DEBES incluir LAS 3 comidas, sin excepcion. NUNCA omitas ninguna.
-4. Respeta alergias y condiciones medicas.
-5. 1 meta corta para hoy (maximo 10 palabras), variada cada vez (no siempre "caminar").
-6. Si es Guayaquil, 1 frase breve de derivacion a CMS.
-7. Mensaje motivacional de 1 frase corta, variado cada vez.
-IMPORTANTE: las 3 comidas (desayuno, almuerzo, cena) son obligatorias en el JSON. Elige opciones DIFERENTES del banco cada vez que te llamen, no repitas siempre las mismas 3 primeras opciones.
+    const prompt = `Eres NutriBot FMC, el asistente de nutricion clinica de Fundacion Medica CMS / NutriSLIM.
+Genera el menu de alimentacion de HOY (${diaSemana}) para este paciente.
 
-JSON COMPACTO SIN SALTOS DE LINEA:
-{"dia":"` + nombreDiaActual + `","numero_dia":${diaActual},"calorias_objetivo":0,"proteina_g":0,"comidas":{"desayuno":{"descripcion":"","calorias":0},"almuerzo":{"descripcion":"","calorias":0},"cena":{"descripcion":"","calorias":0}},"meta_hoy":"","derivacion_cms":{"aplica":false,"mensaje":""},"alerta_medica":"","mensaje_motivacional":""}`;
+DATOS DEL PACIENTE:
+- Nombre: ${d.nombre}
+- Edad: ${d.edad} anos | Sexo: ${d.sexo}
+- Ciudad: ${d.ciudad}
+- Peso: ${d.peso} kg | Talla: ${d.talla} cm | IMC: ${imc || 'no calculado'}
+- Objetivos: ${(d.objetivos || []).join(', ') || 'Bajar de peso'}
+- Meta: bajar ${d.meta_kg || 'no especificado'} kg en ${d.plazo || 'no especificado'}
+- Condiciones medicas: ${(d.condiciones || []).join(', ') || 'Ninguna'}
+- Medicamentos: ${d.medicamentos || 'Ninguno'}
+- Alergias: ${d.alergias || 'Ninguna'}
+- Actividad fisica: ${d.actividad || 'No especificado'}
+- Comidas al dia: ${d.comidas_dia || 3}
+- Tipo de alimentacion: ${d.tipo_alimentacion || 'Omnivoro'}
+- Alimentos que NO consume: ${d.no_gusta || 'Ninguno'}
+- Cocina en casa: ${d.cocina || 'Si'}
+- Presupuesto semanal: ${d.presupuesto || 'No especificado'}
+
+INSTRUCCIONES:
+1. Calcula calorias con Harris-Benedict + factor actividad, aplica deficit de 500 kcal/dia.
+2. Genera el menu SOLO de hoy (${diaSemana}) con desayuno, merienda manana, almuerzo, merienda tarde y cena.
+3. Usa alimentos ecuatorianos: arroz, verde, yuca, menestra, pollo, pescado, frutas tropicales.
+4. NO uses alimentos de la lista no-gusta ni alergias.
+5. Si hay condicion medica (diabetes, hipertension, hipotiroidismo), aplica restricciones clinicas.
+6. Incluye 1 meta del dia y 1 tip practico.
+7. Si ciudad es Guayaquil, incluye derivacion a Fundacion Medica CMS.
+8. Mensaje motivacional breve personalizado.
+
+RESPONDE SOLO CON JSON PURO. Sin markdown, sin explicaciones, sin bloques de codigo.
+{
+  "calorias_objetivo": 0,
+  "proteina_g": 0,
+  "grasa_g": 0,
+  "carbohidratos_g": 0,
+  "comidas": {
+    "desayuno": {"descripcion": "", "calorias": 0},
+    "merienda_manana": {"descripcion": "", "calorias": 0},
+    "almuerzo": {"descripcion": "", "calorias": 0},
+    "merienda_tarde": {"descripcion": "", "calorias": 0},
+    "cena": {"descripcion": "", "calorias": 0}
+  },
+  "meta_dia": "",
+  "tip_dia": "",
+  "nota_clinica": "",
+  "derivacion_cms": {"aplica": false, "mensaje": "", "examenes_recomendados": []},
+  "alerta_medica": "",
+  "mensaje_motivacional": ""
+}`;
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1800,
+      max_tokens: 1200,
       messages: [{ role: 'user', content: prompt }]
     });
 
@@ -56,52 +116,82 @@ JSON COMPACTO SIN SALTOS DE LINEA:
       planData = JSON.parse(cleaned);
     } catch (parseErr) {
       console.error('Error parsing plan JSON:', parseErr);
-      throw new Error('Error generando el plan');
+      throw new Error('Error generando el plan del dia');
     }
 
-    const { data: plan, error: planError } = await supabase
-      .from('planes')
-      .insert([{
+    // Guardar en planes_diarios (upsert por paciente+fecha)
+    const { data: planGuardado, error: planError } = await supabase
+      .from('planes_diarios')
+      .upsert([{
         paciente_id: pacienteId,
-        semana: 1,
+        fecha: fechaISO,
+        dia_semana: diaSemana,
         calorias_objetivo: planData.calorias_objetivo,
         proteina_g: planData.proteina_g,
-        plan_7_dias: [planData],
-        nota_clinica: planData.alerta_medica || '',
+        grasa_g: planData.grasa_g,
+        carbohidratos_g: planData.carbohidratos_g,
+        comidas: planData.comidas,
+        meta_dia: planData.meta_dia,
+        tip_dia: planData.tip_dia,
+        nota_clinica: planData.nota_clinica,
         derivacion_cms: planData.derivacion_cms,
         alerta_medica: planData.alerta_medica,
         mensaje_motivacional: planData.mensaje_motivacional
-      }])
+      }], { onConflict: 'paciente_id,fecha' })
       .select()
       .single();
 
     if (planError) throw planError;
 
-    await enviarEmailBienvenida(d, planData, esGuayaquil, passwordTemporal);
+    // Enviar email solo si se pide (primer registro)
+    if (enviarEmail === true) {
+      await enviarEmailBienvenida(d, planData, diaSemana, esGuayaquil);
+    }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true, planId: plan.id })
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({
+        success: true,
+        planId: planGuardado.id,
+        fecha: fechaISO,
+        dia: diaSemana,
+        plan: planData
+      })
     };
 
   } catch (err) {
     console.error('Error en generar-plan:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: err.message })
+    };
   }
 };
 
-async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal) {
+async function enviarEmailBienvenida(datos, plan, diaSemana, esGuayaquil) {
   const comidas = plan.comidas || {};
+  const calorias = plan.calorias_objetivo;
+  const proteina = plan.proteina_g;
+
+  const tiposComida = {
+    desayuno: 'Desayuno',
+    merienda_manana: 'Merienda manana',
+    almuerzo: 'Almuerzo',
+    merienda_tarde: 'Merienda tarde',
+    cena: 'Cena'
+  };
+
   let comidasHtml = '';
-  const tipos = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena' };
   for (const key in comidas) {
-    const c = comidas[key];
-    const nombre = tipos[key] || key;
-    comidasHtml += '<div class="meal"><span>' + nombre + ': ' + c.descripcion + '</span><span class="meal-cal">' + c.calorias + ' kcal</span></div>';
+    const comida = comidas[key];
+    const nombre = tiposComida[key] || key;
+    comidasHtml += '<div class="meal"><span>' + nombre + ': ' + comida.descripcion + '</span><span class="meal-cal">' + comida.calorias + ' kcal</span></div>';
   }
 
-  const cmsBoxHtml = (esGuayaquil && plan.derivacion_cms && plan.derivacion_cms.mensaje)
-    ? '<div class="cms-box"><strong>Eres de Guayaquil</strong><p style="margin:6px 0 0;font-size:13px">' + plan.derivacion_cms.mensaje + '</p></div>'
+  const cmsBoxHtml = esGuayaquil
+    ? '<div class="cms-box"><strong>Eres de Guayaquil</strong><p style="margin:6px 0 0;font-size:13px">Para tus examenes y control medico presencial, acude a Fundacion Medica CMS. Tu orden medica digital esta lista en tu perfil.</p></div>'
     : '';
 
   const motivacionalHtml = plan.mensaje_motivacional
@@ -112,8 +202,12 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal)
     ? '<p style="background:#FEE2E2;border-radius:10px;padding:12px;color:#DC2626;font-size:13px">Atencion: ' + plan.alerta_medica + '</p>'
     : '';
 
-  const metaHtml = plan.meta_hoy
-    ? '<p><strong>Tu meta de hoy:</strong> ' + plan.meta_hoy + '</p>'
+  const metaHtml = plan.meta_dia
+    ? '<p><strong>Tu meta de hoy:</strong> ' + plan.meta_dia + '</p>'
+    : '';
+
+  const tipHtml = plan.tip_dia
+    ? '<p><strong>Tip del dia:</strong> ' + plan.tip_dia + '</p>'
     : '';
 
   const htmlEmail = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' +
@@ -124,7 +218,7 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal)
     '.body{padding:28px}' +
     'h2{color:#0F1A14;font-size:20px;margin-bottom:8px}' +
     'p{color:#3D5446;font-size:14px;line-height:1.6;margin-bottom:14px}' +
-    '.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0}' +
+    '.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}' +
     '.stat{background:#F2FAF6;border-radius:10px;padding:14px;text-align:center}' +
     '.stat-val{font-size:22px;font-weight:800;color:#1A7A52}' +
     '.stat-label{font-size:11px;color:#7A9487;margin-top:3px}' +
@@ -138,21 +232,22 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal)
     '</style></head><body><div class="container">' +
     '<div class="header"><div class="logo">NutriSLIM</div><p style="color:rgba(255,255,255,0.8);margin:8px 0 0;font-size:14px">Tu menu de hoy esta listo</p></div>' +
     '<div class="body">' +
-    '<h2>Hola, ' + datos.nombre.split(' ')[0] + '!</h2>' +
-    '<p>Aqui esta tu menu personalizado de ' + plan.dia + ', generado por IA y supervisado por Fundacion Medica CMS:</p>' +
-    (passwordTemporal ? '<div style="background:#E6F1FB;border:1px solid #85B7EB;border-radius:10px;padding:16px;margin-bottom:16px"><strong style="color:#0C447C;display:block;margin-bottom:8px">Tu acceso a NutriSLIM</strong><p style="margin:0;font-size:13px;color:#0C447C">Correo: ' + datos.email + '<br>Contrasena temporal: <strong>' + passwordTemporal + '</strong></p><p style="margin:8px 0 0;font-size:12px;color:#185FA5">Ingresa a nutrislimed.netlify.app/portal y cambia tu contrasena en tu perfil.</p></div>' : '') +
+    '<h2>Hola, ' + datos.nombre.split(' ')[0] + '! Tu plan NutriSLIM esta activo.</h2>' +
+    '<p>Tu menu personalizado para hoy (<strong>' + diaSemana + '</strong>), generado por inteligencia artificial y supervisado por medicos de Fundacion Medica CMS:</p>' +
     '<div class="stat-grid">' +
-    '<div class="stat"><div class="stat-val">' + (plan.calorias_objetivo || '-') + '</div><div class="stat-label">kcal hoy</div></div>' +
-    '<div class="stat"><div class="stat-val">' + (plan.proteina_g || '-') + 'g</div><div class="stat-label">proteina</div></div>' +
+    '<div class="stat"><div class="stat-val">' + (calorias || '-') + '</div><div class="stat-label">kcal hoy</div></div>' +
+    '<div class="stat"><div class="stat-val">' + (proteina || '-') + 'g</div><div class="stat-label">proteina</div></div>' +
+    '<div class="stat"><div class="stat-val">5</div><div class="stat-label">comidas</div></div>' +
     '</div>' +
-    '<div class="day-card"><div class="day-title">Menu de ' + plan.dia + '</div>' + comidasHtml + '</div>' +
+    '<div class="day-card"><div class="day-title">Menu del ' + diaSemana + '</div>' + comidasHtml + '</div>' +
     metaHtml +
+    tipHtml +
     cmsBoxHtml +
     motivacionalHtml +
-    '<p style="text-align:center"><a href="https://nutrislimed.netlify.app/portal" class="btn">Ver mi plan completo</a></p>' +
+    '<p style="text-align:center"><a href="https://nutrislimed.netlify.app/portal" class="btn">Ver mi portal NutriSLIM</a></p>' +
     alertaHtml +
     '</div>' +
-    '<div class="footer">NutriSLIM - Fundacion Medica CMS - Guayaquil, Ecuador<br>Vuelve manana para tu siguiente menu personalizado.</div>' +
+    '<div class="footer">NutriSLIM - Fundacion Medica CMS - Guayaquil, Ecuador<br>Genera tu menu diario desde tu portal cada dia.</div>' +
     '</div></body></html>';
 
   await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -164,7 +259,7 @@ async function enviarEmailBienvenida(datos, plan, esGuayaquil, passwordTemporal)
     body: JSON.stringify({
       sender: { name: 'NutriSLIM', email: process.env.BREVO_FROM_EMAIL },
       to: [{ email: datos.email, name: datos.nombre }],
-      subject: 'Tu menu de ' + plan.dia + ' esta listo, ' + datos.nombre.split(' ')[0],
+      subject: 'Tu menu NutriSLIM para hoy (' + diaSemana + '), ' + datos.nombre.split(' ')[0],
       htmlContent: htmlEmail
     })
   });
