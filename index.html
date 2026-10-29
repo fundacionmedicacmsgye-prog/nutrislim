@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Si llega un token de Supabase (magic link o recovery), redirigir al portal
+  if (window.location.hash && (
+    window.location.hash.includes('access_token=') ||
+    window.location.hash.includes('type=recovery') ||
+    window.location.hash.includes('type=magiclink')
+  )) {
+    window.location.replace('/portal' + window.location.hash);
+  }
+</script>
 <title>NutriSLIM — Tu plan de salud con respaldo médico real</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
