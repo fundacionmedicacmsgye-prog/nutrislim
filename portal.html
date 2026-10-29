@@ -558,49 +558,52 @@ async function cargarPlanHoy(pacienteId) {
   const accesoVigente = await verificarAccesoVigente();
   if (!accesoVigente) return;
 
-  const { data: planes } = await supabaseClient
-    .from('planes')
+  const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+  const { data: planHoy } = await supabaseClient
+    .from('planes_diarios')
     .select('*')
     .eq('paciente_id', pacienteId)
-    .order('created_at', { ascending: false })
-    .limit(1);
+    .eq('fecha', hoy)
+    .maybeSingle();
 
-  if (planes && planes.length > 0 && planes[0].plan_7_dias) {
-    const fechaPlan = new Date(planes[0].created_at);
-    const hoy = new Date();
-    const esMismoDia = fechaPlan.toDateString() === hoy.toDateString();
-
-    mostrarPlanDelDia(planes[0].plan_7_dias[0]);
-
-    if (esMismoDia) {
-      document.getElementById('plan-hoy-vacio').classList.add('hidden');
-      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
-    } else {
-      document.getElementById('plan-hoy-vacio').classList.remove('hidden');
-      document.getElementById('ya-generado-hoy-msg').style.display = 'none';
-    }
+  if (planHoy) {
+    mostrarPlanDelDia(planHoy);
+    document.getElementById('plan-hoy-vacio').classList.add('hidden');
+    document.getElementById('ya-generado-hoy-msg').style.display = 'block';
+  } else {
+    document.getElementById('plan-hoy-vacio').classList.remove('hidden');
+    document.getElementById('plan-hoy-contenido').classList.add('hidden');
   }
 }
 
-function mostrarPlanDelDia(diaData) {
-  if (!diaData) return;
+function mostrarPlanDelDia(planData) {
+  if (!planData) return;
   document.getElementById('plan-hoy-vacio').classList.add('hidden');
   document.getElementById('plan-hoy-contenido').classList.remove('hidden');
 
   const lista = document.getElementById('lista-comidas');
   lista.innerHTML = '';
-  const tipos = { desayuno: 'Desayuno', almuerzo: 'Almuerzo', cena: 'Cena' };
-  for (const key in (diaData.comidas || {})) {
-    const c = diaData.comidas[key];
+  const tipos = {
+    desayuno: 'Desayuno',
+    merienda_manana: 'Merienda mañana',
+    almuerzo: 'Almuerzo',
+    merienda_tarde: 'Merienda tarde',
+    cena: 'Cena'
+  };
+  for (const key in (planData.comidas || {})) {
+    const c = planData.comidas[key];
     const item = document.createElement('div');
     item.className = 'meal-item';
     item.innerHTML = '<span>' + (tipos[key] || key) + ': ' + c.descripcion + '</span><span class="meal-cal">' + c.calorias + ' kcal</span>';
     lista.appendChild(item);
   }
 
-  if (diaData.meta_hoy) {
+  // Meta del día (campo nuevo: meta_dia)
+  const metaTexto = planData.meta_dia || planData.meta_hoy;
+  if (metaTexto) {
     document.getElementById('meta-hoy-card').style.display = 'block';
-    document.getElementById('meta-hoy-texto').textContent = diaData.meta_hoy;
+    document.getElementById('meta-hoy-texto').textContent = metaTexto;
   }
 
   const sugerenciasRutina = {
@@ -617,8 +620,8 @@ function mostrarPlanDelDia(diaData) {
   }
   document.getElementById('rutina-hoy-texto').textContent = sugerenciasRutina[nivelRutina];
 
-  if (diaData.calorias_objetivo && pacienteActual) {
-    const proyeccion = calcularProyeccion(diaData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
+  if (planData.calorias_objetivo && pacienteActual) {
+    const proyeccion = calcularProyeccion(planData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
     document.getElementById('proyeccion-texto').innerHTML = 'Podrías perder <span style="font-size:18px">' + proyeccion + ' kg</span> en las próximas 4 semanas';
   }
 }
@@ -629,38 +632,27 @@ async function generarMenuHoy() {
   btn.textContent = 'Generando tu menú...';
 
   try {
-    const datosParaIA = {
-      nombre: pacienteActual.nombre,
-      email: pacienteActual.email,
-      ciudad: pacienteActual.ciudad,
-      edad: pacienteActual.edad,
-      sexo: pacienteActual.sexo,
-      peso: pacienteActual.peso,
-      talla: pacienteActual.talla,
-      objetivos: pacienteActual.objetivos,
-      condiciones: pacienteActual.condiciones,
-      alergias: pacienteActual.alergias,
-      noGusta: pacienteActual.no_gusta,
-      actividad: pacienteActual.actividad,
-      tipoAlimentacion: pacienteActual.tipo_alimentacion
-    };
-
     const response = await fetch('/.netlify/functions/generar-plan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         pacienteId: pacienteActual.id,
-        datos: datosParaIA,
-        imc: pacienteActual.imc,
-        numeroDia: 1
+        enviarEmail: false
       })
     });
 
     const result = await response.json();
-    if (result.success) {
-      cargarPlanHoy(pacienteActual.id);
+    if (result.success && result.plan) {
+      mostrarPlanDelDia({
+        comidas: result.plan.comidas,
+        meta_dia: result.plan.meta_dia,
+        tip_dia: result.plan.tip_dia,
+        calorias_objetivo: result.plan.calorias_objetivo,
+        mensaje_motivacional: result.plan.mensaje_motivacional
+      });
+      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
     } else {
-      throw new Error(result.error);
+      throw new Error(result.error || 'Error desconocido');
     }
   } catch (err) {
     alert('No pudimos generar tu menú. Intenta de nuevo en unos segundos.');
