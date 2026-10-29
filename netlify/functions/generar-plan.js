@@ -105,18 +105,23 @@ RESPONDE SOLO CON JSON PURO. Sin markdown, sin explicaciones, sin bloques de cod
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1200,
+      max_tokens: 1800,
       messages: [{ role: 'user', content: prompt }]
     });
 
     let planData;
     try {
       const rawText = response.content[0].text;
-      const cleaned = rawText.replace(/```json|```/g, '').trim();
-      planData = JSON.parse(cleaned);
+      // Extrae el JSON entre el primer { y el último }
+      const start = rawText.indexOf('{');
+      const end = rawText.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('No JSON found in response');
+      const jsonStr = rawText.substring(start, end + 1);
+      planData = JSON.parse(jsonStr);
     } catch (parseErr) {
-      console.error('Error parsing plan JSON:', parseErr);
-      throw new Error('Error generando el plan del dia');
+      console.error('Error parsing plan JSON:', parseErr.message);
+      console.error('Raw response:', response.content[0]?.text?.substring(0, 500));
+      throw new Error('Error generando el plan: ' + parseErr.message);
     }
 
     // Guardar en planes_diarios (upsert por paciente+fecha)
