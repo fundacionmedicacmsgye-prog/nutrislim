@@ -5,93 +5,238 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NutriSLIM — Mi Portal</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --green:#1A7A52;--green-mid:#25A96E;--green-lt:#E6F5EE;--green-xlt:#F2FAF6;
-    --ink:#0F1A14;--ink-mid:#3D5446;--ink-lt:#7A9487;
-    --bone:#F7F9F7;--white:#fff;--rule:#D6E8DE;
-    --amber:#E8800A;--amber-lt:#FEF3E2;
-    --red:#DC2626;--red-lt:#FEE2E2;
-    --syne:'Syne',sans-serif;--inter:'Inter',sans-serif;
-    --r:12px;--r-lg:20px;
-  }
-  body{font-family:var(--inter);background:var(--bone);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
-  .hidden{display:none !important}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#1A7A52;--green-mid:#25A96E;--green-lt:#E6F5EE;--green-xlt:#F2FAF6;
+  --ink:#0F1A14;--ink-mid:#3D5446;--ink-lt:#7A9487;
+  --bone:#F7F9F7;--white:#fff;--rule:#D6E8DE;
+  --amber:#E8800A;--amber-lt:#FEF3E2;
+  --red:#DC2626;--red-lt:#FEE2E2;
+  --blue:#1A6FA0;--blue-lt:#E3F0FA;
+  --purple:#6B3EAC;--purple-lt:#F1ECFB;
+  --syne:'Syne',sans-serif;--inter:'Inter',sans-serif;
+  --r:12px;--r-lg:20px;--r-xl:24px;
+}
+body{font-family:var(--inter);background:var(--bone);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.hidden{display:none !important}
 
-  /* LOGIN SCREEN */
-  .login-wrap{max-width:400px;margin:0 auto;padding:60px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-  .login-logo{font-family:var(--syne);font-size:28px;font-weight:800;color:var(--green);text-align:center;margin-bottom:8px}
-  .login-logo span{color:var(--ink)}
-  .login-sub{text-align:center;font-size:14px;color:var(--ink-lt);margin-bottom:32px}
-  .login-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:28px}
-  .field-label{display:block;font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:7px}
-  input[type=email],input[type=password],input[type=number],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:var(--r);font-family:var(--inter);font-size:14px;margin-bottom:16px}
-  input:focus{outline:none;border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(37,169,110,0.12)}
-  .btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer}
-  .btn-primary:hover{background:var(--green-mid)}
-  .btn-primary:disabled{background:var(--rule);cursor:default}
-  .login-error{background:var(--red-lt);color:var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
-  .login-error.show{display:block}
+/* LOGIN */
+.login-wrap{max-width:400px;margin:0 auto;padding:60px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.login-logo{font-family:var(--syne);font-size:28px;font-weight:800;color:var(--green);text-align:center;margin-bottom:8px}
+.login-logo span{color:var(--ink)}
+.login-sub{text-align:center;font-size:14px;color:var(--ink-lt);margin-bottom:32px}
+.login-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:28px}
+.field-label{display:block;font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:7px}
+input[type=email],input[type=password],input[type=number],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:var(--r);font-family:var(--inter);font-size:14px;margin-bottom:16px}
+input:focus{outline:none;border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(37,169,110,0.12)}
+.btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-primary:hover{background:var(--green-mid)}
+.btn-primary:disabled{background:var(--rule);cursor:default}
+.login-error{background:var(--red-lt);color:var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.login-error.show{display:block}
 
-  /* NAV */
-  nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:60px}
-  .nav-logo{font-family:var(--syne);font-size:20px;font-weight:800;color:var(--green)}
-  .nav-logo span{color:var(--ink)}
-  .nav-logout{font-size:13px;color:var(--ink-lt);background:none;border:none;cursor:pointer}
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:var(--syne);font-size:20px;font-weight:800;color:var(--green)}
+.nav-logo span{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-plan-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.nav-plan-badge.free{background:var(--bone);color:var(--ink-lt);border:1px solid var(--rule)}
+.nav-plan-badge.transformacion{background:var(--green-lt);color:var(--green)}
+.nav-plan-badge.vip{background:#FEF3E2;color:#854F0B}
+.nav-logout{font-size:13px;color:var(--ink-lt);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px}
 
-  /* LAYOUT */
-  .layout{max-width:600px;margin:0 auto;padding:24px 20px 100px}
-  .renewal-banner{background:var(--amber-lt);border:1px solid #F5C842;border-radius:var(--r);padding:14px 16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start}
-  .renewal-banner.show{display:flex}
-  .renewal-banner-text{font-size:13px;color:#854F0B;line-height:1.5}
-  .renewal-banner-text strong{display:block;margin-bottom:2px;color:#633806}
-  .renewal-btn{margin-left:auto;flex-shrink:0;background:var(--amber-lt);border:1px solid #F5C842;color:#633806;font-size:12px;padding:6px 12px;border-radius:var(--r);cursor:pointer;font-weight:500;text-decoration:none}
+/* LAYOUT */
+.layout{max-width:640px;margin:0 auto;padding:20px 16px 100px}
 
-  .greeting{display:flex;align-items:center;gap:14px;margin-bottom:20px}
-  .avatar{width:48px;height:48px;border-radius:50%;background:var(--green-lt);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:var(--green);flex-shrink:0}
-  .greeting-name{font-size:16px;font-weight:500}
-  .greeting-sub{font-size:13px;color:var(--ink-lt)}
+/* BANNER RECONEXION */
+.reconexion-banner{border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none}
+.reconexion-banner.show{display:flex;gap:10px;align-items:flex-start}
+.reconexion-banner.rojo{background:#FEE2E2;border:1px solid #F09595}
+.reconexion-banner.amarillo{background:#FEF3E2;border:1px solid #F5C842}
+.reconexion-banner.gris{background:var(--white);border:1px solid var(--rule)}
+.reconexion-banner p{font-size:13px;margin:0;line-height:1.5}
 
-  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
-  .stat{background:var(--bone);border-radius:var(--r);padding:14px;text-align:center}
-  .stat-val{font-size:22px;font-weight:500;color:var(--green)}
-  .stat-val.neutral{color:var(--ink)}
-  .stat-label{font-size:11px;color:var(--ink-lt);margin-top:3px}
+/* RENEWAL BANNER */
+.renewal-banner{background:var(--amber-lt);border:1px solid #F5C842;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:none;gap:12px;align-items:center}
+.renewal-banner.show{display:flex}
+.renewal-banner-text{font-size:13px;color:#854F0B;flex:1}
+.renewal-btn{flex-shrink:0;background:var(--amber);border:none;color:#fff;font-size:12px;padding:7px 14px;border-radius:var(--r);cursor:pointer;font-weight:600;text-decoration:none;display:inline-block}
 
-  .section-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
-  .section-title{font-size:14px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-  .btn-action{padding:12px;border:none;border-radius:var(--r);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-  .btn-action.primary{background:var(--green);color:#fff}
-  .btn-action.secondary{background:var(--bone);color:var(--ink);border:1px solid var(--rule)}
-  .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* HERO CARD */
+.hero-card{background:linear-gradient(135deg,#1A7A52 0%,#0F5038 100%);border-radius:var(--r-xl);padding:24px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
+.hero-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06)}
+.hero-card::after{content:'';position:absolute;bottom:-20px;right:20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04)}
+.hero-avatar{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;margin-bottom:12px;flex-shrink:0}
+.hero-greeting{font-size:22px;font-weight:700;margin-bottom:2px}
+.hero-sub{font-size:13px;opacity:0.75}
+.hero-meta{display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15)}
+.hero-meta-item{text-align:center}
+.hero-meta-val{font-size:18px;font-weight:700}
+.hero-meta-lbl{font-size:10px;opacity:0.7;text-transform:uppercase;letter-spacing:0.04em;margin-top:1px}
+.hero-top{display:flex;align-items:flex-start;justify-content:space-between}
+.hero-day{font-size:11px;font-weight:600;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;white-space:nowrap}
 
-  .meal-list{display:flex;flex-direction:column;gap:6px}
-  .meal-item{padding:10px 12px;background:var(--bone);border-radius:var(--r);font-size:13px;display:flex;justify-content:space-between}
-  .meal-cal{color:var(--green);font-weight:500;font-size:12px}
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px}
+.stat-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
+.stat-icon.green{background:var(--green-lt);color:var(--green)}
+.stat-icon.amber{background:var(--amber-lt);color:var(--amber)}
+.stat-icon.blue{background:var(--blue-lt);color:var(--blue)}
+.stat-icon.purple{background:var(--purple-lt);color:var(--purple)}
+.stat-val{font-size:24px;font-weight:700;color:var(--ink)}
+.stat-val.green{color:var(--green)}
+.stat-label{font-size:11px;color:var(--ink-lt);margin-top:3px}
+.stat-trend{font-size:10px;font-weight:500;margin-top:4px}
+.stat-trend.up{color:var(--green)}
+.stat-trend.neutral{color:var(--ink-lt)}
 
-  .activity-card{background:var(--green-xlt);border:1px solid var(--rule);border-radius:var(--r);padding:14px;margin-top:10px}
-  .activity-title{font-size:13px;font-weight:500;color:var(--green);margin-bottom:4px}
-  .activity-desc{font-size:12px;color:var(--ink-mid)}
+/* META DE PESO */
+.meta-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
+.meta-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.meta-title{font-size:14px;font-weight:600;color:var(--ink)}
+.meta-pesos{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;color:var(--ink-lt)}
+.progress-bar-bg{height:10px;background:var(--green-lt);border-radius:20px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--green-mid),var(--green));border-radius:20px;transition:width 0.8s ease}
+.meta-dist{font-size:12px;color:var(--ink-lt);margin-top:8px;text-align:center}
+.meta-dist strong{color:var(--green)}
 
-  .week-input{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-  .week-input input{margin-bottom:0;flex:1}
+/* CHART */
+.chart-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.chart-title{font-size:14px;font-weight:600}
+.chart-sub{font-size:11px;color:var(--ink-lt)}
+.chart-container{position:relative;height:100px}
+.chart-empty{text-align:center;padding:24px 0;color:var(--ink-lt);font-size:13px}
 
-  .lock-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--bone);border-radius:var(--r);opacity:0.65}
-  .lock-row i{color:var(--ink-lt)}
-  .lock-text{flex:1;font-size:13px;color:var(--ink-lt)}
+/* HÁBITOS */
+.habitos-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
+.habitos-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.habitos-sub{font-size:12px;color:var(--ink-lt);margin-bottom:16px}
+.habito-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule)}
+.habito-row:last-child{border-bottom:none;padding-bottom:0}
+.habito-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.habito-icon.agua{background:#E3F0FA;color:#1A6FA0}
+.habito-icon.menu{background:var(--green-lt);color:var(--green)}
+.habito-icon.ejercicio{background:#F1ECFB;color:#6B3EAC}
+.habito-info{flex:1}
+.habito-name{font-size:13px;font-weight:500}
+.habito-desc{font-size:11px;color:var(--ink-lt);margin-top:1px}
+.habito-toggle{width:40px;height:24px;border-radius:12px;background:var(--rule);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.habito-toggle.activo{background:var(--green)}
+.habito-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.habito-toggle.activo::after{left:19px}
+/* agua counters */
+.agua-counter{display:flex;align-items:center;gap:8px}
+.agua-vasos{display:flex;gap:4px}
+.agua-vaso{width:20px;height:20px;border-radius:6px;border:2px solid var(--rule);background:transparent;cursor:pointer;transition:all 0.15s;position:relative}
+.agua-vaso.lleno{background:var(--blue-lt);border-color:#1A6FA0}
+.agua-label{font-size:11px;color:var(--ink-lt)}
 
-  .footer-nav{position:sticky;bottom:0;display:flex;border-top:1px solid var(--rule);background:var(--white);padding:8px 0}
-  .footer-nav div{flex:1;text-align:center;font-size:10px;color:var(--ink-lt)}
-  .footer-nav i{font-size:18px;display:block;margin-bottom:2px}
-  .footer-nav .active{color:var(--green)}
+/* SECCIÓN CARDS */
+.section-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
+.section-title{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.section-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
 
-  .loading-text{text-align:center;padding:60px 20px;color:var(--ink-lt);font-size:14px}
+/* MENU DEL DÍA */
+.menu-header{background:linear-gradient(135deg,var(--green) 0%,#0F5038 100%);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:16px 20px;margin:-20px -20px 16px -20px}
+.menu-day-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.06em}
+.menu-day-title{font-size:16px;font-weight:600;color:#fff;margin-top:2px}
+.meal-list{display:flex;flex-direction:column;gap:8px}
+.meal-item{padding:12px 14px;background:var(--bone);border-radius:var(--r);display:flex;justify-content:space-between;align-items:center}
+.meal-tipo{font-size:10px;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
+.meal-desc{font-size:13px;color:var(--ink)}
+.meal-cal{font-size:12px;font-weight:600;color:var(--green);white-space:nowrap;margin-left:12px;flex-shrink:0}
+.meal-total{display:flex;justify-content:space-between;padding:10px 14px;margin-top:4px;background:var(--green-lt);border-radius:var(--r);font-size:12px;font-weight:600}
+.meal-total-kcal{color:var(--green)}
+.proyeccion-strip{background:linear-gradient(90deg,#E1F5EE,#C3EDD8);border-radius:var(--r);padding:12px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
+.proyeccion-label{font-size:11px;color:#0F6E56}
+.proyeccion-val{font-size:16px;font-weight:700;color:#085041}
+
+/* ACTIVIDAD */
+.actividad-visual{display:flex;gap:10px;margin-top:12px}
+.actividad-chip{flex:1;background:var(--bone);border-radius:var(--r);padding:12px;text-align:center}
+.actividad-chip-icon{font-size:20px;margin-bottom:4px}
+.actividad-chip-label{font-size:11px;color:var(--ink-lt)}
+.actividad-chip-val{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
+.semana-dots{display:flex;gap:6px;margin-top:12px}
+.semana-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-direction:column}
+.semana-dot.hecho{background:var(--green);color:#fff}
+.semana-dot.hoy{background:var(--green-lt);color:var(--green);border:2px solid var(--green)}
+.semana-dot.no-hecho{background:var(--bone);color:var(--ink-lt)}
+
+/* PESO */
+.peso-action{display:flex;gap:10px;align-items:center}
+.peso-action input{margin-bottom:0;flex:1}
+.btn-guardar-peso{padding:12px 20px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.ultimos-pesos{display:flex;gap:8px;margin-top:14px;overflow-x:auto}
+.peso-chip{flex-shrink:0;padding:8px 12px;background:var(--bone);border-radius:var(--r);text-align:center}
+.peso-chip-val{font-size:14px;font-weight:600;color:var(--ink)}
+.peso-chip-fecha{font-size:10px;color:var(--ink-lt);margin-top:2px}
+.peso-chip.ultimo{background:var(--green-lt)}
+.peso-chip.ultimo .peso-chip-val{color:var(--green)}
+
+/* FOTO PROGRESO */
+.foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.foto-slot{aspect-ratio:3/4;background:var(--bone);border-radius:var(--r-lg);border:2px dashed var(--rule);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;position:relative;overflow:hidden}
+.foto-slot.locked{opacity:0.6;cursor:default}
+.foto-lock-overlay{position:absolute;inset:0;background:rgba(247,249,247,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.foto-slot-label{font-size:10px;color:var(--ink-lt);font-weight:500}
+.foto-lock-text{font-size:10px;color:var(--ink-lt);text-align:center;padding:0 8px}
+
+/* TELECONSULTA */
+.tele-strip{background:var(--blue-lt);border-radius:var(--r);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.tele-count{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
+.tele-info-text{font-size:13px;font-weight:500;color:var(--blue)}
+.tele-info-sub{font-size:11px;color:var(--blue);opacity:0.7;margin-top:2px}
+
+/* EXÁMENES */
+.examen-lista-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.examen-chip{padding:4px 10px;background:var(--bone);border-radius:20px;font-size:11px;color:var(--ink-mid)}
+
+/* BLOQUEOS */
+.bloqueo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bloqueo-item{background:var(--bone);border-radius:var(--r);padding:12px;border:1px dashed var(--rule);display:flex;flex-direction:column;gap:6px}
+.bloqueo-icon{font-size:20px;opacity:0.4}
+.bloqueo-text{font-size:12px;color:var(--ink-mid)}
+.bloqueo-link{font-size:11px;color:var(--green);font-weight:600;text-decoration:none}
+
+/* BTNS */
+.btn-action{padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;width:100%}
+.btn-action.primary{background:var(--green);color:#fff}
+.btn-action.primary:hover{background:var(--green-mid)}
+.btn-action.secondary{background:var(--bone);color:var(--ink);border:1px solid var(--rule)}
+.btn-action.amber{background:var(--amber);color:#fff}
+.btn-action.disabled{background:var(--rule);color:var(--ink-lt);cursor:default;pointer-events:none}
+
+/* LOADING */
+.loading-text{text-align:center;padding:60px 20px;color:var(--ink-lt);font-size:14px}
+.loading-spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--rule);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* STREAK */
+.streak-badge{display:inline-flex;align-items:center;gap:4px;background:#FFF3E0;color:#E65100;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+
+/* TIP DEL DÍA */
+.tip-card{background:var(--purple-lt);border-left:3px solid var(--purple);border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:16px}
+.tip-label{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.tip-text{font-size:13px;color:#3D1F6E;line-height:1.5}
+
+@media(max-width:480px){
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .bloqueo-grid{grid-template-columns:1fr}
+  .hero-meta{gap:10px}
+  .foto-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
 
+<!-- ══ LOGIN ═══════════════════════════════════════════════ -->
 <div id="login-screen" class="login-wrap">
   <div class="login-logo">Nutri<span>SLIM</span></div>
   <p class="login-sub">Tu portal de seguimiento personalizado</p>
@@ -109,6 +254,7 @@
   </div>
 </div>
 
+<!-- ══ RESET PASSWORD ═══════════════════════════════════════ -->
 <div id="reset-password-screen" class="login-wrap hidden">
   <div class="login-logo">Nutri<span>SLIM</span></div>
   <p class="login-sub">Crea tu nueva contraseña</p>
@@ -120,154 +266,314 @@
   </div>
 </div>
 
+<!-- ══ PORTAL ════════════════════════════════════════════════ -->
 <div id="portal-screen" class="hidden">
   <nav>
     <div class="nav-logo">Nutri<span>SLIM</span></div>
-    <button class="nav-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    <div class="nav-right">
+      <span class="nav-plan-badge free" id="nav-plan-badge">Gratuito</span>
+      <button class="nav-logout" onclick="cerrarSesion()"><i class="ti ti-logout"></i> Salir</button>
+    </div>
   </nav>
 
   <div class="layout">
 
-    <div class="loading-text" id="loading-msg">Cargando tu información...</div>
+    <div id="loading-msg" class="loading-text">
+      <div class="loading-spinner"></div><br>Cargando tu información...
+    </div>
 
     <div id="contenido-portal" class="hidden">
 
+      <!-- BANNERS -->
       <div class="renewal-banner" id="renewal-banner">
-        <i class="ti ti-clock" style="font-size:18px;color:#854F0B;flex-shrink:0;margin-top:1px"></i>
-        <div class="renewal-banner-text">
-          <strong id="renewal-dias">Tu plan vence pronto</strong>
-          Renueva ahora para no perder tu seguimiento.
-        </div>
+        <i class="ti ti-clock" style="font-size:18px;color:#854F0B;flex-shrink:0"></i>
+        <div class="renewal-banner-text"><strong id="renewal-dias">Tu plan vence pronto</strong> — Renueva para no perder tu seguimiento.</div>
         <a href="onboarding.html" class="renewal-btn">Renovar</a>
       </div>
 
-      <div id="reconexion-banner" class="hidden" style="border-radius:14px;padding:16px 18px;margin-bottom:20px">
-        <p id="reconexion-texto" style="font-size:14px;margin:0"></p>
+      <div class="reconexion-banner" id="reconexion-banner">
+        <i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px"></i>
+        <p id="reconexion-texto"></p>
       </div>
 
-      <div class="greeting">
-        <div class="avatar" id="avatar-iniciales">--</div>
-        <div>
-          <p class="greeting-name">Hola, <span id="nombre-paciente">—</span></p>
-          <p class="greeting-sub" id="plan-paciente">—</p>
+      <!-- HERO -->
+      <div class="hero-card">
+        <div class="hero-top">
+          <div>
+            <div class="hero-avatar" id="avatar-iniciales">--</div>
+            <div class="hero-greeting">Hola, <span id="nombre-paciente">—</span> 👋</div>
+            <div class="hero-sub" id="plan-paciente-sub">—</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+            <div class="hero-day" id="dia-programa-label">Día — de tu programa</div>
+            <div class="streak-badge" id="streak-badge" style="display:none">🔥 <span id="streak-dias">0</span> días seguidos</div>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-meta-item">
+            <div class="hero-meta-val" id="hero-perdidos">—</div>
+            <div class="hero-meta-lbl">kg perdidos</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hero-meta-val" id="hero-imc">—</div>
+            <div class="hero-meta-lbl">IMC actual</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hero-meta-val" id="hero-semanas">—</div>
+            <div class="hero-meta-lbl">semanas activo</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hero-meta-val" id="hero-peso-actual">—</div>
+            <div class="hero-meta-lbl">kg actuales</div>
+          </div>
         </div>
       </div>
 
-      <div class="stat-grid">
-        <div class="stat">
-          <div class="stat-val" id="stat-perdidos">—</div>
-          <div class="stat-label">kg perdidos</div>
+      <!-- TIP DEL DÍA -->
+      <div class="tip-card" id="tip-card">
+        <div class="tip-label">💡 Dato de salud de hoy</div>
+        <div class="tip-text" id="tip-texto">—</div>
+      </div>
+
+      <!-- META DE PESO -->
+      <div class="meta-card" id="meta-peso-card">
+        <div class="meta-header">
+          <div class="meta-title">📍 Progreso hacia tu meta</div>
+          <span id="meta-pct-label" style="font-size:12px;font-weight:700;color:var(--green)">0%</span>
         </div>
-        <div class="stat">
-          <div class="stat-val neutral" id="stat-imc">—</div>
-          <div class="stat-label">IMC actual</div>
+        <div class="meta-pesos">
+          <span>Inicio: <strong id="meta-peso-inicio">—</strong> kg</span>
+          <span>Meta: <strong id="meta-peso-objetivo">—</strong> kg</span>
         </div>
-        <div class="stat">
-          <div class="stat-val neutral" id="stat-semana">—</div>
-          <div class="stat-label">semana activa</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+        </div>
+        <div class="meta-dist" id="meta-dist-texto">—</div>
+      </div>
+
+      <!-- HÁBITOS DEL DÍA -->
+      <div class="habitos-card">
+        <div class="habitos-title">✅ Hábitos de hoy</div>
+        <div class="habitos-sub">Marca lo que completaste hoy — se guarda automáticamente</div>
+
+        <div class="habito-row">
+          <div class="habito-icon agua"><i class="ti ti-droplet"></i></div>
+          <div class="habito-info">
+            <div class="habito-name">Agua del día</div>
+            <div class="habito-desc">Meta: 8 vasos (2 litros)</div>
+          </div>
+          <div class="agua-counter">
+            <div class="agua-vasos" id="agua-vasos"></div>
+            <span class="agua-label" id="agua-label">0/8</span>
+          </div>
+        </div>
+
+        <div class="habito-row">
+          <div class="habito-icon menu"><i class="ti ti-salad"></i></div>
+          <div class="habito-info">
+            <div class="habito-name">Seguí mi menú</div>
+            <div class="habito-desc">Comí según mi plan de hoy</div>
+          </div>
+          <button class="habito-toggle" id="toggle-menu" onclick="toggleHabito('menu')"></button>
+        </div>
+
+        <div class="habito-row">
+          <div class="habito-icon ejercicio"><i class="ti ti-run"></i></div>
+          <div class="habito-info">
+            <div class="habito-name">Actividad física</div>
+            <div class="habito-desc">Completé mi rutina del día</div>
+          </div>
+          <button class="habito-toggle" id="toggle-ejercicio" onclick="toggleHabito('ejercicio')"></button>
         </div>
       </div>
 
+      <!-- GRÁFICO DE PESO -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">📈 Historial de peso</div>
+            <div class="chart-sub">Últimos registros semanales</div>
+          </div>
+          <div id="chart-variacion" style="font-size:12px;font-weight:600;color:var(--green)"></div>
+        </div>
+        <div class="chart-container" id="chart-container">
+          <div class="chart-empty" id="chart-empty">
+            <i class="ti ti-chart-line" style="font-size:24px;display:block;margin-bottom:6px;opacity:0.3"></i>
+            Registra tu primer peso para ver tu progreso aquí
+          </div>
+          <svg id="weight-chart" width="100%" height="100" style="display:none"></svg>
+        </div>
+      </div>
+
+      <!-- MENÚ DEL DÍA -->
       <div class="section-card" style="padding:0;overflow:hidden">
-        <div style="background:#1A7A52;padding:16px 20px;color:#fff">
-          <div style="font-size:11px;font-weight:500;opacity:0.85;text-transform:uppercase;letter-spacing:0.04em" id="dia-programa-label">Tu día de programa</div>
-          <div style="font-size:16px;font-weight:500;margin-top:4px">Menú de hoy</div>
+        <div class="menu-header">
+          <div class="menu-day-label" id="dia-programa-label2">Tu programa</div>
+          <div class="menu-day-title">Menú de hoy</div>
         </div>
-        <div style="padding:18px 20px">
-          <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:14px;text-align:center;font-size:13px;color:var(--ink-lt)">
-            Tu acceso a generar menús diarios ha vencido. Renueva tu plan para continuar.
-            <br><a href="onboarding.html" style="color:var(--green);font-weight:500;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
+        <div style="padding:0 20px 20px">
+          <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:16px;text-align:center;font-size:13px;color:var(--ink-lt)">
+            Tu acceso a generar menús diarios ha vencido.<br>
+            <a href="onboarding.html" style="color:var(--green);font-weight:600;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
           </div>
           <div id="plan-hoy-vacio">
-            <button class="btn-action primary" style="width:100%" onclick="generarMenuHoy()" id="btn-generar-menu">
-              Generar mi menú de hoy →
+            <button class="btn-action primary" onclick="generarMenuHoy()" id="btn-generar-menu">
+              <i class="ti ti-sparkles"></i> Generar mi menú de hoy
             </button>
           </div>
           <div id="plan-hoy-contenido" class="hidden">
             <div class="meal-list" id="lista-comidas"></div>
-            <div class="activity-card" id="meta-hoy-card" style="display:none">
-              <div class="activity-title">Meta de hoy</div>
-              <div class="activity-desc" id="meta-hoy-texto"></div>
+            <div id="meal-total-row" class="meal-total" style="display:none">
+              <span>Total del día</span>
+              <span class="meal-total-kcal" id="meal-total-kcal">— kcal</span>
             </div>
-            <div style="background:#E6F1FB;border-radius:10px;padding:14px;margin-top:12px">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                <i class="ti ti-walk" style="font-size:16px;color:#185FA5"></i>
-                <span style="font-size:13px;font-weight:500;color:#0C447C">Rutina sugerida de hoy</span>
+            <div id="meta-hoy-card" style="background:var(--green-lt);border-radius:var(--r);padding:12px 14px;margin-top:10px;display:none">
+              <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Meta de hoy</div>
+              <div style="font-size:13px;color:var(--ink-mid)" id="meta-hoy-texto"></div>
+            </div>
+            <div class="proyeccion-strip" id="proyeccion-strip" style="display:none">
+              <div>
+                <div class="proyeccion-label">Si mantienes este ritmo</div>
+                <div class="proyeccion-val" id="proyeccion-texto">—</div>
               </div>
-              <p style="font-size:12px;color:#185FA5;margin:0" id="rutina-hoy-texto"></p>
+              <i class="ti ti-trending-down" style="font-size:24px;color:#0F6E56;opacity:0.6"></i>
             </div>
-            <div style="background:#E1F5EE;border-radius:10px;padding:14px;margin-top:12px;text-align:center">
-              <div style="font-size:11px;color:#0F6E56;margin-bottom:2px">Si mantienes este ritmo</div>
-              <div style="font-size:14px;font-weight:500;color:#085041" id="proyeccion-texto">Calculando proyección...</div>
-            </div>
-            <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center">Ya generaste tu menú de hoy. Vuelve mañana para uno nuevo.</p>
+            <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center;display:none">
+              ✓ Menú generado para hoy. Vuelve mañana para uno nuevo.
+            </p>
           </div>
         </div>
       </div>
 
+      <!-- REGISTRO DE PESO -->
       <div class="section-card">
-        <div class="section-title">Actividad física sugerida</div>
-        <div class="activity-card">
-          <div class="activity-title" id="actividad-titulo">—</div>
-          <div class="activity-desc" id="actividad-desc">—</div>
+        <div class="section-title">⚖️ Registrar mi peso semanal</div>
+        <div class="peso-action">
+          <input type="number" id="peso-input" placeholder="Ej: 78.5 kg" step="0.1">
+          <button class="btn-guardar-peso" onclick="registrarPeso()">Guardar</button>
+        </div>
+        <p style="font-size:12px;color:var(--ink-lt);margin-top:8px">Registra tu peso cada semana para ver tu progreso real en el gráfico.</p>
+        <div class="ultimos-pesos" id="ultimos-pesos-container"></div>
+      </div>
+
+      <!-- ACTIVIDAD FÍSICA -->
+      <div class="section-card">
+        <div class="section-title">🏃 Actividad física</div>
+        <div class="actividad-visual">
+          <div class="actividad-chip">
+            <div class="actividad-chip-icon">⏱️</div>
+            <div class="actividad-chip-label">Duración</div>
+            <div class="actividad-chip-val" id="act-duracion">—</div>
+          </div>
+          <div class="actividad-chip">
+            <div class="actividad-chip-icon">🔥</div>
+            <div class="actividad-chip-label">Intensidad</div>
+            <div class="actividad-chip-val" id="act-intensidad">—</div>
+          </div>
+          <div class="actividad-chip">
+            <div class="actividad-chip-icon">📅</div>
+            <div class="actividad-chip-label">Días/semana</div>
+            <div class="actividad-chip-val" id="act-dias">—</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;background:var(--bone);border-radius:var(--r);padding:12px 14px">
+          <div style="font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Tu rutina sugerida</div>
+          <div style="font-size:13px;color:var(--ink-mid)" id="actividad-desc">—</div>
+        </div>
+        <div class="semana-dots" id="semana-dots"></div>
+      </div>
+
+      <!-- FOTOS DE PROGRESO -->
+      <div class="section-card" id="fotos-card">
+        <div class="section-title">
+          <span>📸 Fotos de progreso</span>
+          <span class="section-badge" id="fotos-badge" style="background:#FEF3E2;color:#854F0B">Plan pago</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink-lt);margin-bottom:12px">Documenta tu transformación semana a semana. La evidencia visual es el mejor motivador.</p>
+        <div class="foto-grid" id="foto-grid">
+          <div class="foto-slot locked">
+            <div class="foto-lock-overlay">
+              <i class="ti ti-lock" style="font-size:20px;color:var(--ink-lt)"></i>
+              <div class="foto-lock-text">Semana 1</div>
+            </div>
+          </div>
+          <div class="foto-slot locked">
+            <div class="foto-lock-overlay">
+              <i class="ti ti-lock" style="font-size:20px;color:var(--ink-lt)"></i>
+              <div class="foto-lock-text">Semana 2</div>
+            </div>
+          </div>
+        </div>
+        <div id="fotos-bloqueadas-msg">
+          <a href="onboarding.html" class="btn-action primary" style="font-size:13px">
+            <i class="ti ti-arrow-up"></i> Mejorar plan para subir fotos
+          </a>
+        </div>
+        <div id="fotos-upload" class="hidden">
+          <button class="btn-action secondary" onclick="alert('Función de subida de fotos próximamente')">
+            <i class="ti ti-camera"></i> Subir mi foto semanal
+          </button>
         </div>
       </div>
 
+      <!-- TELECONSULTA -->
       <div class="section-card">
-        <div class="section-title">Registrar mi progreso</div>
-        <div class="week-input">
-          <input type="number" id="peso-input" placeholder="Tu peso de hoy en kg" step="0.1">
-          <button class="btn-action primary" onclick="registrarPeso()">Guardar</button>
+        <div class="section-title">🩺 Teleconsulta médica</div>
+        <div class="tele-strip" id="tele-strip">
+          <div class="tele-count" id="tele-count">0</div>
+          <div>
+            <div class="tele-info-text" id="tele-info-text">Consultas disponibles este mes</div>
+            <div class="tele-info-sub" id="tele-info-sub">Habla con tu médico NutriSLIM</div>
+          </div>
         </div>
-        <p style="font-size:12px;color:var(--ink-lt)">Registra tu peso cada semana para ver tu progreso real.</p>
-      </div>
-
-      <div class="section-card">
-        <div class="section-title">Teleconsulta médica</div>
-        <p style="font-size:13px;color:var(--ink-mid);margin-bottom:12px" id="tele-texto-disponible">
-          Tienes <strong id="teleconsultas-disponibles">0</strong> teleconsulta(s) disponible(s) este mes.
-        </p>
-        <a id="btn-whatsapp-tele" href="#" target="_blank" class="btn-action primary" style="width:100%;text-decoration:none">
-          Agendar mi teleconsulta →
-        </a>
-        <div id="tele-vip-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;text-align:center;font-size:12px;color:var(--ink-lt)">
+        <div id="tele-vip-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;text-align:center;font-size:12px;color:var(--ink-lt);margin-bottom:12px">
           Ya usaste tus 2 teleconsultas de este mes. Se renuevan en tu próximo ciclo.
         </div>
+        <a id="btn-whatsapp-tele" href="#" target="_blank" class="btn-action primary" style="text-decoration:none">
+          <i class="ti ti-brand-whatsapp"></i> Agendar mi teleconsulta →
+        </a>
       </div>
 
+      <!-- LABORATORIO -->
       <div class="section-card" id="examenes-card" style="border-color:#F5C842">
         <div class="section-title">
-          <span style="display:flex;align-items:center;gap:8px"><i class="ti ti-flask" style="font-size:18px;color:#854F0B"></i>Exámenes de laboratorio</span>
-          <span id="examenes-badge" style="font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px"></span>
+          <span style="display:flex;align-items:center;gap:8px"><i class="ti ti-flask" style="font-size:18px;color:#854F0B"></i> Exámenes de laboratorio</span>
+          <span id="examenes-badge" class="section-badge"></span>
         </div>
-        <p id="examenes-texto" style="font-size:13px;color:var(--ink-mid);margin-bottom:14px">
-          Para que tu plan funcione con datos reales de tu salud, necesitas realizarte tus exámenes base. Esto es parte obligatoria de tu programa.
-        </p>
-        <div id="examenes-lista" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--ink-mid);line-height:1.7">
-          Glucosa en ayunas · Hemoglobina glicosilada · Perfil lipídico · TSH · Hemograma completo · Ácido úrico · Insulina basal · Creatinina
+        <p id="examenes-texto" style="font-size:13px;color:var(--ink-mid);margin-bottom:12px">—</p>
+        <div class="examen-lista-grid">
+          <span class="examen-chip">Glucosa en ayunas</span>
+          <span class="examen-chip">Hemoglobina glicosilada</span>
+          <span class="examen-chip">Perfil lipídico</span>
+          <span class="examen-chip">TSH</span>
+          <span class="examen-chip">Hemograma completo</span>
+          <span class="examen-chip">Ácido úrico</span>
+          <span class="examen-chip">Insulina basal</span>
+          <span class="examen-chip">Creatinina</span>
         </div>
-        <a id="btn-examenes" href="#" target="_blank" class="btn-action" style="width:100%;text-decoration:none;background:#E8800A;color:#fff">
-          Agendar mis exámenes →
+        <a id="btn-examenes" href="#" target="_blank" class="btn-action amber" style="text-decoration:none">
+          <i class="ti ti-calendar-plus"></i> Agendar mis exámenes →
         </a>
-        <p id="examenes-estado" style="font-size:11px;color:var(--ink-lt);margin-top:8px;text-align:center">Pendiente de realizar</p>
+        <p id="examenes-estado" style="font-size:11px;color:var(--ink-lt);margin-top:8px;text-align:center">—</p>
       </div>
 
+      <!-- FUNCIONES BLOQUEADAS -->
       <div class="section-card" id="seccion-bloqueada">
-        <div class="section-title">Funciones de tu plan</div>
-        <div id="lista-bloqueos" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div class="section-title">🔒 Desbloquea más con un plan pago</div>
+        <div class="bloqueo-grid" id="lista-bloqueos"></div>
       </div>
 
     </div>
-
   </div>
 </div>
 
 <script>
 let supabaseClient = null;
 let pacienteActual = null;
-let planActual = null;
 let configCargada = false;
+let historialPesos = [];
 
+// ── SUPABASE ─────────────────────────────────────────────
 async function inicializarSupabase() {
   if (configCargada) return;
   const resp = await fetch('/.netlify/functions/get-config');
@@ -276,479 +582,21 @@ async function inicializarSupabase() {
   configCargada = true;
 }
 
-async function hacerLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  const errorBox = document.getElementById('login-error');
-  const btn = document.getElementById('btn-login');
-
-  errorBox.classList.remove('show');
-  btn.disabled = true;
-  btn.textContent = 'Ingresando...';
-
-  try {
-    await inicializarSupabase();
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-
-    localStorage.setItem('nutrislim_session', JSON.stringify(data.session));
-    mostrarPortal();
-
-  } catch (err) {
-    errorBox.textContent = 'Correo o contraseña incorrectos. Revisa el email de bienvenida que recibiste.';
-    errorBox.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Ingresar a mi portal';
-  }
-}
-
-function cerrarSesion() {
-  supabaseClient.auth.signOut();
-  localStorage.removeItem('nutrislim_session');
-  document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('portal-screen').classList.add('hidden');
-}
-
-async function mostrarPortal() {
-  document.getElementById('login-screen').classList.add('hidden');
-  document.getElementById('portal-screen').classList.remove('hidden');
-  await cargarDatosPaciente();
-}
-
-async function cargarDatosPaciente() {
-  try {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) throw new Error('No hay sesión activa');
-
-    const { data: paciente, error } = await supabaseClient
-      .from('pacientes')
-      .select('*')
-      .eq('auth_user_id', user.id)
-      .single();
-
-    if (error) throw error;
-    pacienteActual = paciente;
-
-    document.getElementById('loading-msg').classList.add('hidden');
-    document.getElementById('contenido-portal').classList.remove('hidden');
-
-    const iniciales = paciente.nombre.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-    document.getElementById('avatar-iniciales').textContent = iniciales;
-    document.getElementById('nombre-paciente').textContent = paciente.nombre.split(' ')[0];
-
-    const nombresPlan = { free: 'Plan Gratuito', '19': 'Plan Transformación', '49': 'Plan VIP Clínico' };
-    document.getElementById('plan-paciente').textContent = nombresPlan[paciente.plan_elegido] || 'Plan Gratuito';
-
-    document.getElementById('stat-imc').textContent = paciente.imc || '—';
-
-    if (paciente.plan_vence_en) {
-      const dias = Math.ceil((new Date(paciente.plan_vence_en) - new Date()) / (1000*60*60*24));
-      if (dias <= 8 && dias > 0) {
-        document.getElementById('renewal-banner').classList.add('show');
-        document.getElementById('renewal-dias').textContent = 'Tu plan vence en ' + dias + ' día(s)';
-      }
-    }
-
-    configurarExamenesLaboratorio(paciente);
-    configurarTeleconsulta(paciente, nombresPlan);
-
-    mostrarDiaDePrograma(paciente);
-    verificarReconexion(paciente);
-    mostrarActividadSugerida(paciente.actividad);
-    cargarSeguimientoPeso(paciente.id, paciente.peso);
-    cargarPlanHoy(paciente.id);
-    mostrarBloqueosPorPlan(paciente.plan_elegido);
-
-  } catch (err) {
-    console.error('Error cargando paciente:', err);
-    document.getElementById('loading-msg').textContent = 'No pudimos cargar tu información. Intenta cerrar sesión y entrar de nuevo.';
-  }
-}
-
-const LINK_PAGO_TELECONSULTA = 'https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ';
-
-function configurarTeleconsulta(paciente, nombresPlan) {
-  const disponibles = (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0);
-  const telefonoFMC = '593990932502';
-  const nombrePlan = nombresPlan[paciente.plan_elegido] || 'Gratuito';
-
-  document.getElementById('teleconsultas-disponibles').textContent = Math.max(disponibles, 0);
-
-  if (paciente.plan_elegido === '49') {
-    if (disponibles > 0) {
-      const mensaje = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan VIP, quiero agendar mi teleconsulta médica con NutriSLIM.');
-      document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensaje;
-      document.getElementById('btn-whatsapp-tele').classList.remove('hidden');
-      document.getElementById('tele-vip-agotado').classList.add('hidden');
-    } else {
-      document.getElementById('btn-whatsapp-tele').classList.add('hidden');
-      document.getElementById('tele-texto-disponible').classList.add('hidden');
-      document.getElementById('tele-vip-agotado').classList.remove('hidden');
-    }
-  } else {
-    if (disponibles > 0) {
-      const mensaje = encodeURIComponent('Hola, soy ' + paciente.nombre + ', plan ' + nombrePlan + ', quiero agendar mi teleconsulta médica con NutriSLIM.');
-      document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + telefonoFMC + '?text=' + mensaje;
-      document.getElementById('btn-whatsapp-tele').textContent = 'Agendar mi teleconsulta →';
-    } else {
-      document.getElementById('tele-texto-disponible').innerHTML = 'No tienes teleconsultas incluidas. Cada sesión adicional cuesta <strong>$35</strong>.';
-      document.getElementById('btn-whatsapp-tele').href = LINK_PAGO_TELECONSULTA;
-      document.getElementById('btn-whatsapp-tele').target = '_self';
-      document.getElementById('btn-whatsapp-tele').textContent = 'Pagar $35 y agendar →';
-    }
-  }
-}
-
-const LINK_PAGO_EXAMENES = 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw';
-
-function configurarExamenesLaboratorio(paciente) {
-  const btnExamenes = document.getElementById('btn-examenes');
-  const textoExamenes = document.getElementById('examenes-texto');
-  const badge = document.getElementById('examenes-badge');
-  const estado = document.getElementById('examenes-estado');
-
-  const fechaRegistro = new Date(paciente.created_at);
-  const hoy = new Date();
-  const mesesTranscurridos = (hoy.getFullYear() - fechaRegistro.getFullYear()) * 12 + (hoy.getMonth() - fechaRegistro.getMonth());
-  const cicloActual = Math.floor(mesesTranscurridos / 3);
-  const esPrimerCiclo = cicloActual === 0;
-
-  const proximaFecha = new Date(fechaRegistro);
-  proximaFecha.setMonth(proximaFecha.getMonth() + (cicloActual + 1) * 3);
-  const diasParaProximo = Math.ceil((proximaFecha - hoy) / (1000*60*60*24));
-
-  let lugarTexto = '';
-  let linkAccion = '';
-  if (paciente.es_guayaquil) {
-    lugarTexto = 'Tus exámenes se pagan aquí y se realizan presencialmente en Fundación Médica CMS.';
-    linkAccion = LINK_PAGO_EXAMENES;
-  } else {
-    lugarTexto = 'Tus exámenes se pagan aquí y se realizan en el laboratorio partner más cercano a ' + (paciente.ciudad || 'tu ciudad') + '.';
-    linkAccion = LINK_PAGO_EXAMENES;
-  }
-
-  if (esPrimerCiclo) {
-    textoExamenes.textContent = 'Examen inicial obligatorio. ' + lugarTexto;
-    badge.textContent = 'Pendiente';
-    badge.style.background = '#FEF3E2';
-    badge.style.color = '#854F0B';
-    estado.textContent = 'Examen base aún no realizado';
-  } else if (diasParaProximo <= 14) {
-    textoExamenes.textContent = 'Tu examen de seguimiento (cada 3 meses) está por vencer. ' + lugarTexto;
-    badge.textContent = 'Vence pronto';
-    badge.style.background = '#FEE2E2';
-    badge.style.color = '#DC2626';
-    estado.textContent = 'Vence en ' + diasParaProximo + ' día(s)';
-  } else {
-    textoExamenes.textContent = 'Tu próximo examen de seguimiento (cada 3 meses) es en ' + diasParaProximo + ' días. ' + lugarTexto;
-    badge.textContent = 'Al día';
-    badge.style.background = '#E6F5EE';
-    badge.style.color = '#085041';
-    estado.textContent = 'Próximo seguimiento en ' + diasParaProximo + ' días';
-  }
-
-  btnExamenes.href = linkAccion;
-}
-
-function mostrarDiaDePrograma(paciente) {
-  const fechaInicio = new Date(paciente.created_at);
-  const hoy = new Date();
-  const diaPrograma = Math.floor((hoy - fechaInicio) / (1000*60*60*24)) + 1;
-  document.getElementById('dia-programa-label').textContent = 'Día ' + diaPrograma + ' de tu programa';
-}
-
-function verificarReconexion(paciente) {
-  const ultimaActividad = paciente.ultima_conexion ? new Date(paciente.ultima_conexion) : new Date(paciente.created_at);
-  const hoy = new Date();
-  const diasSinConectar = Math.floor((hoy - ultimaActividad) / (1000*60*60*24));
-
-  const banner = document.getElementById('reconexion-banner');
-  const texto = document.getElementById('reconexion-texto');
-  const nombre = paciente.nombre.split(' ')[0];
-
-  if (diasSinConectar >= 14) {
-    banner.style.background = '#FEE2E2';
-    banner.style.border = '0.5px solid #F09595';
-    texto.style.color = '#791F1F';
-    texto.innerHTML = '2 semanas de ausencia, ' + nombre + '. Es momento de decidir: retomas hoy o el objetivo se aleja más. Tu equipo médico está aquí cuando estés listo.';
-    banner.classList.remove('hidden');
-  } else if (diasSinConectar >= 5) {
-    banner.style.background = '#FEF3E2';
-    banner.style.border = '0.5px solid #F5C842';
-    texto.style.color = '#633806';
-    texto.innerHTML = 'Una semana sin registrar, ' + nombre + '. Los resultados se construyen con constancia, no con perfección. Vuelve hoy y retoma el ritmo.';
-    banner.classList.remove('hidden');
-  } else if (diasSinConectar >= 2) {
-    banner.style.background = 'var(--color-background-primary)';
-    banner.style.border = '0.5px solid var(--rule)';
-    texto.style.color = 'var(--ink)';
-    texto.innerHTML = nombre + ', llevas ' + diasSinConectar + ' días sin entrar. Tu menú de hoy está listo en 30 segundos — no dejes que se enfríe el progreso.';
-    banner.classList.remove('hidden');
-  }
-
-  supabaseClient.from('pacientes').update({ ultima_conexion: hoy.toISOString() }).eq('id', paciente.id);
-}
-
-function calcularProyeccion(caloriasObjetivo, pesoActual, actividad) {
-  const caloriasMantenimiento = actividad && actividad.includes('Sedentario') ? caloriasObjetivo + 350 :
-                                  actividad && actividad.includes('Intenso') ? caloriasObjetivo + 700 :
-                                  caloriasObjetivo + 500;
-  const deficitDiario = caloriasMantenimiento - caloriasObjetivo;
-  const kgPorSemana = (deficitDiario * 7) / 7700;
-  const proyeccion4Semanas = (kgPorSemana * 4).toFixed(1);
-  return proyeccion4Semanas;
-}
-
-function mostrarActividadSugerida(nivelActividad) {
-  const sugerencias = {
-    'Sedentario': { titulo: 'Empieza con caminatas suaves', desc: '15-20 minutos de caminata diaria, 4 veces por semana. Sube de a poco.' },
-    'Ligero': { titulo: 'Caminata + estiramientos', desc: '25-30 minutos de caminata rápida o bicicleta suave, 4-5 veces por semana.' },
-    'Moderado': { titulo: 'Entrenamiento mixto', desc: 'Combina cardio (30 min) con fuerza básica 2 veces por semana.' },
-    'Intenso': { titulo: 'Mantén tu rutina con ajustes', desc: 'Continúa tu entrenamiento, prioriza recuperación e hidratación.' }
-  };
-  let nivel = 'Ligero';
-  if (nivelActividad) {
-    for (const key in sugerencias) {
-      if (nivelActividad.includes(key)) { nivel = key; break; }
-    }
-  }
-  const s = sugerencias[nivel];
-  document.getElementById('actividad-titulo').textContent = s.titulo;
-  document.getElementById('actividad-desc').textContent = s.desc;
-}
-
-async function cargarSeguimientoPeso(pacienteId, pesoInicial) {
-  const { data: registros } = await supabaseClient
-    .from('seguimiento_peso')
-    .select('*')
-    .eq('paciente_id', pacienteId)
-    .order('created_at', { ascending: true });
-
-  if (registros && registros.length > 0) {
-    const ultimoPeso = registros[registros.length - 1].peso_kg;
-    const diferencia = (pesoInicial - ultimoPeso).toFixed(1);
-    document.getElementById('stat-perdidos').textContent = diferencia > 0 ? '-' + diferencia : '+' + Math.abs(diferencia);
-    document.getElementById('stat-semana').textContent = registros.length;
-  } else {
-    document.getElementById('stat-perdidos').textContent = '0';
-    document.getElementById('stat-semana').textContent = '1';
-  }
-}
-
-async function registrarPeso() {
-  const peso = document.getElementById('peso-input').value;
-  if (!peso) { alert('Ingresa tu peso'); return; }
-
-  try {
-    await supabaseClient.from('seguimiento_peso').insert([{
-      paciente_id: pacienteActual.id,
-      peso_kg: parseFloat(peso),
-      semana: 1
-    }]);
-    alert('¡Peso registrado correctamente!');
-    document.getElementById('peso-input').value = '';
-    cargarSeguimientoPeso(pacienteActual.id, pacienteActual.peso);
-  } catch (err) {
-    alert('Error al registrar tu peso. Intenta de nuevo.');
-  }
-}
-
-async function verificarAccesoVigente() {
-  const fechaInicio = new Date(pacienteActual.created_at);
-  const hoy = new Date();
-  const diasTranscurridos = Math.floor((hoy - fechaInicio) / (1000*60*60*24));
-
-  const limiteDias = pacienteActual.plan_elegido === 'free' ? 7 : 30;
-
-  if (diasTranscurridos >= limiteDias) {
-    document.getElementById('plan-vencido-msg').classList.remove('hidden');
-    document.getElementById('plan-hoy-vacio').classList.add('hidden');
-    document.getElementById('plan-hoy-contenido').classList.add('hidden');
-    return false;
-  }
-  return true;
-}
-
-async function cargarPlanHoy(pacienteId) {
-  const accesoVigente = await verificarAccesoVigente();
-  if (!accesoVigente) return;
-
-  const hoy = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-
-  const { data: planHoy } = await supabaseClient
-    .from('planes_diarios')
-    .select('*')
-    .eq('paciente_id', pacienteId)
-    .eq('fecha', hoy)
-    .maybeSingle();
-
-  if (planHoy) {
-    mostrarPlanDelDia(planHoy);
-    document.getElementById('plan-hoy-vacio').classList.add('hidden');
-    document.getElementById('ya-generado-hoy-msg').style.display = 'block';
-  } else {
-    document.getElementById('plan-hoy-vacio').classList.remove('hidden');
-    document.getElementById('plan-hoy-contenido').classList.add('hidden');
-  }
-}
-
-function mostrarPlanDelDia(planData) {
-  if (!planData) return;
-  document.getElementById('plan-hoy-vacio').classList.add('hidden');
-  document.getElementById('plan-hoy-contenido').classList.remove('hidden');
-
-  const lista = document.getElementById('lista-comidas');
-  lista.innerHTML = '';
-  const tipos = {
-    desayuno: 'Desayuno',
-    merienda_manana: 'Merienda mañana',
-    almuerzo: 'Almuerzo',
-    merienda_tarde: 'Merienda tarde',
-    cena: 'Cena'
-  };
-  for (const key in (planData.comidas || {})) {
-    const c = planData.comidas[key];
-    const item = document.createElement('div');
-    item.className = 'meal-item';
-    item.innerHTML = '<span>' + (tipos[key] || key) + ': ' + c.descripcion + '</span><span class="meal-cal">' + c.calorias + ' kcal</span>';
-    lista.appendChild(item);
-  }
-
-  // Meta del día (campo nuevo: meta_dia)
-  const metaTexto = planData.meta_dia || planData.meta_hoy;
-  if (metaTexto) {
-    document.getElementById('meta-hoy-card').style.display = 'block';
-    document.getElementById('meta-hoy-texto').textContent = metaTexto;
-  }
-
-  const sugerenciasRutina = {
-    'Sedentario': 'Caminata de 15-20 min a paso firme + estiramientos suaves.',
-    'Ligero': 'Caminata rápida de 25 min o bicicleta suave + estiramientos.',
-    'Moderado': 'Cardio 30 min + ejercicios de fuerza básica.',
-    'Intenso': 'Mantén tu rutina habitual, prioriza hidratación y recuperación.'
-  };
-  let nivelRutina = 'Ligero';
-  if (pacienteActual && pacienteActual.actividad) {
-    for (const key in sugerenciasRutina) {
-      if (pacienteActual.actividad.includes(key)) { nivelRutina = key; break; }
-    }
-  }
-  document.getElementById('rutina-hoy-texto').textContent = sugerenciasRutina[nivelRutina];
-
-  if (planData.calorias_objetivo && pacienteActual) {
-    const proyeccion = calcularProyeccion(planData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
-    document.getElementById('proyeccion-texto').innerHTML = 'Podrías perder <span style="font-size:18px">' + proyeccion + ' kg</span> en las próximas 4 semanas';
-  }
-}
-
-async function generarMenuHoy() {
-  const btn = document.getElementById('btn-generar-menu');
-  btn.disabled = true;
-  btn.textContent = 'Generando tu menú...';
-
-  try {
-    const response = await fetch('/.netlify/functions/generar-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        pacienteId: pacienteActual.id,
-        enviarEmail: false
-      })
-    });
-
-    const result = await response.json();
-    if (result.success && result.plan) {
-      mostrarPlanDelDia({
-        comidas: result.plan.comidas,
-        meta_dia: result.plan.meta_dia,
-        tip_dia: result.plan.tip_dia,
-        calorias_objetivo: result.plan.calorias_objetivo,
-        mensaje_motivacional: result.plan.mensaje_motivacional
-      });
-      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
-    } else {
-      throw new Error(result.error || 'Error desconocido');
-    }
-  } catch (err) {
-    alert('No pudimos generar tu menú. Intenta de nuevo en unos segundos.');
-    btn.disabled = false;
-    btn.textContent = 'Generar mi menú de hoy →';
-  }
-}
-
-function mostrarBloqueosPorPlan(plan) {
-  const lista = document.getElementById('lista-bloqueos');
-  lista.innerHTML = '';
-
-  const features = {
-    free: [
-      { texto: 'Fotos de avance ilimitadas', bloqueado: true },
-      { texto: 'Compartir en redes sociales', bloqueado: true },
-      { texto: 'Teleconsulta médica', bloqueado: true }
-    ],
-    '19': [
-      { texto: 'Certificado de seguimiento médico', bloqueado: true },
-      { texto: 'Exámenes de laboratorio con descuento', bloqueado: true }
-    ],
-    '49': []
-  };
-
-  const lista_feat = features[plan] || features.free;
-  if (lista_feat.length === 0) {
-    document.getElementById('seccion-bloqueada').style.display = 'none';
-    return;
-  }
-
-  lista_feat.forEach(f => {
-    const row = document.createElement('div');
-    row.className = 'lock-row';
-    row.innerHTML = '<i class="ti ti-lock" style="font-size:16px"></i><span class="lock-text">' + f.texto + '</span><a href="onboarding.html" style="font-size:12px;color:var(--green);font-weight:500;text-decoration:none">Mejorar →</a>';
-    lista.appendChild(row);
-  });
-}
-
-// ── RESET DE CONTRASEÑA ─────────────────────────────────────
-async function guardarNuevaContrasena() {
-  const nueva = document.getElementById('nueva-password').value;
-  const errorEl = document.getElementById('reset-error');
-  const btn = document.getElementById('btn-guardar-password');
-  if (nueva.length < 6) {
-    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
-    errorEl.classList.add('show');
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = 'Guardando...';
-  const { error } = await supabaseClient.auth.updateUser({ password: nueva });
-  if (error) {
-    errorEl.textContent = 'Error al guardar. Intenta de nuevo.';
-    errorEl.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Guardar contraseña';
-  } else {
-    mostrarPortal();
-  }
-}
-
-// ── LOGIN CON EMAIL + PASSWORD ──────────────────────────────
+// ── AUTH ─────────────────────────────────────────────────
 async function iniciarSesion() {
   const email = document.getElementById('login-email').value.trim();
   const password = document.getElementById('login-password').value;
   const errorEl = document.getElementById('login-error');
   const btn = document.getElementById('btn-login');
-
   errorEl.classList.remove('show');
   if (!email || !password) {
     errorEl.textContent = 'Ingresa tu correo y contraseña.';
     errorEl.classList.add('show');
     return;
   }
-
   btn.disabled = true;
   btn.textContent = 'Ingresando...';
-
   const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
   if (error) {
     errorEl.textContent = 'Correo o contraseña incorrectos. ¿Olvidaste tu contraseña?';
     errorEl.classList.add('show');
@@ -776,27 +624,685 @@ async function enviarRecuperacion() {
   errorEl.classList.add('show');
 }
 
+function cerrarSesion() {
+  supabaseClient.auth.signOut();
+  localStorage.removeItem('nutrislim_session');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('portal-screen').classList.add('hidden');
+}
+
+async function mostrarPortal() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('portal-screen').classList.remove('hidden');
+  await cargarDatosPaciente();
+}
+
+async function guardarNuevaContrasena() {
+  const nueva = document.getElementById('nueva-password').value;
+  const errorEl = document.getElementById('reset-error');
+  const btn = document.getElementById('btn-guardar-password');
+  if (nueva.length < 6) {
+    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+    errorEl.classList.add('show');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  const { error } = await supabaseClient.auth.updateUser({ password: nueva });
+  if (error) {
+    errorEl.textContent = 'Error al guardar. Intenta de nuevo.';
+    errorEl.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Guardar contraseña';
+  } else {
+    mostrarPortal();
+  }
+}
+
+// ── CARGA PRINCIPAL ───────────────────────────────────────
+async function cargarDatosPaciente() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) throw new Error('No hay sesión activa');
+
+    const { data: paciente, error } = await supabaseClient
+      .from('pacientes')
+      .select('*')
+      .eq('auth_user_id', user.id)
+      .single();
+
+    if (error) throw error;
+    pacienteActual = paciente;
+
+    document.getElementById('loading-msg').classList.add('hidden');
+    document.getElementById('contenido-portal').classList.remove('hidden');
+
+    renderizarPortal(paciente);
+
+  } catch (err) {
+    console.error('Error cargando paciente:', err);
+    if (err.code === 'PGRST116' || (err.message && err.message.includes('No rows'))) {
+      document.getElementById('loading-msg').innerHTML =
+        '<div style="padding:20px"><p style="margin-bottom:16px;color:var(--ink-mid)">Aún no tienes un perfil de paciente configurado.</p>' +
+        '<a href="/onboarding.html" style="background:var(--green);color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">Completar mi registro →</a></div>';
+    } else {
+      document.getElementById('loading-msg').textContent = 'No pudimos cargar tu información. Intenta cerrar sesión y entrar de nuevo.';
+    }
+  }
+}
+
+async function renderizarPortal(paciente) {
+  const nombreCorto = paciente.nombre.split(' ')[0];
+  const iniciales = paciente.nombre.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+  const NOMBRES_PLAN = { free: 'Plan Gratuito', '19': 'Plan Transformación', '49': 'Plan VIP Clínico' };
+  const nombrePlan = NOMBRES_PLAN[paciente.plan_elegido] || 'Plan Gratuito';
+
+  // Nav badge
+  const badge = document.getElementById('nav-plan-badge');
+  badge.textContent = nombrePlan;
+  badge.className = 'nav-plan-badge ' + (paciente.plan_elegido === '49' ? 'vip' : paciente.plan_elegido === '19' ? 'transformacion' : 'free');
+
+  // Hero
+  document.getElementById('avatar-iniciales').textContent = iniciales;
+  document.getElementById('nombre-paciente').textContent = nombreCorto;
+  document.getElementById('plan-paciente-sub').textContent = nombrePlan;
+  document.getElementById('hero-imc').textContent = paciente.imc || '—';
+  document.getElementById('hero-peso-actual').textContent = paciente.peso || '—';
+
+  const fechaInicio = new Date(paciente.created_at);
+  const hoy = new Date();
+  const diaPrograma = Math.floor((hoy - fechaInicio) / (1000*60*60*24)) + 1;
+  const semanaActiva = Math.ceil(diaPrograma / 7);
+  document.getElementById('dia-programa-label').textContent = 'Día ' + diaPrograma + ' de tu programa';
+  document.getElementById('dia-programa-label2').textContent = 'Día ' + diaPrograma;
+  document.getElementById('hero-semanas').textContent = semanaActiva;
+
+  // Banner de renovación
+  if (paciente.plan_vence_en) {
+    const dias = Math.ceil((new Date(paciente.plan_vence_en) - hoy) / (1000*60*60*24));
+    if (dias <= 8 && dias > 0) {
+      document.getElementById('renewal-banner').classList.add('show');
+      document.getElementById('renewal-dias').textContent = 'Tu plan vence en ' + dias + ' día(s)';
+    }
+  }
+
+  // Tip del día
+  mostrarTipDelDia(paciente);
+
+  // Cargar peso e historial
+  await cargarSeguimientoPeso(paciente.id, paciente.peso);
+
+  // Meta de peso
+  renderizarMetaPeso(paciente);
+
+  // Hábitos (localStorage)
+  inicializarHabitos();
+
+  // Menú del día
+  await cargarPlanHoy(paciente.id);
+
+  // Actividad
+  mostrarActividadDetallada(paciente.actividad);
+
+  // Días de la semana
+  renderizarSemana();
+
+  // Teleconsulta
+  configurarTeleconsulta(paciente, NOMBRES_PLAN);
+
+  // Exámenes
+  configurarExamenesLaboratorio(paciente);
+
+  // Fotos
+  configurarFotos(paciente.plan_elegido);
+
+  // Bloqueos
+  mostrarBloqueosPorPlan(paciente.plan_elegido);
+
+  // Reconexión
+  verificarReconexion(paciente);
+
+  // Actualizar última conexión
+  supabaseClient.from('pacientes').update({ ultima_conexion: hoy.toISOString() }).eq('id', paciente.id);
+}
+
+// ── TIPS DEL DÍA ─────────────────────────────────────────
+function mostrarTipDelDia(paciente) {
+  const imc = parseFloat(paciente.imc) || 0;
+  const tips = [];
+
+  if (imc >= 30) {
+    tips.push('Reducir 500 kcal diarias del mantenimiento genera un déficit suficiente para perder ≈ 0.5 kg por semana de forma sostenible y sin comprometer la masa muscular.');
+    tips.push('El sueño de 7-8 horas regula la grelina y la leptina — las hormonas del hambre. Dormir mal puede aumentar el apetito hasta un 24% al día siguiente.');
+    tips.push('Beber 500 ml de agua 30 minutos antes de cada comida reduce la ingesta calórica en un promedio del 13%, según estudios clínicos.');
+  } else if (imc >= 25) {
+    tips.push('Una pérdida del 5-10% del peso corporal ya reduce significativamente el riesgo cardiovascular, mejora la resistencia a la insulina y los niveles de colesterol.');
+    tips.push('Las proteínas tienen el mayor efecto térmico — tu cuerpo quema hasta un 30% de las calorías proteicas solo para digerirlas. Prioriza pollo, huevo y legumbres.');
+    tips.push('Caminar 10,000 pasos al día equivale a quemar entre 300 y 500 kcal dependiendo de tu peso actual. Es el ejercicio más subestimado.');
+  } else {
+    tips.push('Mantener el peso saludable requiere monitoreo constante. El seguimiento semanal del peso predice éxito a largo plazo mejor que cualquier dieta restrictiva.');
+    tips.push('El músculo quema 3 veces más calorías que la grasa en reposo. Incorporar ejercicios de fuerza 2 veces por semana transforma tu metabolismo basal.');
+    tips.push('Una dieta mediterránea — aceite de oliva, legumbres, pescado, vegetales — es el patrón alimenticio con mayor evidencia científica de longevidad.');
+  }
+
+  const idx = new Date().getDate() % tips.length;
+  document.getElementById('tip-texto').textContent = tips[idx];
+}
+
+// ── META DE PESO ──────────────────────────────────────────
+function renderizarMetaPeso(paciente) {
+  const pesoInicio = parseFloat(paciente.peso) || 0;
+  const pesoObjetivo = parseFloat(paciente.peso_objetivo) || null;
+
+  if (!pesoObjetivo || pesoObjetivo >= pesoInicio) {
+    document.getElementById('meta-peso-card').style.display = 'none';
+    return;
+  }
+
+  const pesoActual = historialPesos.length > 0
+    ? historialPesos[historialPesos.length - 1].peso_kg
+    : pesoInicio;
+
+  const totalPerder = pesoInicio - pesoObjetivo;
+  const perdido = pesoInicio - pesoActual;
+  const pct = Math.min(100, Math.max(0, (perdido / totalPerder) * 100));
+  const falta = Math.max(0, pesoActual - pesoObjetivo).toFixed(1);
+
+  document.getElementById('meta-peso-inicio').textContent = pesoInicio.toFixed(1);
+  document.getElementById('meta-peso-objetivo').textContent = pesoObjetivo.toFixed(1);
+  document.getElementById('meta-pct-label').textContent = pct.toFixed(0) + '%';
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  if (falta <= 0) {
+    document.getElementById('meta-dist-texto').innerHTML = '🎉 <strong>¡Alcanzaste tu meta!</strong> Sigue así.';
+  } else {
+    document.getElementById('meta-dist-texto').innerHTML = 'Faltan <strong>' + falta + ' kg</strong> para tu meta de ' + pesoObjetivo.toFixed(1) + ' kg';
+  }
+}
+
+// ── HÁBITOS (localStorage) ────────────────────────────────
+function inicializarHabitos() {
+  const hoy = new Date().toISOString().split('T')[0];
+  let habitos = {};
+  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
+
+  // Vasos de agua
+  const vasosContainer = document.getElementById('agua-vasos');
+  vasosContainer.innerHTML = '';
+  const vasosLlenos = habitos.agua || 0;
+  for (let i = 0; i < 8; i++) {
+    const v = document.createElement('div');
+    v.className = 'agua-vaso' + (i < vasosLlenos ? ' lleno' : '');
+    v.onclick = () => setAgua(i + 1);
+    vasosContainer.appendChild(v);
+  }
+  document.getElementById('agua-label').textContent = vasosLlenos + '/8';
+
+  if (habitos.menu) document.getElementById('toggle-menu').classList.add('activo');
+  if (habitos.ejercicio) document.getElementById('toggle-ejercicio').classList.add('activo');
+}
+
+function setAgua(cantidad) {
+  const hoy = new Date().toISOString().split('T')[0];
+  let habitos = {};
+  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
+  habitos.agua = cantidad;
+  try { localStorage.setItem('ns_habitos_' + hoy, JSON.stringify(habitos)); } catch(e) {}
+  inicializarHabitos();
+}
+
+function toggleHabito(tipo) {
+  const hoy = new Date().toISOString().split('T')[0];
+  let habitos = {};
+  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
+  habitos[tipo] = !habitos[tipo];
+  try { localStorage.setItem('ns_habitos_' + hoy, JSON.stringify(habitos)); } catch(e) {}
+  const btn = document.getElementById('toggle-' + tipo);
+  if (habitos[tipo]) btn.classList.add('activo');
+  else btn.classList.remove('activo');
+}
+
+// ── HISTORIAL PESO + CHART ────────────────────────────────
+async function cargarSeguimientoPeso(pacienteId, pesoInicial) {
+  const { data: registros } = await supabaseClient
+    .from('seguimiento_peso')
+    .select('*')
+    .eq('paciente_id', pacienteId)
+    .order('created_at', { ascending: true });
+
+  historialPesos = registros || [];
+
+  if (historialPesos.length > 0) {
+    const ultimoPeso = historialPesos[historialPesos.length - 1].peso_kg;
+    const diferencia = (pesoInicial - ultimoPeso).toFixed(1);
+    const val = parseFloat(diferencia);
+
+    document.getElementById('hero-perdidos').textContent = val > 0 ? '-' + diferencia : (val < 0 ? '+' + Math.abs(diferencia) : '0');
+    document.getElementById('hero-peso-actual').textContent = ultimoPeso.toFixed(1);
+
+    if (historialPesos.length >= 2) {
+      const penultimo = historialPesos[historialPesos.length - 2].peso_kg;
+      const variacion = (ultimoPeso - penultimo).toFixed(1);
+      const v = parseFloat(variacion);
+      document.getElementById('chart-variacion').textContent = (v < 0 ? '↓' : v > 0 ? '↑' : '→') + ' ' + Math.abs(variacion) + ' kg última semana';
+      document.getElementById('chart-variacion').style.color = v < 0 ? 'var(--green)' : v > 0 ? 'var(--red)' : 'var(--ink-lt)';
+    }
+
+    renderizarChartPeso(historialPesos, pesoInicial);
+    renderizarUltimosPesos(historialPesos);
+  } else {
+    document.getElementById('hero-perdidos').textContent = '0';
+  }
+
+  // Streak
+  calcularStreak(historialPesos);
+}
+
+function renderizarChartPeso(registros, pesoInicial) {
+  if (registros.length < 1) return;
+
+  const svg = document.getElementById('weight-chart');
+  document.getElementById('chart-empty').style.display = 'none';
+  svg.style.display = 'block';
+
+  const pesos = registros.map(r => r.peso_kg);
+  const minP = Math.min(...pesos, pesoInicial) - 1;
+  const maxP = Math.max(...pesos, pesoInicial) + 1;
+  const W = 600, H = 90;
+  const pad = { l: 40, r: 10, t: 10, b: 20 };
+
+  const puntos = [{ peso: pesoInicial, fecha: registros[0].created_at }, ...registros.map(r => ({ peso: r.peso_kg, fecha: r.created_at }))];
+
+  const xStep = (W - pad.l - pad.r) / Math.max(puntos.length - 1, 1);
+  const yScale = (p) => pad.t + (H - pad.t - pad.b) * (1 - (p - minP) / (maxP - minP));
+
+  let pathD = '';
+  let areaD = '';
+  const pts = puntos.map((p, i) => ({ x: pad.l + i * xStep, y: yScale(p.peso) }));
+
+  pts.forEach((pt, i) => {
+    if (i === 0) { pathD += 'M ' + pt.x + ' ' + pt.y; areaD += 'M ' + pt.x + ' ' + H + ' L ' + pt.x + ' ' + pt.y; }
+    else { pathD += ' L ' + pt.x + ' ' + pt.y; areaD += ' L ' + pt.x + ' ' + pt.y; }
+  });
+  areaD += ' L ' + pts[pts.length-1].x + ' ' + H + ' Z';
+
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1A7A52" stop-opacity="0.15"/>
+        <stop offset="100%" stop-color="#1A7A52" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <path d="${areaD}" fill="url(#chartGrad)"/>
+    <path d="${pathD}" stroke="#1A7A52" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map((pt, i) => `
+      <circle cx="${pt.x}" cy="${pt.y}" r="${i === pts.length-1 ? 5 : 3}" fill="${i === pts.length-1 ? '#1A7A52' : '#fff'}" stroke="#1A7A52" stroke-width="2"/>
+      ${i % Math.ceil(pts.length / 4) === 0 || i === pts.length-1 ? `<text x="${pt.x}" y="${H}" text-anchor="middle" font-size="9" fill="#7A9487">${puntos[i].peso.toFixed(1)}</text>` : ''}
+    `).join('')}
+    <line x1="${pad.l}" y1="${yScale(minP+1)}" x2="${W-pad.r}" y2="${yScale(minP+1)}" stroke="#D6E8DE" stroke-width="1" stroke-dasharray="4,4"/>
+  `;
+}
+
+function renderizarUltimosPesos(registros) {
+  const container = document.getElementById('ultimos-pesos-container');
+  container.innerHTML = '';
+  const ultimos = registros.slice(-5);
+  ultimos.forEach((r, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'peso-chip' + (i === ultimos.length - 1 ? ' ultimo' : '');
+    const fecha = new Date(r.created_at);
+    const label = fecha.toLocaleDateString('es-EC', { day: 'numeric', month: 'short' });
+    chip.innerHTML = '<div class="peso-chip-val">' + r.peso_kg.toFixed(1) + ' kg</div><div class="peso-chip-fecha">' + label + '</div>';
+    container.appendChild(chip);
+  });
+}
+
+function calcularStreak(registros) {
+  if (registros.length < 2) return;
+  const hoy = new Date();
+  let streak = 1;
+  for (let i = registros.length - 1; i > 0; i--) {
+    const diff = Math.abs(new Date(registros[i].created_at) - new Date(registros[i-1].created_at));
+    if (diff <= 8 * 24 * 60 * 60 * 1000) streak++;
+    else break;
+  }
+  if (streak >= 2) {
+    document.getElementById('streak-badge').style.display = 'flex';
+    document.getElementById('streak-dias').textContent = streak;
+  }
+}
+
+// ── ACTIVIDAD ─────────────────────────────────────────────
+function mostrarActividadDetallada(nivelActividad) {
+  const config = {
+    'Sedentario': { duracion: '15-20 min', intensidad: 'Baja', dias: '4x/sem', desc: 'Caminatas suaves a paso firme. Ideal para empezar sin riesgo de lesiones.' },
+    'Ligero':     { duracion: '25-30 min', intensidad: 'Moderada', dias: '4-5x/sem', desc: 'Caminata rápida o bicicleta suave. Combina con estiramientos al final.' },
+    'Moderado':   { duracion: '30-45 min', intensidad: 'Media-alta', dias: '5x/sem', desc: 'Cardio 30 min + ejercicios de fuerza básica 2 veces por semana.' },
+    'Intenso':    { duracion: '45-60 min', intensidad: 'Alta', dias: '5-6x/sem', desc: 'Mantén tu rutina habitual. Prioriza hidratación y recuperación muscular.' }
+  };
+  let nivel = 'Ligero';
+  if (nivelActividad) {
+    for (const key in config) {
+      if (nivelActividad.includes(key)) { nivel = key; break; }
+    }
+  }
+  const c = config[nivel];
+  document.getElementById('act-duracion').textContent = c.duracion;
+  document.getElementById('act-intensidad').textContent = c.intensidad;
+  document.getElementById('act-dias').textContent = c.dias;
+  document.getElementById('actividad-desc').textContent = c.desc;
+}
+
+function renderizarSemana() {
+  const dias = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+  const hoy = new Date().getDay();
+  const diaHoyIdx = hoy === 0 ? 6 : hoy - 1;
+  const container = document.getElementById('semana-dots');
+  container.innerHTML = '';
+  dias.forEach((d, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'semana-dot ' + (i < diaHoyIdx ? 'hecho' : i === diaHoyIdx ? 'hoy' : 'no-hecho');
+    dot.textContent = d;
+    container.appendChild(dot);
+  });
+}
+
+// ── RECONEXIÓN ───────────────────────────────────────────
+function verificarReconexion(paciente) {
+  const ultima = paciente.ultima_conexion ? new Date(paciente.ultima_conexion) : new Date(paciente.created_at);
+  const hoy = new Date();
+  const dias = Math.floor((hoy - ultima) / (1000*60*60*24));
+  const banner = document.getElementById('reconexion-banner');
+  const texto = document.getElementById('reconexion-texto');
+  const nombre = paciente.nombre.split(' ')[0];
+
+  if (dias >= 14) {
+    banner.className = 'reconexion-banner rojo show';
+    banner.querySelector('i').style.color = '#791F1F';
+    texto.style.color = '#791F1F';
+    texto.innerHTML = '2 semanas de ausencia, <strong>' + nombre + '</strong>. Es momento de decidir: retomas hoy o el objetivo se aleja más. Tu equipo médico está aquí cuando estés listo.';
+  } else if (dias >= 5) {
+    banner.className = 'reconexion-banner amarillo show';
+    banner.querySelector('i').style.color = '#633806';
+    texto.style.color = '#633806';
+    texto.innerHTML = '<strong>' + nombre + '</strong>, una semana sin registrar. Los resultados se construyen con constancia, no con perfección.';
+  } else if (dias >= 2) {
+    banner.className = 'reconexion-banner gris show';
+    banner.querySelector('i').style.color = 'var(--ink-lt)';
+    texto.style.color = 'var(--ink-mid)';
+    texto.innerHTML = nombre + ', llevas ' + dias + ' días sin entrar. Tu menú de hoy está listo — no dejes que se enfríe el progreso.';
+  }
+}
+
+// ── PLAN DEL DÍA ──────────────────────────────────────────
+async function verificarAccesoVigente() {
+  const fechaInicio = new Date(pacienteActual.created_at);
+  const hoy = new Date();
+  const diasTranscurridos = Math.floor((hoy - fechaInicio) / (1000*60*60*24));
+  const limite = pacienteActual.plan_elegido === 'free' ? 7 : 30;
+  if (diasTranscurridos >= limite) {
+    document.getElementById('plan-vencido-msg').classList.remove('hidden');
+    document.getElementById('plan-hoy-vacio').classList.add('hidden');
+    return false;
+  }
+  return true;
+}
+
+async function cargarPlanHoy(pacienteId) {
+  const vigente = await verificarAccesoVigente();
+  if (!vigente) return;
+
+  const hoy = new Date().toISOString().split('T')[0];
+  const { data: planHoy } = await supabaseClient
+    .from('planes_diarios')
+    .select('*')
+    .eq('paciente_id', pacienteId)
+    .eq('fecha', hoy)
+    .maybeSingle();
+
+  if (planHoy) {
+    mostrarPlanDelDia(planHoy);
+    document.getElementById('plan-hoy-vacio').classList.add('hidden');
+    document.getElementById('ya-generado-hoy-msg').style.display = 'block';
+  } else {
+    document.getElementById('plan-hoy-vacio').classList.remove('hidden');
+  }
+}
+
+function mostrarPlanDelDia(planData) {
+  if (!planData) return;
+  document.getElementById('plan-hoy-vacio').classList.add('hidden');
+  document.getElementById('plan-hoy-contenido').classList.remove('hidden');
+
+  const lista = document.getElementById('lista-comidas');
+  lista.innerHTML = '';
+  const tipos = { desayuno:'Desayuno', merienda_manana:'Merienda AM', almuerzo:'Almuerzo', merienda_tarde:'Merienda PM', cena:'Cena' };
+  let totalKcal = 0;
+
+  for (const key in (planData.comidas || {})) {
+    const c = planData.comidas[key];
+    totalKcal += c.calorias || 0;
+    const item = document.createElement('div');
+    item.className = 'meal-item';
+    item.innerHTML = '<div><div class="meal-tipo">' + (tipos[key] || key) + '</div><div class="meal-desc">' + c.descripcion + '</div></div><span class="meal-cal">' + c.calorias + ' kcal</span>';
+    lista.appendChild(item);
+  }
+
+  if (totalKcal > 0) {
+    document.getElementById('meal-total-row').style.display = 'flex';
+    document.getElementById('meal-total-kcal').textContent = totalKcal + ' kcal';
+  }
+
+  const metaTexto = planData.meta_dia || planData.meta_hoy;
+  if (metaTexto) {
+    document.getElementById('meta-hoy-card').style.display = 'block';
+    document.getElementById('meta-hoy-texto').textContent = metaTexto;
+  }
+
+  if (planData.calorias_objetivo && pacienteActual) {
+    const proyeccion = calcularProyeccion(planData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
+    document.getElementById('proyeccion-strip').style.display = 'flex';
+    document.getElementById('proyeccion-texto').innerHTML = 'Podrías perder <strong>' + proyeccion + ' kg</strong> en 4 semanas';
+  }
+}
+
+function calcularProyeccion(caloriasObjetivo, pesoActual, actividad) {
+  const mantenimiento = actividad && actividad.includes('Sedentario') ? caloriasObjetivo + 350 :
+                        actividad && actividad.includes('Intenso') ? caloriasObjetivo + 700 :
+                        caloriasObjetivo + 500;
+  const deficit = mantenimiento - caloriasObjetivo;
+  const kgSemana = (deficit * 7) / 7700;
+  return (kgSemana * 4).toFixed(1);
+}
+
+async function generarMenuHoy() {
+  const btn = document.getElementById('btn-generar-menu');
+  btn.disabled = true;
+  btn.innerHTML = '<div style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></div> Generando...';
+
+  try {
+    const response = await fetch('/.netlify/functions/generar-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pacienteId: pacienteActual.id, enviarEmail: false })
+    });
+    const result = await response.json();
+    if (result.success && result.plan) {
+      mostrarPlanDelDia({
+        comidas: result.plan.comidas,
+        meta_dia: result.plan.meta_dia,
+        calorias_objetivo: result.plan.calorias_objetivo
+      });
+      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
+    } else {
+      throw new Error(result.error || 'Error desconocido');
+    }
+  } catch (err) {
+    alert('No pudimos generar tu menú. Intenta de nuevo.');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-sparkles"></i> Generar mi menú de hoy';
+  }
+}
+
+// ── REGISTRO DE PESO ─────────────────────────────────────
+async function registrarPeso() {
+  const val = document.getElementById('peso-input').value;
+  if (!val) { alert('Ingresa tu peso'); return; }
+
+  try {
+    await supabaseClient.from('seguimiento_peso').insert([{
+      paciente_id: pacienteActual.id,
+      peso_kg: parseFloat(val),
+      semana: Math.ceil((new Date() - new Date(pacienteActual.created_at)) / (7*24*60*60*1000))
+    }]);
+    document.getElementById('peso-input').value = '';
+    await cargarSeguimientoPeso(pacienteActual.id, pacienteActual.peso);
+    renderizarMetaPeso(pacienteActual);
+  } catch (err) {
+    alert('Error al registrar tu peso. Intenta de nuevo.');
+  }
+}
+
+// ── TELECONSULTA ─────────────────────────────────────────
+const LINK_PAGO_TELECONSULTA = 'https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ';
+
+function configurarTeleconsulta(paciente, NOMBRES_PLAN) {
+  const disponibles = Math.max(0, (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0));
+  const tel = '593990932502';
+  const nombrePlan = NOMBRES_PLAN[paciente.plan_elegido] || 'Gratuito';
+
+  document.getElementById('tele-count').textContent = disponibles;
+
+  if (disponibles > 0) {
+    const msg = encodeURIComponent('Hola, soy ' + paciente.nombre + ' (' + nombrePlan + '). Quiero agendar mi teleconsulta médica NutriSLIM.');
+    document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + tel + '?text=' + msg;
+    document.getElementById('tele-strip').style.display = 'flex';
+    if (paciente.plan_elegido === '49' && disponibles <= 0) {
+      document.getElementById('tele-strip').style.display = 'none';
+      document.getElementById('tele-vip-agotado').classList.remove('hidden');
+    }
+  } else {
+    document.getElementById('tele-count').textContent = '0';
+    document.getElementById('tele-info-text').textContent = 'Sin teleconsultas incluidas';
+    document.getElementById('tele-info-sub').textContent = 'Sesión adicional: $35';
+    document.getElementById('tele-strip').style.background = '#F5F5F5';
+    document.getElementById('tele-strip').style.color = 'var(--ink-lt)';
+    document.getElementById('tele-count').style.background = 'var(--ink-lt)';
+    document.getElementById('btn-whatsapp-tele').href = LINK_PAGO_TELECONSULTA;
+    document.getElementById('btn-whatsapp-tele').textContent = 'Pagar $35 y agendar →';
+    document.getElementById('btn-whatsapp-tele').target = '_self';
+  }
+}
+
+// ── EXÁMENES ─────────────────────────────────────────────
+const LINK_PAGO_EXAMENES = 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw';
+
+function configurarExamenesLaboratorio(paciente) {
+  const fechaRegistro = new Date(paciente.created_at);
+  const hoy = new Date();
+  const meses = (hoy.getFullYear() - fechaRegistro.getFullYear()) * 12 + (hoy.getMonth() - fechaRegistro.getMonth());
+  const ciclo = Math.floor(meses / 3);
+  const esPrimero = ciclo === 0;
+
+  const proxima = new Date(fechaRegistro);
+  proxima.setMonth(proxima.getMonth() + (ciclo + 1) * 3);
+  const diasProximo = Math.ceil((proxima - hoy) / (1000*60*60*24));
+
+  const lugar = paciente.es_guayaquil
+    ? 'Realizados presencialmente en Fundación Médica CMS, Guayaquil.'
+    : 'Realizados en el laboratorio partner más cercano a ' + (paciente.ciudad || 'tu ciudad') + '.';
+
+  const badge = document.getElementById('examenes-badge');
+  const estado = document.getElementById('examenes-estado');
+  const texto = document.getElementById('examenes-texto');
+
+  if (esPrimero) {
+    texto.textContent = 'Examen inicial obligatorio para calibrar tu plan nutricional. ' + lugar;
+    badge.textContent = 'Pendiente';
+    badge.style.background = '#FEF3E2'; badge.style.color = '#854F0B';
+    estado.textContent = '⚠️ Examen base aún no realizado';
+  } else if (diasProximo <= 14) {
+    texto.textContent = 'Tu examen de seguimiento trimestral está por vencer. ' + lugar;
+    badge.textContent = 'Vence pronto';
+    badge.style.background = '#FEE2E2'; badge.style.color = '#DC2626';
+    estado.textContent = '🔴 Vence en ' + diasProximo + ' día(s)';
+  } else {
+    texto.textContent = 'Próximo examen en ' + diasProximo + ' días. ' + lugar;
+    badge.textContent = 'Al día ✓';
+    badge.style.background = '#E6F5EE'; badge.style.color = '#085041';
+    estado.textContent = '✓ Próximo seguimiento en ' + diasProximo + ' días';
+  }
+
+  document.getElementById('btn-examenes').href = LINK_PAGO_EXAMENES;
+}
+
+// ── FOTOS ─────────────────────────────────────────────────
+function configurarFotos(plan) {
+  const esPago = plan === '19' || plan === '49';
+  document.getElementById('fotos-bloqueadas-msg').style.display = esPago ? 'none' : 'block';
+  document.getElementById('fotos-upload').classList.toggle('hidden', !esPago);
+  if (esPago) {
+    document.getElementById('fotos-badge').textContent = '✓ Incluido';
+    document.getElementById('fotos-badge').style.background = 'var(--green-lt)';
+    document.getElementById('fotos-badge').style.color = 'var(--green)';
+    document.querySelectorAll('.foto-slot').forEach(s => { s.classList.remove('locked'); s.querySelector('.foto-lock-overlay').remove(); });
+  }
+}
+
+// ── BLOQUEOS ─────────────────────────────────────────────
+function mostrarBloqueosPorPlan(plan) {
+  const items = {
+    free: [
+      { icon: '📸', texto: 'Fotos de avance semanales', link: 'onboarding.html' },
+      { icon: '🤳', texto: 'Compartir en redes sociales', link: 'onboarding.html' },
+      { icon: '📊', texto: 'Reportes de progreso PDF', link: 'onboarding.html' },
+      { icon: '📜', texto: 'Certificado médico de seguimiento', link: 'onboarding.html' },
+      { icon: '🧪', texto: 'Descuento en exámenes', link: 'onboarding.html' },
+      { icon: '💬', texto: 'Chat directo con tu nutricionista', link: 'onboarding.html' }
+    ],
+    '19': [
+      { icon: '🧪', texto: 'Exámenes con descuento prioritario', link: 'onboarding.html' },
+      { icon: '📜', texto: 'Certificado médico con sello clínico', link: 'onboarding.html' }
+    ],
+    '49': []
+  };
+
+  const lista = items[plan] || items.free;
+  if (lista.length === 0) {
+    document.getElementById('seccion-bloqueada').style.display = 'none';
+    return;
+  }
+
+  const grid = document.getElementById('lista-bloqueos');
+  grid.innerHTML = '';
+  lista.forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'bloqueo-item';
+    el.innerHTML = '<div class="bloqueo-icon">' + item.icon + '</div>' +
+                   '<div class="bloqueo-text">' + item.texto + '</div>' +
+                   '<a href="' + item.link + '" class="bloqueo-link">Mejorar →</a>';
+    grid.appendChild(el);
+  });
+}
+
+// ── INIT ──────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', async () => {
   await inicializarSupabase();
 
   const hash = window.location.hash;
 
-  // Si hay error en el hash (magic link expirado, etc.) — mostrar login
   if (hash.includes('error=')) {
-    document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('portal-screen').classList.add('hidden');
     const errorEl = document.getElementById('login-error');
     errorEl.textContent = 'El enlace expiró. Ingresa con tu correo y contraseña, o usa "Olvidé mi contraseña".';
     errorEl.classList.add('show');
+    document.getElementById('login-screen').classList.remove('hidden');
     return;
   }
 
-  // Si viene de reset de contraseña
   if (hash.includes('type=recovery')) {
     const { data: { session } } = await supabaseClient.auth.getSession();
     if (session) {
       document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('portal-screen').classList.add('hidden');
       document.getElementById('reset-password-screen').classList.remove('hidden');
       return;
     }
@@ -807,10 +1313,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     mostrarPortal();
   } else {
     document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('portal-screen').classList.add('hidden');
   }
 });
 </script>
-
 </body>
 </html>
