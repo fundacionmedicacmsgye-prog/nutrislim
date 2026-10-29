@@ -4,239 +4,255 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NutriSLIM — Mi Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green:#1A7A52;--green-mid:#25A96E;--green-lt:#E6F5EE;--green-xlt:#F2FAF6;
-  --ink:#0F1A14;--ink-mid:#3D5446;--ink-lt:#7A9487;
-  --bone:#F7F9F7;--white:#fff;--rule:#D6E8DE;
+  --g1:#0D9B5E;--g2:#0A7A48;--g3:#065C35;
+  --ink:#0C1A12;--ink-mid:#3A5045;--ink-lt:#7A9080;
+  --bone:#F4F7F4;--white:#fff;--rule:#D6E8DA;
   --amber:#E8800A;--amber-lt:#FEF3E2;
   --red:#DC2626;--red-lt:#FEE2E2;
-  --blue:#1A6FA0;--blue-lt:#E3F0FA;
-  --purple:#6B3EAC;--purple-lt:#F1ECFB;
-  --syne:'Syne',sans-serif;--inter:'Inter',sans-serif;
-  --r:12px;--r-lg:20px;--r-xl:24px;
+  --blue:#1565C0;--blue-lt:#E3F0FA;
+  --purple:#6B3EAC;--purple-lt:#F0ECFB;
+  --teal:#0097A7;--teal-lt:#E0F5F7;
+  --font-head:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --r:10px;--r-lg:18px;--r-xl:24px;
 }
-body{font-family:var(--inter);background:var(--bone);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
-.hidden{display:none !important}
+body{font-family:var(--font-body);background:#EEF3EE;color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+.hidden{display:none!important}
 
-/* LOGIN */
-.login-wrap{max-width:400px;margin:0 auto;padding:60px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
-.login-logo{font-family:var(--syne);font-size:28px;font-weight:800;color:var(--green);text-align:center;margin-bottom:8px}
+/* ─── LOGIN ────────────────────────────────────────────── */
+.login-wrap{max-width:420px;margin:0 auto;padding:60px 20px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.login-logo{font-family:var(--font-head);font-size:30px;font-weight:700;color:var(--g1);text-align:center;margin-bottom:6px}
 .login-logo span{color:var(--ink)}
 .login-sub{text-align:center;font-size:14px;color:var(--ink-lt);margin-bottom:32px}
-.login-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:28px}
-.field-label{display:block;font-size:13px;font-weight:500;color:var(--ink-mid);margin-bottom:7px}
-input[type=email],input[type=password],input[type=number],input[type=text]{width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:var(--r);font-family:var(--inter);font-size:14px;margin-bottom:16px}
-input:focus{outline:none;border-color:var(--green-mid);box-shadow:0 0 0 3px rgba(37,169,110,0.12)}
-.btn-primary{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer}
-.btn-primary:hover{background:var(--green-mid)}
+.login-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-xl);padding:30px;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+label.field-label{display:block;font-size:12px;font-weight:600;color:var(--ink-mid);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.04em}
+input[type=email],input[type=password],input[type=number],input[type=text]{width:100%;padding:12px 14px;border:1.5px solid var(--rule);border-radius:var(--r);font-family:var(--font-body);font-size:14px;margin-bottom:16px;background:var(--bone);transition:border-color 0.2s}
+input:focus{outline:none;border-color:var(--g1);background:#fff;box-shadow:0 0 0 3px rgba(13,155,94,0.10)}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:0.02em}
+.btn-primary:hover{opacity:0.92}
 .btn-primary:disabled{background:var(--rule);cursor:default}
 .login-error{background:var(--red-lt);color:var(--red);border-radius:var(--r);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
 .login-error.show{display:block}
 
-/* NAV */
-nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
-.nav-logo{font-family:var(--syne);font-size:20px;font-weight:800;color:var(--green)}
+/* ─── NAV ──────────────────────────────────────────────── */
+nav{background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:var(--font-head);font-size:19px;font-weight:700;color:var(--g1)}
 .nav-logo span{color:var(--ink)}
-.nav-right{display:flex;align-items:center;gap:12px}
-.nav-plan-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
-.nav-plan-badge.free{background:var(--bone);color:var(--ink-lt);border:1px solid var(--rule)}
-.nav-plan-badge.transformacion{background:var(--green-lt);color:var(--green)}
-.nav-plan-badge.vip{background:#FEF3E2;color:#854F0B}
-.nav-logout{font-size:13px;color:var(--ink-lt);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:5px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-plan{font-size:11px;font-weight:600;padding:4px 11px;border-radius:20px;background:#E6F7EE;color:var(--g2);border:1px solid #B2E0C7}
+.nav-logout{font-size:12px;color:var(--ink-lt);background:none;border:1px solid var(--rule);border-radius:20px;cursor:pointer;padding:5px 12px;display:flex;align-items:center;gap:5px}
 
-/* LAYOUT */
-.layout{max-width:640px;margin:0 auto;padding:20px 16px 100px}
+/* ─── LAYOUT ───────────────────────────────────────────── */
+.layout{max-width:660px;margin:0 auto;padding:20px 14px 100px}
 
-/* BANNER RECONEXION */
-.reconexion-banner{border-radius:14px;padding:14px 16px;margin-bottom:16px;display:none}
-.reconexion-banner.show{display:flex;gap:10px;align-items:flex-start}
-.reconexion-banner.rojo{background:#FEE2E2;border:1px solid #F09595}
-.reconexion-banner.amarillo{background:#FEF3E2;border:1px solid #F5C842}
-.reconexion-banner.gris{background:var(--white);border:1px solid var(--rule)}
-.reconexion-banner p{font-size:13px;margin:0;line-height:1.5}
+/* ─── BANNERS ──────────────────────────────────────────── */
+.banner{border-radius:12px;padding:13px 16px;margin-bottom:14px;display:none;gap:10px;align-items:flex-start;font-size:13px}
+.banner.show{display:flex}
+.banner.rojo{background:#FEE2E2;border:1px solid #FBBFBF;color:#7F1D1D}
+.banner.amber{background:var(--amber-lt);border:1px solid #FCD34D;color:#78350F}
+.banner.verde{background:#E6F7EE;border:1px solid #86EFAC;color:#064E3B}
 
-/* RENEWAL BANNER */
-.renewal-banner{background:var(--amber-lt);border:1px solid #F5C842;border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:none;gap:12px;align-items:center}
-.renewal-banner.show{display:flex}
-.renewal-banner-text{font-size:13px;color:#854F0B;flex:1}
-.renewal-btn{flex-shrink:0;background:var(--amber);border:none;color:#fff;font-size:12px;padding:7px 14px;border-radius:var(--r);cursor:pointer;font-weight:600;text-decoration:none;display:inline-block}
+/* ─── HERO CARD ────────────────────────────────────────── */
+.hero{background:linear-gradient(145deg,#0D5C38 0%,#0A3D25 55%,#061E12 100%);border-radius:var(--r-xl);padding:0;margin-bottom:14px;overflow:hidden;position:relative}
+.hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");opacity:0.4}
+.hero-orb{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(13,155,94,0.18) 0%,transparent 70%);top:-80px;right:-80px;pointer-events:none}
+.hero-orb2{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(0,151,167,0.12) 0%,transparent 70%);bottom:-60px;left:-40px;pointer-events:none}
+.hero-body{position:relative;z-index:1;padding:22px 22px 0}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.hero-greeting{color:#fff}
+.hero-name{font-family:var(--font-head);font-size:24px;font-weight:700;line-height:1.1}
+.hero-plan-tag{font-size:11px;color:rgba(255,255,255,0.55);margin-top:3px;display:flex;align-items:center;gap:6px}
+.hero-plan-dot{width:6px;height:6px;border-radius:50%;background:var(--g1)}
+.hero-badges{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.hero-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:0.04em}
+.hero-badge.day{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.12)}
+.hero-badge.streak{background:linear-gradient(135deg,#FF6B00,#FF9A00);color:#fff;display:none}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);padding:18px 22px 22px;gap:4px}
+.hero-stat{text-align:center}
+.hero-stat-val{font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;line-height:1}
+.hero-stat-lbl{font-size:9px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
+.hero-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);margin:0 22px}
 
-/* HERO CARD */
-.hero-card{background:linear-gradient(135deg,#1A7A52 0%,#0F5038 100%);border-radius:var(--r-xl);padding:24px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden}
-.hero-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06)}
-.hero-card::after{content:'';position:absolute;bottom:-20px;right:20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04)}
-.hero-avatar{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;margin-bottom:12px;flex-shrink:0}
-.hero-greeting{font-size:22px;font-weight:700;margin-bottom:2px}
-.hero-sub{font-size:13px;opacity:0.75}
-.hero-meta{display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15)}
-.hero-meta-item{text-align:center}
-.hero-meta-val{font-size:18px;font-weight:700}
-.hero-meta-lbl{font-size:10px;opacity:0.7;text-transform:uppercase;letter-spacing:0.04em;margin-top:1px}
-.hero-top{display:flex;align-items:flex-start;justify-content:space-between}
-.hero-day{font-size:11px;font-weight:600;background:rgba(255,255,255,0.15);padding:4px 10px;border-radius:20px;white-space:nowrap}
+/* ─── SCORE RING ───────────────────────────────────────── */
+.score-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.score-card{background:var(--white);border-radius:var(--r-lg);padding:18px;display:flex;align-items:center;gap:14px;border:1px solid var(--rule)}
+.ring-wrap{position:relative;width:60px;height:60px;flex-shrink:0}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-val{font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--ink);line-height:1}
+.ring-unit{font-size:8px;color:var(--ink-lt)}
+.score-info{flex:1}
+.score-name{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.score-sub{font-size:11px;color:var(--ink-lt);line-height:1.4}
 
-/* STAT GRID */
-.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
-.stat{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:16px}
-.stat-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
-.stat-icon.green{background:var(--green-lt);color:var(--green)}
-.stat-icon.amber{background:var(--amber-lt);color:var(--amber)}
-.stat-icon.blue{background:var(--blue-lt);color:var(--blue)}
-.stat-icon.purple{background:var(--purple-lt);color:var(--purple)}
-.stat-val{font-size:24px;font-weight:700;color:var(--ink)}
-.stat-val.green{color:var(--green)}
-.stat-label{font-size:11px;color:var(--ink-lt);margin-top:3px}
-.stat-trend{font-size:10px;font-weight:500;margin-top:4px}
-.stat-trend.up{color:var(--green)}
-.stat-trend.neutral{color:var(--ink-lt)}
+/* ─── TIP ──────────────────────────────────────────────── */
+.tip-strip{background:linear-gradient(135deg,#2D1B6B 0%,#1A0E45 100%);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px}
+.tip-icon{font-size:22px;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(139,92,246,0.5))}
+.tip-label{font-size:9px;font-weight:700;color:#A78BFA;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.tip-text{font-size:13px;color:#E9D5FF;line-height:1.5}
 
-/* META DE PESO */
-.meta-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
-.meta-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.meta-title{font-size:14px;font-weight:600;color:var(--ink)}
-.meta-pesos{display:flex;justify-content:space-between;margin-bottom:10px;font-size:12px;color:var(--ink-lt)}
-.progress-bar-bg{height:10px;background:var(--green-lt);border-radius:20px;overflow:hidden}
-.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--green-mid),var(--green));border-radius:20px;transition:width 0.8s ease}
-.meta-dist{font-size:12px;color:var(--ink-lt);margin-top:8px;text-align:center}
-.meta-dist strong{color:var(--green)}
+/* ─── META PESO ────────────────────────────────────────── */
+.meta-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.meta-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.meta-title{font-size:13px;font-weight:600;color:var(--ink)}
+.meta-pct{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--g1)}
+.meta-endpoints{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-lt);margin-bottom:8px}
+.meta-endpoints strong{color:var(--ink)}
+.prog-track{height:8px;background:#E8F0E8;border-radius:20px;overflow:hidden;position:relative}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--g1),#00C875);border-radius:20px;transition:width 1s cubic-bezier(0.22,1,0.36,1);position:relative}
+.prog-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;border-radius:0 20px 20px 0;background:rgba(255,255,255,0.6)}
+.meta-foot{font-size:12px;color:var(--ink-lt);margin-top:8px;text-align:center}
+.meta-foot strong{color:var(--g1)}
 
-/* CHART */
-.chart-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
-.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.chart-title{font-size:14px;font-weight:600}
-.chart-sub{font-size:11px;color:var(--ink-lt)}
-.chart-container{position:relative;height:100px}
-.chart-empty{text-align:center;padding:24px 0;color:var(--ink-lt);font-size:13px}
+/* ─── CHART ────────────────────────────────────────────── */
+.chart-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.chart-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.chart-title{font-size:13px;font-weight:600;color:var(--ink)}
+.chart-sub{font-size:11px;color:var(--ink-lt);margin-top:2px}
+.chart-delta{font-size:12px;font-weight:700}
+.chart-area{height:110px;position:relative}
+.chart-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:6px;color:var(--ink-lt)}
 
-/* HÁBITOS */
-.habitos-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
-.habitos-title{font-size:14px;font-weight:600;margin-bottom:4px}
-.habitos-sub{font-size:12px;color:var(--ink-lt);margin-bottom:16px}
-.habito-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--rule)}
-.habito-row:last-child{border-bottom:none;padding-bottom:0}
-.habito-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.habito-icon.agua{background:#E3F0FA;color:#1A6FA0}
-.habito-icon.menu{background:var(--green-lt);color:var(--green)}
-.habito-icon.ejercicio{background:#F1ECFB;color:#6B3EAC}
-.habito-info{flex:1}
-.habito-name{font-size:13px;font-weight:500}
-.habito-desc{font-size:11px;color:var(--ink-lt);margin-top:1px}
-.habito-toggle{width:40px;height:24px;border-radius:12px;background:var(--rule);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
-.habito-toggle.activo{background:var(--green)}
-.habito-toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
-.habito-toggle.activo::after{left:19px}
-/* agua counters */
-.agua-counter{display:flex;align-items:center;gap:8px}
-.agua-vasos{display:flex;gap:4px}
-.agua-vaso{width:20px;height:20px;border-radius:6px;border:2px solid var(--rule);background:transparent;cursor:pointer;transition:all 0.15s;position:relative}
-.agua-vaso.lleno{background:var(--blue-lt);border-color:#1A6FA0}
-.agua-label{font-size:11px;color:var(--ink-lt)}
+/* ─── HÁBITOS ──────────────────────────────────────────── */
+.habitos-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.habitos-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.habitos-title{font-size:13px;font-weight:600;color:var(--ink)}
+.habitos-score{font-size:11px;font-weight:600;color:var(--g1);background:#E6F7EE;padding:3px 8px;border-radius:20px}
+.habito{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #F0F4F0}
+.habito:last-child{border-bottom:none;padding-bottom:0}
+.habito-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.habito-info{flex:1;min-width:0}
+.habito-name{font-size:13px;font-weight:500;color:var(--ink)}
+.habito-detail{font-size:11px;color:var(--ink-lt);margin-top:1px}
+.toggle{width:42px;height:24px;border-radius:12px;background:#D1D8D1;border:none;cursor:pointer;position:relative;transition:background 0.25s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.18)}
+.toggle.on{background:var(--g1)}
+.toggle.on::after{left:21px}
+.agua-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.vaso{width:22px;height:22px;border-radius:6px;border:2px solid #C8DBCA;background:transparent;cursor:pointer;transition:all 0.15s;font-size:12px;display:flex;align-items:center;justify-content:center}
+.vaso.on{background:#DAEEF8;border-color:#1565C0;font-size:13px}
 
-/* SECCIÓN CARDS */
-.section-card{background:var(--white);border:1px solid var(--rule);border-radius:var(--r-lg);padding:20px;margin-bottom:16px}
-.section-title{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.section-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+/* ─── BODY MAP ─────────────────────────────────────────── */
+.body-card{background:linear-gradient(135deg,#F0F9F4 0%,#E6F5EC 100%);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid #C3E6CF}
+.body-head{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px}
+.body-sub{font-size:12px;color:var(--ink-lt);margin-bottom:16px}
+.body-layout{display:flex;gap:16px;align-items:center}
+.body-svg-wrap{flex-shrink:0;width:90px;position:relative}
+.body-benefits{flex:1;display:flex;flex-direction:column;gap:8px}
+.benefit-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.7);border-radius:var(--r);border:1px solid rgba(13,155,94,0.12)}
+.benefit-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.benefit-text{font-size:12px;color:var(--ink-mid);line-height:1.4}
+.benefit-title{font-weight:600;color:var(--ink);font-size:12px;display:block;margin-bottom:1px}
 
-/* MENU DEL DÍA */
-.menu-header{background:linear-gradient(135deg,var(--green) 0%,#0F5038 100%);border-radius:var(--r-lg) var(--r-lg) 0 0;padding:16px 20px;margin:-20px -20px 16px -20px}
-.menu-day-label{font-size:10px;font-weight:600;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.06em}
-.menu-day-title{font-size:16px;font-weight:600;color:#fff;margin-top:2px}
-.meal-list{display:flex;flex-direction:column;gap:8px}
-.meal-item{padding:12px 14px;background:var(--bone);border-radius:var(--r);display:flex;justify-content:space-between;align-items:center}
-.meal-tipo{font-size:10px;font-weight:600;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px}
-.meal-desc{font-size:13px;color:var(--ink)}
-.meal-cal{font-size:12px;font-weight:600;color:var(--green);white-space:nowrap;margin-left:12px;flex-shrink:0}
-.meal-total{display:flex;justify-content:space-between;padding:10px 14px;margin-top:4px;background:var(--green-lt);border-radius:var(--r);font-size:12px;font-weight:600}
-.meal-total-kcal{color:var(--green)}
-.proyeccion-strip{background:linear-gradient(90deg,#E1F5EE,#C3EDD8);border-radius:var(--r);padding:12px 14px;margin-top:10px;display:flex;justify-content:space-between;align-items:center}
-.proyeccion-label{font-size:11px;color:#0F6E56}
-.proyeccion-val{font-size:16px;font-weight:700;color:#085041}
+/* ─── MENÚ ─────────────────────────────────────────────── */
+.menu-card{background:var(--white);border-radius:var(--r-lg);margin-bottom:14px;border:1px solid var(--rule);overflow:hidden}
+.menu-top{background:linear-gradient(135deg,#0D5C38 0%,#073D25 100%);padding:16px 18px;position:relative;overflow:hidden}
+.menu-top::before{content:'🥗';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:36px;opacity:0.15}
+.menu-day{font-size:10px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+.menu-title{font-size:18px;font-weight:700;color:#fff;font-family:var(--font-head)}
+.menu-body{padding:18px}
+.menu-empty{text-align:center;padding:16px 0;font-size:13px;color:var(--ink-lt)}
+.meal-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r);background:var(--bone);margin-bottom:8px;border-left:3px solid transparent}
+.meal-item.desayuno{border-color:#FCD34D}
+.meal-item.almuerzo{border-color:var(--g1)}
+.meal-item.cena{border-color:#818CF8}
+.meal-item.merienda{border-color:var(--teal)}
+.meal-emoji{font-size:20px;flex-shrink:0}
+.meal-info{flex:1}
+.meal-tipo{font-size:10px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.04em}
+.meal-desc{font-size:13px;color:var(--ink);margin-top:1px}
+.meal-kcal{font-size:12px;font-weight:700;color:var(--g1);flex-shrink:0;background:#E6F7EE;padding:3px 8px;border-radius:20px}
+.meal-total-bar{display:flex;justify-content:space-between;padding:10px 12px;background:linear-gradient(90deg,#E6F7EE,#D0F0E4);border-radius:var(--r);font-size:12px;font-weight:700;color:var(--g2);margin-bottom:10px}
+.proyeccion-box{background:linear-gradient(135deg,#0D3D26,#071A10);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
+.proy-label{font-size:10px;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px}
+.proy-val{font-size:16px;font-weight:700;color:#fff;font-family:var(--font-head)}
+.btn-generar{width:100%;padding:13px;background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-generar:hover{opacity:0.9}
+.btn-generar:disabled{background:var(--rule);color:var(--ink-lt)}
+.vencido-msg{text-align:center;padding:16px;background:var(--bone);border-radius:var(--r)}
 
-/* ACTIVIDAD */
-.actividad-visual{display:flex;gap:10px;margin-top:12px}
-.actividad-chip{flex:1;background:var(--bone);border-radius:var(--r);padding:12px;text-align:center}
-.actividad-chip-icon{font-size:20px;margin-bottom:4px}
-.actividad-chip-label{font-size:11px;color:var(--ink-lt)}
-.actividad-chip-val{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
-.semana-dots{display:flex;gap:6px;margin-top:12px}
-.semana-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-direction:column}
-.semana-dot.hecho{background:var(--green);color:#fff}
-.semana-dot.hoy{background:var(--green-lt);color:var(--green);border:2px solid var(--green)}
-.semana-dot.no-hecho{background:var(--bone);color:var(--ink-lt)}
+/* ─── PESO ─────────────────────────────────────────────── */
+.peso-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.peso-input-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.peso-input-row input{margin-bottom:0;flex:1}
+.btn-peso{padding:12px 20px;background:var(--g1);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pesos-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.peso-chip{flex-shrink:0;text-align:center;padding:8px 12px;background:var(--bone);border-radius:var(--r);min-width:68px}
+.peso-chip.latest{background:#E6F7EE;border:1px solid #86EFAC}
+.peso-chip-val{font-size:14px;font-weight:700;color:var(--ink)}
+.peso-chip.latest .peso-chip-val{color:var(--g1)}
+.peso-chip-lbl{font-size:10px;color:var(--ink-lt);margin-top:2px}
 
-/* PESO */
-.peso-action{display:flex;gap:10px;align-items:center}
-.peso-action input{margin-bottom:0;flex:1}
-.btn-guardar-peso{padding:12px 20px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
-.ultimos-pesos{display:flex;gap:8px;margin-top:14px;overflow-x:auto}
-.peso-chip{flex-shrink:0;padding:8px 12px;background:var(--bone);border-radius:var(--r);text-align:center}
-.peso-chip-val{font-size:14px;font-weight:600;color:var(--ink)}
-.peso-chip-fecha{font-size:10px;color:var(--ink-lt);margin-top:2px}
-.peso-chip.ultimo{background:var(--green-lt)}
-.peso-chip.ultimo .peso-chip-val{color:var(--green)}
+/* ─── ACTIVIDAD ────────────────────────────────────────── */
+.act-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.act-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.act-chip{background:var(--bone);border-radius:var(--r);padding:12px;text-align:center}
+.act-chip-emoji{font-size:18px;margin-bottom:4px}
+.act-chip-val{font-size:13px;font-weight:700;color:var(--ink)}
+.act-chip-lbl{font-size:10px;color:var(--ink-lt)}
+.semana-row{display:flex;gap:6px;margin-top:12px}
+.dia{flex:1;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.dia.done{background:var(--g1);color:#fff}
+.dia.today{background:#E6F7EE;color:var(--g1);border:1.5px solid var(--g1)}
+.dia.pending{background:var(--bone);color:var(--ink-lt)}
 
-/* FOTO PROGRESO */
-.foto-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.foto-slot{aspect-ratio:3/4;background:var(--bone);border-radius:var(--r-lg);border:2px dashed var(--rule);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;position:relative;overflow:hidden}
-.foto-slot.locked{opacity:0.6;cursor:default}
-.foto-lock-overlay{position:absolute;inset:0;background:rgba(247,249,247,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
-.foto-slot-label{font-size:10px;color:var(--ink-lt);font-weight:500}
-.foto-lock-text{font-size:10px;color:var(--ink-lt);text-align:center;padding:0 8px}
+/* ─── TELECONSULTA ─────────────────────────────────────── */
+.tele-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.tele-banner{background:linear-gradient(135deg,#E3F0FA,#C7E2F7);border-radius:var(--r);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.tele-badge{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:var(--font-head)}
+.tele-info{flex:1}
+.tele-num{font-size:13px;font-weight:600;color:var(--blue)}
+.tele-sub{font-size:11px;color:#1E3A5F;opacity:0.7;margin-top:1px}
 
-/* TELECONSULTA */
-.tele-strip{background:var(--blue-lt);border-radius:var(--r);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
-.tele-count{width:40px;height:40px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0}
-.tele-info-text{font-size:13px;font-weight:500;color:var(--blue)}
-.tele-info-sub{font-size:11px;color:var(--blue);opacity:0.7;margin-top:2px}
+/* ─── EXÁMENES ─────────────────────────────────────────── */
+.lab-card{background:linear-gradient(135deg,#FFFBEB,#FEF3E2);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid #FCD34D}
+.lab-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.lab-title{font-size:13px;font-weight:600;color:#78350F}
+.lab-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.examen-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.examen-tag{font-size:11px;padding:4px 9px;background:rgba(255,255,255,0.7);border-radius:20px;color:#7C2D12;border:1px solid #FCA5A5}
 
-/* EXÁMENES */
-.examen-lista-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
-.examen-chip{padding:4px 10px;background:var(--bone);border-radius:20px;font-size:11px;color:var(--ink-mid)}
+/* ─── BLOQUEOS ─────────────────────────────────────────── */
+.bloqueos-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.bloqueos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.bloqueo{background:var(--bone);border-radius:var(--r);padding:12px;border:1px dashed #C8D8CA}
+.bloqueo-emo{font-size:20px;opacity:0.5;margin-bottom:6px}
+.bloqueo-text{font-size:12px;color:var(--ink-mid);margin-bottom:6px;line-height:1.4}
+.bloqueo-link{font-size:11px;color:var(--g1);font-weight:700;text-decoration:none}
 
-/* BLOQUEOS */
-.bloqueo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.bloqueo-item{background:var(--bone);border-radius:var(--r);padding:12px;border:1px dashed var(--rule);display:flex;flex-direction:column;gap:6px}
-.bloqueo-icon{font-size:20px;opacity:0.4}
-.bloqueo-text{font-size:12px;color:var(--ink-mid)}
-.bloqueo-link{font-size:11px;color:var(--green);font-weight:600;text-decoration:none}
+/* ─── BTNS ─────────────────────────────────────────────── */
+.btn-full{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.btn-full.green{background:linear-gradient(135deg,var(--g1),var(--g2));color:#fff}
+.btn-full.green:hover{opacity:0.9}
+.btn-full.wa{background:linear-gradient(135deg,#128C7E,#075E54);color:#fff}
+.btn-full.amber{background:linear-gradient(135deg,var(--amber),#C05E00);color:#fff}
+.btn-full.muted{background:var(--bone);color:var(--ink);border:1px solid var(--rule)}
+.btn-full.disabled{background:var(--rule);color:var(--ink-lt);cursor:default;pointer-events:none}
 
-/* BTNS */
-.btn-action{padding:13px;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;width:100%}
-.btn-action.primary{background:var(--green);color:#fff}
-.btn-action.primary:hover{background:var(--green-mid)}
-.btn-action.secondary{background:var(--bone);color:var(--ink);border:1px solid var(--rule)}
-.btn-action.amber{background:var(--amber);color:#fff}
-.btn-action.disabled{background:var(--rule);color:var(--ink-lt);cursor:default;pointer-events:none}
-
-/* LOADING */
-.loading-text{text-align:center;padding:60px 20px;color:var(--ink-lt);font-size:14px}
-.loading-spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--rule);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:12px}
+/* ─── LOADING ──────────────────────────────────────────── */
+.loading-wrap{text-align:center;padding:70px 20px;color:var(--ink-lt)}
+.spin{display:inline-block;width:28px;height:28px;border:3px solid #C8D8CA;border-top-color:var(--g1);border-radius:50%;animation:spin 0.7s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* STREAK */
-.streak-badge{display:inline-flex;align-items:center;gap:4px;background:#FFF3E0;color:#E65100;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
-
-/* TIP DEL DÍA */
-.tip-card{background:var(--purple-lt);border-left:3px solid var(--purple);border-radius:0 var(--r) var(--r) 0;padding:12px 14px;margin-bottom:16px}
-.tip-label{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
-.tip-text{font-size:13px;color:#3D1F6E;line-height:1.5}
+/* ─── SECTION LABEL ────────────────────────────────────── */
+.sec-label{font-size:11px;font-weight:700;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;padding-left:2px}
 
 @media(max-width:480px){
-  .stat-grid{grid-template-columns:repeat(2,1fr)}
-  .bloqueo-grid{grid-template-columns:1fr}
-  .hero-meta{gap:10px}
-  .foto-grid{grid-template-columns:1fr 1fr}
+  .score-row{grid-template-columns:1fr 1fr}
+  .hero-stats{grid-template-columns:repeat(4,1fr);gap:2px}
+  .hero-stat-val{font-size:18px}
+  .bloqueos-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ═══════════════════════════════════════════════ -->
+<!-- ══ LOGIN ═════════════════════════════════════════════ -->
 <div id="login-screen" class="login-wrap">
   <div class="login-logo">Nutri<span>SLIM</span></div>
   <p class="login-sub">Tu portal de seguimiento personalizado</p>
@@ -245,16 +261,18 @@ nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;di
     <label class="field-label">Correo electrónico</label>
     <input type="email" id="login-email" placeholder="tu@correo.com">
     <label class="field-label">Contraseña</label>
-    <input type="password" id="login-password" placeholder="••••••••">
+    <input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')iniciarSesion()">
     <button class="btn-primary" id="btn-login" onclick="iniciarSesion()">Ingresar a mi portal</button>
     <p style="text-align:center;margin-top:14px;font-size:13px;color:var(--ink-lt)">
-      <a href="#" onclick="enviarRecuperacion();return false;" style="color:var(--green);text-decoration:none">Olvidé mi contraseña</a>
+      <a href="#" onclick="enviarRecuperacion();return false;" style="color:var(--g1);text-decoration:none">Olvidé mi contraseña</a>
     </p>
-    <p style="text-align:center;margin-top:8px;font-size:12px;color:var(--ink-lt)">¿No tienes cuenta? <a href="onboarding.html" style="color:var(--green);text-decoration:none">Regístrate gratis</a></p>
+    <p style="text-align:center;margin-top:8px;font-size:12px;color:var(--ink-lt)">
+      ¿Sin cuenta? <a href="onboarding.html" style="color:var(--g1);text-decoration:none">Regístrate gratis →</a>
+    </p>
   </div>
 </div>
 
-<!-- ══ RESET PASSWORD ═══════════════════════════════════════ -->
+<!-- ══ RESET PASSWORD ══════════════════════════════════════ -->
 <div id="reset-password-screen" class="login-wrap hidden">
   <div class="login-logo">Nutri<span>SLIM</span></div>
   <p class="login-sub">Crea tu nueva contraseña</p>
@@ -262,1058 +280,942 @@ nav{background:var(--white);border-bottom:1px solid var(--rule);padding:0 5vw;di
     <div class="login-error" id="reset-error"></div>
     <label class="field-label">Nueva contraseña</label>
     <input type="password" id="nueva-password" placeholder="Mínimo 6 caracteres">
-    <button class="btn-primary" id="btn-guardar-password" onclick="guardarNuevaContrasena()">Guardar contraseña</button>
+    <button class="btn-primary" id="btn-guardar-pwd" onclick="guardarPassword()">Guardar contraseña</button>
   </div>
 </div>
 
-<!-- ══ PORTAL ════════════════════════════════════════════════ -->
+<!-- ══ PORTAL ═════════════════════════════════════════════ -->
 <div id="portal-screen" class="hidden">
   <nav>
     <div class="nav-logo">Nutri<span>SLIM</span></div>
     <div class="nav-right">
-      <span class="nav-plan-badge free" id="nav-plan-badge">Gratuito</span>
-      <button class="nav-logout" onclick="cerrarSesion()"><i class="ti ti-logout"></i> Salir</button>
+      <span class="nav-plan" id="nav-plan-lbl">Gratuito</span>
+      <button class="nav-logout" onclick="cerrarSesion()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Salir
+      </button>
     </div>
   </nav>
 
   <div class="layout">
-
-    <div id="loading-msg" class="loading-text">
-      <div class="loading-spinner"></div><br>Cargando tu información...
+    <div id="loading-msg" class="loading-wrap">
+      <div class="spin"></div>
+      <p>Cargando tu portal...</p>
     </div>
 
-    <div id="contenido-portal" class="hidden">
+    <div id="portal-content" class="hidden">
 
       <!-- BANNERS -->
-      <div class="renewal-banner" id="renewal-banner">
-        <i class="ti ti-clock" style="font-size:18px;color:#854F0B;flex-shrink:0"></i>
-        <div class="renewal-banner-text"><strong id="renewal-dias">Tu plan vence pronto</strong> — Renueva para no perder tu seguimiento.</div>
-        <a href="onboarding.html" class="renewal-btn">Renovar</a>
-      </div>
-
-      <div class="reconexion-banner" id="reconexion-banner">
-        <i class="ti ti-alert-triangle" style="font-size:18px;flex-shrink:0;margin-top:1px"></i>
-        <p id="reconexion-texto"></p>
-      </div>
+      <div class="banner rojo" id="b-rojo"><span style="font-size:16px">⚠️</span><p id="b-rojo-txt"></p></div>
+      <div class="banner amber" id="b-amber"><span style="font-size:16px">🕐</span><p id="b-amber-txt"></p></div>
+      <div class="banner verde" id="b-verde"><span style="font-size:16px">🔔</span><p id="b-verde-txt"></p></div>
 
       <!-- HERO -->
-      <div class="hero-card">
-        <div class="hero-top">
-          <div>
-            <div class="hero-avatar" id="avatar-iniciales">--</div>
-            <div class="hero-greeting">Hola, <span id="nombre-paciente">—</span> 👋</div>
-            <div class="hero-sub" id="plan-paciente-sub">—</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-            <div class="hero-day" id="dia-programa-label">Día — de tu programa</div>
-            <div class="streak-badge" id="streak-badge" style="display:none">🔥 <span id="streak-dias">0</span> días seguidos</div>
+      <div class="hero">
+        <div class="hero-noise"></div>
+        <div class="hero-orb"></div>
+        <div class="hero-orb2"></div>
+        <div class="hero-body">
+          <div class="hero-top">
+            <div class="hero-greeting">
+              <div class="hero-name">Hola, <span id="h-nombre">—</span> 👋</div>
+              <div class="hero-plan-tag"><div class="hero-plan-dot"></div><span id="h-plan">—</span></div>
+            </div>
+            <div class="hero-badges">
+              <div class="hero-badge day" id="h-dia">Día —</div>
+              <div class="hero-badge streak" id="h-streak">🔥 <span id="h-streak-n">0</span> días</div>
+            </div>
           </div>
         </div>
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <div class="hero-meta-val" id="hero-perdidos">—</div>
-            <div class="hero-meta-lbl">kg perdidos</div>
+        <div class="hero-divider"></div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-perdidos">—</div>
+            <div class="hero-stat-lbl">kg perdidos</div>
           </div>
-          <div class="hero-meta-item">
-            <div class="hero-meta-val" id="hero-imc">—</div>
-            <div class="hero-meta-lbl">IMC actual</div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-imc">—</div>
+            <div class="hero-stat-lbl">IMC</div>
           </div>
-          <div class="hero-meta-item">
-            <div class="hero-meta-val" id="hero-semanas">—</div>
-            <div class="hero-meta-lbl">semanas activo</div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-semanas">—</div>
+            <div class="hero-stat-lbl">semanas</div>
           </div>
-          <div class="hero-meta-item">
-            <div class="hero-meta-val" id="hero-peso-actual">—</div>
-            <div class="hero-meta-lbl">kg actuales</div>
+          <div class="hero-stat">
+            <div class="hero-stat-val" id="h-peso">—</div>
+            <div class="hero-stat-lbl">kg actuales</div>
           </div>
         </div>
       </div>
 
-      <!-- TIP DEL DÍA -->
-      <div class="tip-card" id="tip-card">
-        <div class="tip-label">💡 Dato de salud de hoy</div>
-        <div class="tip-text" id="tip-texto">—</div>
+      <!-- TIP CIENTÍFICO -->
+      <div class="tip-strip">
+        <div class="tip-icon">🔬</div>
+        <div>
+          <div class="tip-label">Dato clínico · <span id="tip-fecha"></span></div>
+          <div class="tip-text" id="tip-texto">—</div>
+        </div>
+      </div>
+
+      <!-- SCORE RINGS -->
+      <div class="sec-label">Tu estado de hoy</div>
+      <div class="score-row">
+        <div class="score-card">
+          <div class="ring-wrap">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="24" fill="none" stroke="#E8F0E8" stroke-width="6"/>
+              <circle id="ring-wellness" cx="30" cy="30" r="24" fill="none" stroke="var(--g1)" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)"/>
+            </svg>
+            <div class="ring-center"><div class="ring-val" id="ring-w-val">—</div><div class="ring-unit">pts</div></div>
+          </div>
+          <div class="score-info">
+            <div class="score-name">Wellness Score</div>
+            <div class="score-sub" id="ring-w-sub">Calculando tu puntuación...</div>
+          </div>
+        </div>
+        <div class="score-card">
+          <div class="ring-wrap">
+            <svg width="60" height="60" viewBox="0 0 60 60">
+              <circle cx="30" cy="30" r="24" fill="none" stroke="#E8F0E8" stroke-width="6"/>
+              <circle id="ring-imc" cx="30" cy="30" r="24" fill="none" stroke="#1565C0" stroke-width="6" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.22,1,0.36,1)"/>
+            </svg>
+            <div class="ring-center"><div class="ring-val" id="ring-imc-val">—</div><div class="ring-unit">IMC</div></div>
+          </div>
+          <div class="score-info">
+            <div class="score-name">Índice de Masa</div>
+            <div class="score-sub" id="ring-imc-sub">—</div>
+          </div>
+        </div>
       </div>
 
       <!-- META DE PESO -->
       <div class="meta-card" id="meta-peso-card">
         <div class="meta-header">
-          <div class="meta-title">📍 Progreso hacia tu meta</div>
-          <span id="meta-pct-label" style="font-size:12px;font-weight:700;color:var(--green)">0%</span>
+          <div class="meta-title">📍 Meta de transformación</div>
+          <div class="meta-pct" id="meta-pct-val">0%</div>
         </div>
-        <div class="meta-pesos">
-          <span>Inicio: <strong id="meta-peso-inicio">—</strong> kg</span>
-          <span>Meta: <strong id="meta-peso-objetivo">—</strong> kg</span>
+        <div class="meta-endpoints">
+          <span>Inicio <strong id="meta-inicio">—</strong> kg</span>
+          <span>Actual <strong id="meta-actual">—</strong> kg</span>
+          <span>Meta <strong id="meta-objetivo">—</strong> kg</span>
         </div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
-        </div>
-        <div class="meta-dist" id="meta-dist-texto">—</div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="meta-foot" id="meta-foot">—</div>
       </div>
 
-      <!-- HÁBITOS DEL DÍA -->
+      <!-- HÁBITOS -->
       <div class="habitos-card">
-        <div class="habitos-title">✅ Hábitos de hoy</div>
-        <div class="habitos-sub">Marca lo que completaste hoy — se guarda automáticamente</div>
-
-        <div class="habito-row">
-          <div class="habito-icon agua"><i class="ti ti-droplet"></i></div>
-          <div class="habito-info">
-            <div class="habito-name">Agua del día</div>
-            <div class="habito-desc">Meta: 8 vasos (2 litros)</div>
-          </div>
-          <div class="agua-counter">
-            <div class="agua-vasos" id="agua-vasos"></div>
-            <span class="agua-label" id="agua-label">0/8</span>
-          </div>
+        <div class="habitos-head">
+          <div class="habitos-title">✅ Hábitos del día</div>
+          <div class="habitos-score" id="habitos-score-lbl">0/3 completados</div>
         </div>
 
-        <div class="habito-row">
-          <div class="habito-icon menu"><i class="ti ti-salad"></i></div>
+        <div class="habito">
+          <div class="habito-icon" style="background:#DAEEF8">💧</div>
+          <div class="habito-info">
+            <div class="habito-name">Hidratación</div>
+            <div class="habito-detail">Meta 8 vasos · <span id="agua-count-lbl">0 completados</span></div>
+          </div>
+          <div class="agua-row" id="vasos-wrap"></div>
+        </div>
+
+        <div class="habito">
+          <div class="habito-icon" style="background:#E6F7EE">🥗</div>
           <div class="habito-info">
             <div class="habito-name">Seguí mi menú</div>
-            <div class="habito-desc">Comí según mi plan de hoy</div>
+            <div class="habito-detail">Comí según mi plan nutricional de hoy</div>
           </div>
-          <button class="habito-toggle" id="toggle-menu" onclick="toggleHabito('menu')"></button>
+          <button class="toggle" id="tog-menu" onclick="togHabito('menu')"></button>
         </div>
 
-        <div class="habito-row">
-          <div class="habito-icon ejercicio"><i class="ti ti-run"></i></div>
+        <div class="habito">
+          <div class="habito-icon" style="background:#F0ECFB">🏃</div>
           <div class="habito-info">
             <div class="habito-name">Actividad física</div>
-            <div class="habito-desc">Completé mi rutina del día</div>
+            <div class="habito-detail">Completé mi rutina de hoy</div>
           </div>
-          <button class="habito-toggle" id="toggle-ejercicio" onclick="toggleHabito('ejercicio')"></button>
+          <button class="toggle" id="tog-act" onclick="togHabito('ejercicio')"></button>
         </div>
       </div>
 
-      <!-- GRÁFICO DE PESO -->
+      <!-- HISTORIAL PESO -->
       <div class="chart-card">
         <div class="chart-header">
           <div>
-            <div class="chart-title">📈 Historial de peso</div>
-            <div class="chart-sub">Últimos registros semanales</div>
+            <div class="chart-title">📈 Curva de peso</div>
+            <div class="chart-sub">Evolución semana a semana</div>
           </div>
-          <div id="chart-variacion" style="font-size:12px;font-weight:600;color:var(--green)"></div>
+          <div class="chart-delta" id="chart-delta"></div>
         </div>
-        <div class="chart-container" id="chart-container">
-          <div class="chart-empty" id="chart-empty">
-            <i class="ti ti-chart-line" style="font-size:24px;display:block;margin-bottom:6px;opacity:0.3"></i>
-            Registra tu primer peso para ver tu progreso aquí
+        <div class="chart-area">
+          <div class="chart-empty-state" id="chart-empty">
+            <span style="font-size:28px;opacity:0.25">📊</span>
+            <span style="font-size:13px">Registra tu primer peso para ver tu curva</span>
           </div>
-          <svg id="weight-chart" width="100%" height="100" style="display:none"></svg>
+          <svg id="chart-svg" width="100%" height="110" style="display:none;overflow:visible"></svg>
+        </div>
+      </div>
+
+      <!-- ZONA CORPORAL (sustituye fotos) -->
+      <div class="body-card">
+        <div class="body-head">🏃 Tu cuerpo en movimiento</div>
+        <div class="body-sub" id="body-sub">Qué ocurre en tu organismo cuando cumples tu rutina diaria</div>
+        <div class="body-layout">
+          <div class="body-svg-wrap" id="body-svg-wrap">
+            <!-- SVG cuerpo humano con zonas activas -->
+            <svg viewBox="0 0 80 200" width="80" height="200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Cabeza -->
+              <ellipse cx="40" cy="18" rx="14" ry="16" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1.5"/>
+              <!-- Cuello -->
+              <rect x="34" y="32" width="12" height="10" rx="4" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+              <!-- Torso -->
+              <rect x="22" y="40" width="36" height="50" rx="8" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1.5" id="bz-torso"/>
+              <!-- Brazos -->
+              <rect x="8" y="42" width="13" height="40" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1" id="bz-brazo-i"/>
+              <rect x="59" y="42" width="13" height="40" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1" id="bz-brazo-d"/>
+              <!-- Cadera/glúteos (zona quema grasa) -->
+              <ellipse cx="40" cy="98" rx="20" ry="14" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5" id="bz-cadera"/>
+              <!-- Muslos -->
+              <rect x="20" y="108" width="16" height="48" rx="8" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5" id="bz-muslo-i"/>
+              <rect x="44" y="108" width="16" height="48" rx="8" fill="#A5D6A7" stroke="#43A047" stroke-width="1.5" id="bz-muslo-d"/>
+              <!-- Pantorrillas -->
+              <rect x="22" y="158" width="12" height="30" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1" id="bz-pant-i"/>
+              <rect x="46" y="158" width="12" height="30" rx="6" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1" id="bz-pant-d"/>
+              <!-- Pies -->
+              <ellipse cx="28" cy="191" rx="8" ry="5" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+              <ellipse cx="52" cy="191" rx="8" ry="5" fill="#C8E6C9" stroke="#66BB6A" stroke-width="1"/>
+              <!-- Corazón (activo al hacer ejercicio) -->
+              <text x="40" y="70" text-anchor="middle" font-size="12" id="bz-corazon" style="animation:pulse 1.5s infinite">❤️</text>
+              <!-- Etiquetas de zona activa -->
+              <text x="40" y="102" text-anchor="middle" font-size="6" fill="#1B5E20" font-weight="bold" id="bz-label-cadera">ACTIVO</text>
+            </svg>
+          </div>
+          <div class="body-benefits" id="body-benefits">
+            <!-- Populated by JS -->
+          </div>
         </div>
       </div>
 
       <!-- MENÚ DEL DÍA -->
-      <div class="section-card" style="padding:0;overflow:hidden">
-        <div class="menu-header">
-          <div class="menu-day-label" id="dia-programa-label2">Tu programa</div>
-          <div class="menu-day-title">Menú de hoy</div>
+      <div class="sec-label">Tu nutrición</div>
+      <div class="menu-card">
+        <div class="menu-top">
+          <div class="menu-day" id="menu-dia-lbl">Tu programa</div>
+          <div class="menu-title">Menú de hoy</div>
         </div>
-        <div style="padding:0 20px 20px">
-          <div id="plan-vencido-msg" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:16px;text-align:center;font-size:13px;color:var(--ink-lt)">
-            Tu acceso a generar menús diarios ha vencido.<br>
-            <a href="onboarding.html" style="color:var(--green);font-weight:600;text-decoration:none;display:inline-block;margin-top:8px">Renovar plan →</a>
+        <div class="menu-body">
+          <div id="menu-vencido" class="hidden">
+            <div class="vencido-msg">
+              <p style="font-size:13px;color:var(--ink-lt);margin-bottom:10px">Tu acceso a los menús diarios personalizados ha vencido.</p>
+              <a href="onboarding.html" class="btn-full green" style="text-decoration:none;font-size:13px;display:flex">Renovar mi plan →</a>
+            </div>
           </div>
-          <div id="plan-hoy-vacio">
-            <button class="btn-action primary" onclick="generarMenuHoy()" id="btn-generar-menu">
-              <i class="ti ti-sparkles"></i> Generar mi menú de hoy
+          <div id="menu-generar">
+            <button class="btn-generar" id="btn-generar" onclick="generarMenu()">
+              ✨ Generar mi menú personalizado de hoy
             </button>
           </div>
-          <div id="plan-hoy-contenido" class="hidden">
-            <div class="meal-list" id="lista-comidas"></div>
-            <div id="meal-total-row" class="meal-total" style="display:none">
-              <span>Total del día</span>
-              <span class="meal-total-kcal" id="meal-total-kcal">— kcal</span>
+          <div id="menu-contenido" class="hidden">
+            <div id="lista-meals"></div>
+            <div class="meal-total-bar" id="meal-total" style="display:none">
+              <span>Total calórico del día</span>
+              <span id="meal-total-val">— kcal</span>
             </div>
-            <div id="meta-hoy-card" style="background:var(--green-lt);border-radius:var(--r);padding:12px 14px;margin-top:10px;display:none">
-              <div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px">Meta de hoy</div>
-              <div style="font-size:13px;color:var(--ink-mid)" id="meta-hoy-texto"></div>
-            </div>
-            <div class="proyeccion-strip" id="proyeccion-strip" style="display:none">
+            <div class="proyeccion-box" id="proy-box" style="display:none">
               <div>
-                <div class="proyeccion-label">Si mantienes este ritmo</div>
-                <div class="proyeccion-val" id="proyeccion-texto">—</div>
+                <div class="proy-label">Proyección 30 días a este ritmo</div>
+                <div class="proy-val" id="proy-val">—</div>
               </div>
-              <i class="ti ti-trending-down" style="font-size:24px;color:#0F6E56;opacity:0.6"></i>
+              <span style="font-size:24px;opacity:0.5">📉</span>
             </div>
-            <p id="ya-generado-hoy-msg" style="font-size:12px;color:var(--ink-lt);margin-top:10px;text-align:center;display:none">
-              ✓ Menú generado para hoy. Vuelve mañana para uno nuevo.
+            <p id="menu-ya-generado" style="font-size:11px;color:var(--ink-lt);margin-top:10px;text-align:center;display:none">
+              ✓ Menú generado · Vuelve mañana para uno nuevo
             </p>
           </div>
         </div>
       </div>
 
       <!-- REGISTRO DE PESO -->
-      <div class="section-card">
-        <div class="section-title">⚖️ Registrar mi peso semanal</div>
-        <div class="peso-action">
-          <input type="number" id="peso-input" placeholder="Ej: 78.5 kg" step="0.1">
-          <button class="btn-guardar-peso" onclick="registrarPeso()">Guardar</button>
+      <div class="peso-card">
+        <div class="sec-label" style="margin-bottom:12px">⚖️ Registro de peso semanal</div>
+        <div class="peso-input-row">
+          <input type="number" id="peso-input" placeholder="Ej: 78.5 (en kg)" step="0.1">
+          <button class="btn-peso" onclick="guardarPeso()">+ Registrar</button>
         </div>
-        <p style="font-size:12px;color:var(--ink-lt);margin-top:8px">Registra tu peso cada semana para ver tu progreso real en el gráfico.</p>
-        <div class="ultimos-pesos" id="ultimos-pesos-container"></div>
+        <p style="font-size:11px;color:var(--ink-lt);margin-bottom:10px">Registra una vez por semana, siempre en las mismas condiciones (mañana, en ayunas).</p>
+        <div class="pesos-scroll" id="pesos-recientes"></div>
       </div>
 
-      <!-- ACTIVIDAD FÍSICA -->
-      <div class="section-card">
-        <div class="section-title">🏃 Actividad física</div>
-        <div class="actividad-visual">
-          <div class="actividad-chip">
-            <div class="actividad-chip-icon">⏱️</div>
-            <div class="actividad-chip-label">Duración</div>
-            <div class="actividad-chip-val" id="act-duracion">—</div>
+      <!-- ACTIVIDAD -->
+      <div class="act-card">
+        <div class="sec-label">🏃 Actividad física recomendada</div>
+        <div class="act-chips">
+          <div class="act-chip">
+            <div class="act-chip-emoji">⏱️</div>
+            <div class="act-chip-val" id="act-duracion">—</div>
+            <div class="act-chip-lbl">Duración</div>
           </div>
-          <div class="actividad-chip">
-            <div class="actividad-chip-icon">🔥</div>
-            <div class="actividad-chip-label">Intensidad</div>
-            <div class="actividad-chip-val" id="act-intensidad">—</div>
+          <div class="act-chip">
+            <div class="act-chip-emoji">🔥</div>
+            <div class="act-chip-val" id="act-intensidad">—</div>
+            <div class="act-chip-lbl">Intensidad</div>
           </div>
-          <div class="actividad-chip">
-            <div class="actividad-chip-icon">📅</div>
-            <div class="actividad-chip-label">Días/semana</div>
-            <div class="actividad-chip-val" id="act-dias">—</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;background:var(--bone);border-radius:var(--r);padding:12px 14px">
-          <div style="font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Tu rutina sugerida</div>
-          <div style="font-size:13px;color:var(--ink-mid)" id="actividad-desc">—</div>
-        </div>
-        <div class="semana-dots" id="semana-dots"></div>
-      </div>
-
-      <!-- FOTOS DE PROGRESO -->
-      <div class="section-card" id="fotos-card">
-        <div class="section-title">
-          <span>📸 Fotos de progreso</span>
-          <span class="section-badge" id="fotos-badge" style="background:#FEF3E2;color:#854F0B">Plan pago</span>
-        </div>
-        <p style="font-size:13px;color:var(--ink-lt);margin-bottom:12px">Documenta tu transformación semana a semana. La evidencia visual es el mejor motivador.</p>
-        <div class="foto-grid" id="foto-grid">
-          <div class="foto-slot locked">
-            <div class="foto-lock-overlay">
-              <i class="ti ti-lock" style="font-size:20px;color:var(--ink-lt)"></i>
-              <div class="foto-lock-text">Semana 1</div>
-            </div>
-          </div>
-          <div class="foto-slot locked">
-            <div class="foto-lock-overlay">
-              <i class="ti ti-lock" style="font-size:20px;color:var(--ink-lt)"></i>
-              <div class="foto-lock-text">Semana 2</div>
-            </div>
+          <div class="act-chip">
+            <div class="act-chip-emoji">📅</div>
+            <div class="act-chip-val" id="act-dias">—</div>
+            <div class="act-chip-lbl">Frecuencia</div>
           </div>
         </div>
-        <div id="fotos-bloqueadas-msg">
-          <a href="onboarding.html" class="btn-action primary" style="font-size:13px">
-            <i class="ti ti-arrow-up"></i> Mejorar plan para subir fotos
-          </a>
-        </div>
-        <div id="fotos-upload" class="hidden">
-          <button class="btn-action secondary" onclick="alert('Función de subida de fotos próximamente')">
-            <i class="ti ti-camera"></i> Subir mi foto semanal
-          </button>
-        </div>
+        <div style="background:var(--bone);border-radius:var(--r);padding:11px 13px;margin-bottom:12px;font-size:13px;color:var(--ink-mid)" id="act-desc">—</div>
+        <div class="semana-row" id="semana-row"></div>
       </div>
 
       <!-- TELECONSULTA -->
-      <div class="section-card">
-        <div class="section-title">🩺 Teleconsulta médica</div>
-        <div class="tele-strip" id="tele-strip">
-          <div class="tele-count" id="tele-count">0</div>
-          <div>
-            <div class="tele-info-text" id="tele-info-text">Consultas disponibles este mes</div>
-            <div class="tele-info-sub" id="tele-info-sub">Habla con tu médico NutriSLIM</div>
+      <div class="tele-card">
+        <div class="sec-label">🩺 Teleconsulta médica</div>
+        <div class="tele-banner" id="tele-banner">
+          <div class="tele-badge" id="tele-n">0</div>
+          <div class="tele-info">
+            <div class="tele-num" id="tele-txt">Consultas disponibles</div>
+            <div class="tele-sub">Con médico NutriSLIM de Fundación Médica CMS</div>
           </div>
         </div>
-        <div id="tele-vip-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:12px 14px;text-align:center;font-size:12px;color:var(--ink-lt);margin-bottom:12px">
-          Ya usaste tus 2 teleconsultas de este mes. Se renuevan en tu próximo ciclo.
+        <div id="tele-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:11px 13px;text-align:center;font-size:12px;color:var(--ink-lt);margin-bottom:12px">
+          Teleconsultas del mes agotadas. Se renuevan en tu próximo ciclo.
         </div>
-        <a id="btn-whatsapp-tele" href="#" target="_blank" class="btn-action primary" style="text-decoration:none">
-          <i class="ti ti-brand-whatsapp"></i> Agendar mi teleconsulta →
+        <a id="btn-tele" href="#" target="_blank" class="btn-full wa" style="text-decoration:none">
+          💬 Agendar mi teleconsulta por WhatsApp
         </a>
       </div>
 
-      <!-- LABORATORIO -->
-      <div class="section-card" id="examenes-card" style="border-color:#F5C842">
-        <div class="section-title">
-          <span style="display:flex;align-items:center;gap:8px"><i class="ti ti-flask" style="font-size:18px;color:#854F0B"></i> Exámenes de laboratorio</span>
-          <span id="examenes-badge" class="section-badge"></span>
+      <!-- EXÁMENES -->
+      <div class="lab-card">
+        <div class="lab-head">
+          <div class="lab-title">🧪 Exámenes de laboratorio</div>
+          <span class="lab-badge" id="lab-badge"></span>
         </div>
-        <p id="examenes-texto" style="font-size:13px;color:var(--ink-mid);margin-bottom:12px">—</p>
-        <div class="examen-lista-grid">
-          <span class="examen-chip">Glucosa en ayunas</span>
-          <span class="examen-chip">Hemoglobina glicosilada</span>
-          <span class="examen-chip">Perfil lipídico</span>
-          <span class="examen-chip">TSH</span>
-          <span class="examen-chip">Hemograma completo</span>
-          <span class="examen-chip">Ácido úrico</span>
-          <span class="examen-chip">Insulina basal</span>
-          <span class="examen-chip">Creatinina</span>
+        <p id="lab-desc" style="font-size:13px;color:#78350F;margin-bottom:10px;line-height:1.5">—</p>
+        <div class="examen-tags">
+          <span class="examen-tag">Glucosa en ayunas</span>
+          <span class="examen-tag">HbA1c</span>
+          <span class="examen-tag">Perfil lipídico</span>
+          <span class="examen-tag">TSH</span>
+          <span class="examen-tag">Hemograma</span>
+          <span class="examen-tag">Ácido úrico</span>
+          <span class="examen-tag">Insulina</span>
+          <span class="examen-tag">Creatinina</span>
         </div>
-        <a id="btn-examenes" href="#" target="_blank" class="btn-action amber" style="text-decoration:none">
-          <i class="ti ti-calendar-plus"></i> Agendar mis exámenes →
+        <a id="btn-lab" href="https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw" target="_blank" class="btn-full amber" style="text-decoration:none">
+          📅 Agendar mis exámenes →
         </a>
-        <p id="examenes-estado" style="font-size:11px;color:var(--ink-lt);margin-top:8px;text-align:center">—</p>
+        <p id="lab-estado" style="font-size:11px;color:#92400E;margin-top:8px;text-align:center">—</p>
       </div>
 
       <!-- FUNCIONES BLOQUEADAS -->
-      <div class="section-card" id="seccion-bloqueada">
-        <div class="section-title">🔒 Desbloquea más con un plan pago</div>
-        <div class="bloqueo-grid" id="lista-bloqueos"></div>
+      <div class="bloqueos-card" id="bloqueos-card">
+        <div class="sec-label">🔒 Desbloquea con plan pago</div>
+        <div class="bloqueos-grid" id="bloqueos-grid"></div>
+        <a href="onboarding.html" class="btn-full green" style="text-decoration:none;margin-top:14px">
+          ⚡ Ver planes y mejorar →
+        </a>
       </div>
 
-    </div>
+    </div><!-- /portal-content -->
   </div>
 </div>
 
 <script>
-let supabaseClient = null;
-let pacienteActual = null;
-let configCargada = false;
-let historialPesos = [];
+let sb = null, paciente = null, pesos = [], cfgOK = false;
+const EMOJICOMIDA = {desayuno:'🍳', merienda_manana:'🥝', almuerzo:'🍽️', merienda_tarde:'🥑', cena:'🌙'};
+const CLASSMEAL   = {desayuno:'desayuno', merienda_manana:'merienda', almuerzo:'almuerzo', merienda_tarde:'merienda', cena:'cena'};
+const LINK_TELE   = 'https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ';
+const LINK_LAB    = 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw';
+const TEL_WA      = '593990932502';
 
-// ── SUPABASE ─────────────────────────────────────────────
-async function inicializarSupabase() {
-  if (configCargada) return;
-  const resp = await fetch('/.netlify/functions/get-config');
-  const config = await resp.json();
-  supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
-  configCargada = true;
+/* ── SUPABASE ───────────────────────────────────────────── */
+async function initSB(){
+  if(cfgOK)return;
+  const r=await fetch('/.netlify/functions/get-config');
+  const c=await r.json();
+  sb=supabase.createClient(c.supabaseUrl,c.supabaseAnonKey);
+  cfgOK=true;
 }
 
-// ── AUTH ─────────────────────────────────────────────────
-async function iniciarSesion() {
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  const errorEl = document.getElementById('login-error');
-  const btn = document.getElementById('btn-login');
-  errorEl.classList.remove('show');
-  if (!email || !password) {
-    errorEl.textContent = 'Ingresa tu correo y contraseña.';
-    errorEl.classList.add('show');
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = 'Ingresando...';
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) {
-    errorEl.textContent = 'Correo o contraseña incorrectos. ¿Olvidaste tu contraseña?';
-    errorEl.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Ingresar';
-  } else {
-    mostrarPortal();
-  }
+/* ── LOGIN ─────────────────────────────────────────────── */
+async function iniciarSesion(){
+  const em=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  const err=document.getElementById('login-error');
+  const btn=document.getElementById('btn-login');
+  err.classList.remove('show');
+  if(!em||!pw){err.textContent='Completa correo y contraseña.';err.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Ingresando...';
+  const{error}=await sb.auth.signInWithPassword({email:em,password:pw});
+  if(error){
+    err.textContent='Correo o contraseña incorrectos.';
+    err.classList.add('show');btn.disabled=false;btn.textContent='Ingresar a mi portal';
+  } else mostrarPortal();
 }
 
-async function enviarRecuperacion() {
-  const email = document.getElementById('login-email').value.trim();
-  const errorEl = document.getElementById('login-error');
-  if (!email) {
-    errorEl.textContent = 'Escribe tu correo arriba y luego haz clic en "Olvidé mi contraseña".';
-    errorEl.classList.add('show');
-    return;
-  }
-  await supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://nutrislimed.netlify.app/portal'
-  });
-  errorEl.style.background = '#E6F5EE';
-  errorEl.style.color = '#1A7A52';
-  errorEl.textContent = '✓ Revisa tu correo — te enviamos el enlace para crear tu contraseña.';
-  errorEl.classList.add('show');
+async function enviarRecuperacion(){
+  const em=document.getElementById('login-email').value.trim();
+  const err=document.getElementById('login-error');
+  if(!em){err.textContent='Escribe tu correo arriba primero.';err.classList.add('show');return;}
+  await sb.auth.resetPasswordForEmail(em,{redirectTo:'https://nutrislimed.netlify.app/portal'});
+  err.style.background='#E6F7EE';err.style.color='#064E3B';
+  err.textContent='✓ Revisa tu correo — te enviamos el enlace.';err.classList.add('show');
 }
 
-function cerrarSesion() {
-  supabaseClient.auth.signOut();
-  localStorage.removeItem('nutrislim_session');
+function cerrarSesion(){
+  sb.auth.signOut();
   document.getElementById('login-screen').classList.remove('hidden');
   document.getElementById('portal-screen').classList.add('hidden');
 }
 
-async function mostrarPortal() {
+async function mostrarPortal(){
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('portal-screen').classList.remove('hidden');
-  await cargarDatosPaciente();
+  await cargarPaciente();
 }
 
-async function guardarNuevaContrasena() {
-  const nueva = document.getElementById('nueva-password').value;
-  const errorEl = document.getElementById('reset-error');
-  const btn = document.getElementById('btn-guardar-password');
-  if (nueva.length < 6) {
-    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
-    errorEl.classList.add('show');
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = 'Guardando...';
-  const { error } = await supabaseClient.auth.updateUser({ password: nueva });
-  if (error) {
-    errorEl.textContent = 'Error al guardar. Intenta de nuevo.';
-    errorEl.classList.add('show');
-    btn.disabled = false;
-    btn.textContent = 'Guardar contraseña';
-  } else {
-    mostrarPortal();
-  }
+async function guardarPassword(){
+  const pw=document.getElementById('nueva-password').value;
+  const err=document.getElementById('reset-error');
+  const btn=document.getElementById('btn-guardar-pwd');
+  if(pw.length<6){err.textContent='Mínimo 6 caracteres.';err.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Guardando...';
+  const{error}=await sb.auth.updateUser({password:pw});
+  if(error){err.textContent='Error al guardar. Intenta de nuevo.';err.classList.add('show');btn.disabled=false;btn.textContent='Guardar contraseña';}
+  else mostrarPortal();
 }
 
-// ── CARGA PRINCIPAL ───────────────────────────────────────
-async function cargarDatosPaciente() {
-  try {
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (!user) throw new Error('No hay sesión activa');
-
-    const { data: paciente, error } = await supabaseClient
-      .from('pacientes')
-      .select('*')
-      .eq('auth_user_id', user.id)
-      .single();
-
-    if (error) throw error;
-    pacienteActual = paciente;
-
+/* ── DATOS PACIENTE ────────────────────────────────────── */
+async function cargarPaciente(){
+  try{
+    const{data:{user}}=await sb.auth.getUser();
+    if(!user) throw new Error('no-session');
+    const{data:p,error}=await sb.from('pacientes').select('*').eq('auth_user_id',user.id).single();
+    if(error) throw error;
+    paciente=p;
     document.getElementById('loading-msg').classList.add('hidden');
-    document.getElementById('contenido-portal').classList.remove('hidden');
-
-    renderizarPortal(paciente);
-
-  } catch (err) {
-    console.error('Error cargando paciente:', err);
-    if (err.code === 'PGRST116' || (err.message && err.message.includes('No rows'))) {
-      document.getElementById('loading-msg').innerHTML =
-        '<div style="padding:20px"><p style="margin-bottom:16px;color:var(--ink-mid)">Aún no tienes un perfil de paciente configurado.</p>' +
-        '<a href="/onboarding.html" style="background:var(--green);color:#fff;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px;display:inline-block">Completar mi registro →</a></div>';
+    document.getElementById('portal-content').classList.remove('hidden');
+    render();
+  }catch(e){
+    const lm=document.getElementById('loading-msg');
+    if(e.code==='PGRST116'||String(e.message).includes('No rows')){
+      lm.innerHTML='<p style="margin-bottom:16px;color:var(--ink-mid)">Aún no tienes perfil de paciente.</p><a href="/onboarding.html" style="background:var(--g1);color:#fff;padding:13px 26px;border-radius:50px;text-decoration:none;font-weight:600;font-size:14px">Completar registro →</a>';
     } else {
-      document.getElementById('loading-msg').textContent = 'No pudimos cargar tu información. Intenta cerrar sesión y entrar de nuevo.';
+      lm.textContent='No pudimos cargar tu información. Cierra sesión e intenta de nuevo.';
     }
   }
 }
 
-async function renderizarPortal(paciente) {
-  const nombreCorto = paciente.nombre.split(' ')[0];
-  const iniciales = paciente.nombre.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-  const NOMBRES_PLAN = { free: 'Plan Gratuito', '19': 'Plan Transformación', '49': 'Plan VIP Clínico' };
-  const nombrePlan = NOMBRES_PLAN[paciente.plan_elegido] || 'Plan Gratuito';
+async function render(){
+  const p=paciente;
+  const PLAN_NOMBRE={free:'Plan Gratuito','19':'Plan Transformación','49':'Plan VIP Clínico'};
+  const nombre=p.nombre.split(' ')[0];
+  const planNombre=PLAN_NOMBRE[p.plan_elegido]||'Plan Gratuito';
+  const hoy=new Date();
+  const inicio=new Date(p.created_at);
+  const diaNum=Math.floor((hoy-inicio)/(864e5))+1;
+  const semNum=Math.ceil(diaNum/7);
 
-  // Nav badge
-  const badge = document.getElementById('nav-plan-badge');
-  badge.textContent = nombrePlan;
-  badge.className = 'nav-plan-badge ' + (paciente.plan_elegido === '49' ? 'vip' : paciente.plan_elegido === '19' ? 'transformacion' : 'free');
+  // Nav
+  const nb=document.getElementById('nav-plan-lbl');
+  nb.textContent=planNombre;
+  if(p.plan_elegido==='49') nb.style.background='#FEF3E2',nb.style.color='#854F0B';
+  else if(p.plan_elegido==='19') nb.style.background='#E6F7EE',nb.style.color='var(--g2)';
 
   // Hero
-  document.getElementById('avatar-iniciales').textContent = iniciales;
-  document.getElementById('nombre-paciente').textContent = nombreCorto;
-  document.getElementById('plan-paciente-sub').textContent = nombrePlan;
-  document.getElementById('hero-imc').textContent = paciente.imc || '—';
-  document.getElementById('hero-peso-actual').textContent = paciente.peso || '—';
+  document.getElementById('h-nombre').textContent=nombre;
+  document.getElementById('h-plan').textContent=planNombre;
+  document.getElementById('h-dia').textContent='Día '+diaNum;
+  document.getElementById('h-imc').textContent=p.imc||'—';
+  document.getElementById('h-semanas').textContent=semNum;
+  document.getElementById('h-peso').textContent=p.peso||'—';
+  document.getElementById('h-perdidos').textContent='0';
 
-  const fechaInicio = new Date(paciente.created_at);
-  const hoy = new Date();
-  const diaPrograma = Math.floor((hoy - fechaInicio) / (1000*60*60*24)) + 1;
-  const semanaActiva = Math.ceil(diaPrograma / 7);
-  document.getElementById('dia-programa-label').textContent = 'Día ' + diaPrograma + ' de tu programa';
-  document.getElementById('dia-programa-label2').textContent = 'Día ' + diaPrograma;
-  document.getElementById('hero-semanas').textContent = semanaActiva;
+  // Tip
+  mostrarTip(p);
 
-  // Banner de renovación
-  if (paciente.plan_vence_en) {
-    const dias = Math.ceil((new Date(paciente.plan_vence_en) - hoy) / (1000*60*60*24));
-    if (dias <= 8 && dias > 0) {
-      document.getElementById('renewal-banner').classList.add('show');
-      document.getElementById('renewal-dias').textContent = 'Tu plan vence en ' + dias + ' día(s)';
-    }
-  }
+  // Pesos
+  await cargarPesos(p.id, p.peso);
 
-  // Tip del día
-  mostrarTipDelDia(paciente);
+  // Score rings
+  calcScores(p);
 
-  // Cargar peso e historial
-  await cargarSeguimientoPeso(paciente.id, paciente.peso);
+  // Meta
+  renderMeta(p);
 
-  // Meta de peso
-  renderizarMetaPeso(paciente);
+  // Hábitos
+  initHabitos();
 
-  // Hábitos (localStorage)
-  inicializarHabitos();
+  // Body map
+  renderBodyMap(p.actividad);
 
-  // Menú del día
-  await cargarPlanHoy(paciente.id);
+  // Menú
+  await cargarMenu(p.id);
+  document.getElementById('menu-dia-lbl').textContent='Día '+diaNum+' de tu programa';
 
   // Actividad
-  mostrarActividadDetallada(paciente.actividad);
+  renderActividad(p.actividad);
 
-  // Días de la semana
-  renderizarSemana();
+  // Semana
+  renderSemana();
 
   // Teleconsulta
-  configurarTeleconsulta(paciente, NOMBRES_PLAN);
+  renderTele(p, planNombre);
 
-  // Exámenes
-  configurarExamenesLaboratorio(paciente);
-
-  // Fotos
-  configurarFotos(paciente.plan_elegido);
+  // Lab
+  renderLab(p);
 
   // Bloqueos
-  mostrarBloqueosPorPlan(paciente.plan_elegido);
+  renderBloqueos(p.plan_elegido);
 
-  // Reconexión
-  verificarReconexion(paciente);
+  // Banners
+  renderBanners(p, nombre);
 
-  // Actualizar última conexión
-  supabaseClient.from('pacientes').update({ ultima_conexion: hoy.toISOString() }).eq('id', paciente.id);
+  // Update connection
+  sb.from('pacientes').update({ultima_conexion:hoy.toISOString()}).eq('id',p.id);
 }
 
-// ── TIPS DEL DÍA ─────────────────────────────────────────
-function mostrarTipDelDia(paciente) {
-  const imc = parseFloat(paciente.imc) || 0;
-  const tips = [];
+/* ── TIP ───────────────────────────────────────────────── */
+function mostrarTip(p){
+  const imc=parseFloat(p.imc)||0;
+  const diasSemana=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  document.getElementById('tip-fecha').textContent=diasSemana[new Date().getDay()===0?6:new Date().getDay()-1];
+  const tips=[
+    'Reducir 500 kcal/día del total de mantenimiento produce una pérdida de 0.45–0.5 kg/semana sin comprometer la masa muscular, según las guías clínicas ESPEN.',
+    'El músculo en reposo consume 13 kcal/kg al día vs 4.5 kcal/kg del tejido adiposo. Cada kg de músculo ganado acelera tu metabolismo basal de forma permanente.',
+    'Dormir menos de 6 horas eleva la grelina (hormona del hambre) un 28% y reduce la leptina (saciedad) un 18%, saboteando directamente tu control calórico.',
+    'Beber 500 ml de agua 20–30 min antes de comer reduce la ingesta calórica espontánea en un promedio de 13%, según el Journal of Obesity (2010).',
+    'Una pérdida de solo el 5% del peso corporal en personas con sobrepeso reduce la presión arterial sistólica en ≈3 mmHg y mejora el perfil lipídico.',
+    'El ejercicio aeróbico de baja intensidad (como caminar) activa preferentemente la oxidación de grasas como combustible vs el glucógeno en el ejercicio intenso.',
+    'La proteína tiene un efecto térmico del 20–30% de su valor calórico — tu cuerpo quema hasta 30 kcal solo para digerir 100 kcal de proteína.',
+    'El consumo de fibra soluble (avena, legumbres) forma un gel viscoso en el intestino que ralentiza la absorción de glucosa, reduciendo picos de insulina.'
+  ];
+  const idx=imc>=30 ? new Date().getDate()%3 : imc>=25 ? 3+(new Date().getDate()%3) : 6+(new Date().getDate()%2);
+  document.getElementById('tip-texto').textContent=tips[Math.min(idx,tips.length-1)];
+}
 
-  if (imc >= 30) {
-    tips.push('Reducir 500 kcal diarias del mantenimiento genera un déficit suficiente para perder ≈ 0.5 kg por semana de forma sostenible y sin comprometer la masa muscular.');
-    tips.push('El sueño de 7-8 horas regula la grelina y la leptina — las hormonas del hambre. Dormir mal puede aumentar el apetito hasta un 24% al día siguiente.');
-    tips.push('Beber 500 ml de agua 30 minutos antes de cada comida reduce la ingesta calórica en un promedio del 13%, según estudios clínicos.');
-  } else if (imc >= 25) {
-    tips.push('Una pérdida del 5-10% del peso corporal ya reduce significativamente el riesgo cardiovascular, mejora la resistencia a la insulina y los niveles de colesterol.');
-    tips.push('Las proteínas tienen el mayor efecto térmico — tu cuerpo quema hasta un 30% de las calorías proteicas solo para digerirlas. Prioriza pollo, huevo y legumbres.');
-    tips.push('Caminar 10,000 pasos al día equivale a quemar entre 300 y 500 kcal dependiendo de tu peso actual. Es el ejercicio más subestimado.');
-  } else {
-    tips.push('Mantener el peso saludable requiere monitoreo constante. El seguimiento semanal del peso predice éxito a largo plazo mejor que cualquier dieta restrictiva.');
-    tips.push('El músculo quema 3 veces más calorías que la grasa en reposo. Incorporar ejercicios de fuerza 2 veces por semana transforma tu metabolismo basal.');
-    tips.push('Una dieta mediterránea — aceite de oliva, legumbres, pescado, vegetales — es el patrón alimenticio con mayor evidencia científica de longevidad.');
+/* ── SCORES ────────────────────────────────────────────── */
+function calcScores(p){
+  const imc=parseFloat(p.imc)||0;
+  // Wellness Score: basado en imc, días activos, habitos
+  let ws=50;
+  if(imc<25) ws+=25;
+  else if(imc<30) ws+=10;
+  const hoy=new Date().toISOString().split('T')[0];
+  let hab={};try{hab=JSON.parse(localStorage.getItem('ns_h_'+hoy)||'{}')}catch(e){}
+  if(hab.menu) ws+=10; if(hab.ejercicio) ws+=10; if((hab.agua||0)>=8) ws+=5;
+  ws=Math.min(100,ws);
+  animRing('ring-wellness',ws,100);
+  document.getElementById('ring-w-val').textContent=ws;
+  document.getElementById('ring-w-sub').textContent=ws>=80?'¡Excelente hoy!':ws>=60?'Buen progreso':'Por mejorar';
+
+  // IMC ring: escala 15-40 → 0-100%
+  const imcPct=Math.max(0,Math.min(100,(1-(imc-18.5)/21.5)*100));
+  const imcColor=imc<18.5?'#F59E0B':imc<25?'#22C55E':imc<30?'#F97316':'#EF4444';
+  document.getElementById('ring-imc').style.stroke=imcColor;
+  animRing('ring-imc',imcPct,100);
+  document.getElementById('ring-imc-val').textContent=imc;
+  document.getElementById('ring-imc-sub').textContent=imc<18.5?'Bajo peso':imc<25?'Peso normal ✓':imc<30?'Sobrepeso':'Obesidad';
+}
+
+function animRing(id,pct,max){
+  const circ=150.796;
+  const offset=circ-((pct/max)*circ);
+  setTimeout(()=>{document.getElementById(id).style.strokeDashoffset=offset;},100);
+}
+
+/* ── META PESO ─────────────────────────────────────────── */
+function renderMeta(p){
+  const card=document.getElementById('meta-peso-card');
+  const po=parseFloat(p.peso_objetivo)||null;
+  const pi=parseFloat(p.peso)||null;
+  if(!po||!pi||po>=pi){card.style.display='none';return;}
+  const pa=pesos.length>0?pesos[pesos.length-1].peso_kg:pi;
+  const total=pi-po; const perdido=pi-pa; const pct=Math.min(100,Math.max(0,(perdido/total)*100));
+  const falta=Math.max(0,pa-po).toFixed(1);
+  document.getElementById('meta-inicio').textContent=pi.toFixed(1);
+  document.getElementById('meta-actual').textContent=pa.toFixed(1);
+  document.getElementById('meta-objetivo').textContent=po.toFixed(1);
+  document.getElementById('meta-pct-val').textContent=pct.toFixed(0)+'%';
+  setTimeout(()=>{document.getElementById('prog-fill').style.width=pct+'%';},200);
+  document.getElementById('meta-foot').innerHTML=falta<=0?'🎉 <strong>¡Meta alcanzada!</strong> Increíble logro.':'Faltan <strong>'+falta+' kg</strong> para llegar a tu meta';
+}
+
+/* ── HÁBITOS ───────────────────────────────────────────── */
+function initHabitos(){
+  const hoy=new Date().toISOString().split('T')[0];
+  let h={};try{h=JSON.parse(localStorage.getItem('ns_h_'+hoy)||'{}')}catch(e){}
+  // Vasos
+  const wrap=document.getElementById('vasos-wrap');wrap.innerHTML='';
+  const agua=h.agua||0;
+  for(let i=0;i<8;i++){
+    const v=document.createElement('div');
+    v.className='vaso'+(i<agua?' on':'');
+    v.textContent=i<agua?'💧':'○';
+    v.onclick=()=>setAgua(i+1);
+    wrap.appendChild(v);
   }
-
-  const idx = new Date().getDate() % tips.length;
-  document.getElementById('tip-texto').textContent = tips[idx];
+  document.getElementById('agua-count-lbl').textContent=agua+' completados';
+  if(h.menu) document.getElementById('tog-menu').classList.add('on');
+  else document.getElementById('tog-menu').classList.remove('on');
+  if(h.ejercicio) document.getElementById('tog-act').classList.add('on');
+  else document.getElementById('tog-act').classList.remove('on');
+  // score
+  let n=0;if(agua>=8)n++;if(h.menu)n++;if(h.ejercicio)n++;
+  document.getElementById('habitos-score-lbl').textContent=n+'/3 completados';
 }
 
-// ── META DE PESO ──────────────────────────────────────────
-function renderizarMetaPeso(paciente) {
-  const pesoInicio = parseFloat(paciente.peso) || 0;
-  const pesoObjetivo = parseFloat(paciente.peso_objetivo) || null;
-
-  if (!pesoObjetivo || pesoObjetivo >= pesoInicio) {
-    document.getElementById('meta-peso-card').style.display = 'none';
-    return;
-  }
-
-  const pesoActual = historialPesos.length > 0
-    ? historialPesos[historialPesos.length - 1].peso_kg
-    : pesoInicio;
-
-  const totalPerder = pesoInicio - pesoObjetivo;
-  const perdido = pesoInicio - pesoActual;
-  const pct = Math.min(100, Math.max(0, (perdido / totalPerder) * 100));
-  const falta = Math.max(0, pesoActual - pesoObjetivo).toFixed(1);
-
-  document.getElementById('meta-peso-inicio').textContent = pesoInicio.toFixed(1);
-  document.getElementById('meta-peso-objetivo').textContent = pesoObjetivo.toFixed(1);
-  document.getElementById('meta-pct-label').textContent = pct.toFixed(0) + '%';
-  document.getElementById('progress-bar').style.width = pct + '%';
-
-  if (falta <= 0) {
-    document.getElementById('meta-dist-texto').innerHTML = '🎉 <strong>¡Alcanzaste tu meta!</strong> Sigue así.';
-  } else {
-    document.getElementById('meta-dist-texto').innerHTML = 'Faltan <strong>' + falta + ' kg</strong> para tu meta de ' + pesoObjetivo.toFixed(1) + ' kg';
-  }
+function setAgua(n){
+  const hoy=new Date().toISOString().split('T')[0];
+  let h={};try{h=JSON.parse(localStorage.getItem('ns_h_'+hoy)||'{}')}catch(e){}
+  h.agua=n;try{localStorage.setItem('ns_h_'+hoy,JSON.stringify(h))}catch(e){}
+  initHabitos();
 }
 
-// ── HÁBITOS (localStorage) ────────────────────────────────
-function inicializarHabitos() {
-  const hoy = new Date().toISOString().split('T')[0];
-  let habitos = {};
-  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
-
-  // Vasos de agua
-  const vasosContainer = document.getElementById('agua-vasos');
-  vasosContainer.innerHTML = '';
-  const vasosLlenos = habitos.agua || 0;
-  for (let i = 0; i < 8; i++) {
-    const v = document.createElement('div');
-    v.className = 'agua-vaso' + (i < vasosLlenos ? ' lleno' : '');
-    v.onclick = () => setAgua(i + 1);
-    vasosContainer.appendChild(v);
-  }
-  document.getElementById('agua-label').textContent = vasosLlenos + '/8';
-
-  if (habitos.menu) document.getElementById('toggle-menu').classList.add('activo');
-  if (habitos.ejercicio) document.getElementById('toggle-ejercicio').classList.add('activo');
+function togHabito(t){
+  const hoy=new Date().toISOString().split('T')[0];
+  let h={};try{h=JSON.parse(localStorage.getItem('ns_h_'+hoy)||'{}')}catch(e){}
+  h[t]=!h[t];try{localStorage.setItem('ns_h_'+hoy,JSON.stringify(h))}catch(e){}
+  const btn=t==='menu'?document.getElementById('tog-menu'):document.getElementById('tog-act');
+  h[t]?btn.classList.add('on'):btn.classList.remove('on');
+  let n=0;if((h.agua||0)>=8)n++;if(h.menu)n++;if(h.ejercicio)n++;
+  document.getElementById('habitos-score-lbl').textContent=n+'/3 completados';
 }
 
-function setAgua(cantidad) {
-  const hoy = new Date().toISOString().split('T')[0];
-  let habitos = {};
-  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
-  habitos.agua = cantidad;
-  try { localStorage.setItem('ns_habitos_' + hoy, JSON.stringify(habitos)); } catch(e) {}
-  inicializarHabitos();
-}
-
-function toggleHabito(tipo) {
-  const hoy = new Date().toISOString().split('T')[0];
-  let habitos = {};
-  try { habitos = JSON.parse(localStorage.getItem('ns_habitos_' + hoy) || '{}'); } catch(e) {}
-  habitos[tipo] = !habitos[tipo];
-  try { localStorage.setItem('ns_habitos_' + hoy, JSON.stringify(habitos)); } catch(e) {}
-  const btn = document.getElementById('toggle-' + tipo);
-  if (habitos[tipo]) btn.classList.add('activo');
-  else btn.classList.remove('activo');
-}
-
-// ── HISTORIAL PESO + CHART ────────────────────────────────
-async function cargarSeguimientoPeso(pacienteId, pesoInicial) {
-  const { data: registros } = await supabaseClient
-    .from('seguimiento_peso')
-    .select('*')
-    .eq('paciente_id', pacienteId)
-    .order('created_at', { ascending: true });
-
-  historialPesos = registros || [];
-
-  if (historialPesos.length > 0) {
-    const ultimoPeso = historialPesos[historialPesos.length - 1].peso_kg;
-    const diferencia = (pesoInicial - ultimoPeso).toFixed(1);
-    const val = parseFloat(diferencia);
-
-    document.getElementById('hero-perdidos').textContent = val > 0 ? '-' + diferencia : (val < 0 ? '+' + Math.abs(diferencia) : '0');
-    document.getElementById('hero-peso-actual').textContent = ultimoPeso.toFixed(1);
-
-    if (historialPesos.length >= 2) {
-      const penultimo = historialPesos[historialPesos.length - 2].peso_kg;
-      const variacion = (ultimoPeso - penultimo).toFixed(1);
-      const v = parseFloat(variacion);
-      document.getElementById('chart-variacion').textContent = (v < 0 ? '↓' : v > 0 ? '↑' : '→') + ' ' + Math.abs(variacion) + ' kg última semana';
-      document.getElementById('chart-variacion').style.color = v < 0 ? 'var(--green)' : v > 0 ? 'var(--red)' : 'var(--ink-lt)';
+/* ── PESOS + CHART ─────────────────────────────────────── */
+async function cargarPesos(pid, pesoInicial){
+  const{data:rows}=await sb.from('seguimiento_peso').select('*').eq('paciente_id',pid).order('created_at',{ascending:true});
+  pesos=rows||[];
+  if(pesos.length>0){
+    const ultimo=pesos[pesos.length-1].peso_kg;
+    const pi=parseFloat(pesoInicial)||ultimo;
+    const dif=parseFloat((pi-ultimo).toFixed(1));
+    document.getElementById('h-perdidos').textContent=dif>0?'-'+dif:dif<0?'+'+Math.abs(dif):'0';
+    document.getElementById('h-peso').textContent=ultimo.toFixed(1);
+    if(pesos.length>=2){
+      const prev=pesos[pesos.length-2].peso_kg;
+      const var2=(ultimo-prev).toFixed(1);
+      const v=parseFloat(var2);
+      const delta=document.getElementById('chart-delta');
+      delta.textContent=(v<0?'↓':v>0?'↑':'→')+' '+Math.abs(var2)+' kg';
+      delta.style.color=v<0?'var(--g1)':v>0?'var(--red)':'var(--ink-lt)';
     }
-
-    renderizarChartPeso(historialPesos, pesoInicial);
-    renderizarUltimosPesos(historialPesos);
-  } else {
-    document.getElementById('hero-perdidos').textContent = '0';
+    dibujarChart(pesos, parseFloat(pesoInicial)||pesos[0].peso_kg);
+    mostrarPesosRecientes(pesos);
+    calcStreak(pesos);
   }
-
-  // Streak
-  calcularStreak(historialPesos);
 }
 
-function renderizarChartPeso(registros, pesoInicial) {
-  if (registros.length < 1) return;
-
-  const svg = document.getElementById('weight-chart');
-  document.getElementById('chart-empty').style.display = 'none';
-  svg.style.display = 'block';
-
-  const pesos = registros.map(r => r.peso_kg);
-  const minP = Math.min(...pesos, pesoInicial) - 1;
-  const maxP = Math.max(...pesos, pesoInicial) + 1;
-  const W = 600, H = 90;
-  const pad = { l: 40, r: 10, t: 10, b: 20 };
-
-  const puntos = [{ peso: pesoInicial, fecha: registros[0].created_at }, ...registros.map(r => ({ peso: r.peso_kg, fecha: r.created_at }))];
-
-  const xStep = (W - pad.l - pad.r) / Math.max(puntos.length - 1, 1);
-  const yScale = (p) => pad.t + (H - pad.t - pad.b) * (1 - (p - minP) / (maxP - minP));
-
-  let pathD = '';
-  let areaD = '';
-  const pts = puntos.map((p, i) => ({ x: pad.l + i * xStep, y: yScale(p.peso) }));
-
-  pts.forEach((pt, i) => {
-    if (i === 0) { pathD += 'M ' + pt.x + ' ' + pt.y; areaD += 'M ' + pt.x + ' ' + H + ' L ' + pt.x + ' ' + pt.y; }
-    else { pathD += ' L ' + pt.x + ' ' + pt.y; areaD += ' L ' + pt.x + ' ' + pt.y; }
+function dibujarChart(rows, pi){
+  if(!rows.length)return;
+  document.getElementById('chart-empty').style.display='none';
+  const svg=document.getElementById('chart-svg');svg.style.display='block';
+  const pts=[{peso:pi,fecha:rows[0].created_at},...rows.map(r=>({peso:r.peso_kg,fecha:r.created_at}))];
+  const W=600,H=100,pL=36,pR=12,pT=12,pB=22;
+  const p2=pts.map(p=>p.peso);
+  const minP=Math.min(...p2)-1,maxP=Math.max(...p2)+1;
+  const sx=(i)=>pL+(i/(pts.length-1||1))*(W-pL-pR);
+  const sy=(v)=>pT+(H-pT-pB)*(1-(v-minP)/(maxP-minP));
+  let path='',area='';
+  pts.forEach((p,i)=>{
+    const x=sx(i),y=sy(p.peso);
+    if(i===0){path='M'+x+' '+y;area='M'+x+' '+H+' L'+x+' '+y;}
+    else{path+=' L'+x+' '+y;area+=' L'+x+' '+y;}
   });
-  areaD += ' L ' + pts[pts.length-1].x + ' ' + H + ' Z';
-
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#1A7A52" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="#1A7A52" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <path d="${areaD}" fill="url(#chartGrad)"/>
-    <path d="${pathD}" stroke="#1A7A52" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    ${pts.map((pt, i) => `
-      <circle cx="${pt.x}" cy="${pt.y}" r="${i === pts.length-1 ? 5 : 3}" fill="${i === pts.length-1 ? '#1A7A52' : '#fff'}" stroke="#1A7A52" stroke-width="2"/>
-      ${i % Math.ceil(pts.length / 4) === 0 || i === pts.length-1 ? `<text x="${pt.x}" y="${H}" text-anchor="middle" font-size="9" fill="#7A9487">${puntos[i].peso.toFixed(1)}</text>` : ''}
-    `).join('')}
-    <line x1="${pad.l}" y1="${yScale(minP+1)}" x2="${W-pad.r}" y2="${yScale(minP+1)}" stroke="#D6E8DE" stroke-width="1" stroke-dasharray="4,4"/>
-  `;
+  area+=' L'+sx(pts.length-1)+' '+H+' Z';
+  const circles=pts.map((p,i)=>{
+    const x=sx(i),y=sy(p.peso);
+    const label=(i===0||i===pts.length-1||(i%Math.max(1,Math.floor(pts.length/3))===0));
+    return `<circle cx="${x}" cy="${y}" r="${i===pts.length-1?5:3}" fill="${i===pts.length-1?'var(--g1)':'#fff'}" stroke="var(--g1)" stroke-width="2"/>
+    ${label?`<text x="${x}" y="${H}" text-anchor="middle" font-size="9" fill="#7A9080">${p.peso.toFixed(1)}</text>`:''}`;
+  }).join('');
+  svg.innerHTML=`<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--g1)" stop-opacity="0.12"/><stop offset="100%" stop-color="var(--g1)" stop-opacity="0"/></linearGradient></defs>
+  <path d="${area}" fill="url(#g)"/>
+  <path d="${path}" stroke="var(--g1)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  ${circles}`;
 }
 
-function renderizarUltimosPesos(registros) {
-  const container = document.getElementById('ultimos-pesos-container');
-  container.innerHTML = '';
-  const ultimos = registros.slice(-5);
-  ultimos.forEach((r, i) => {
-    const chip = document.createElement('div');
-    chip.className = 'peso-chip' + (i === ultimos.length - 1 ? ' ultimo' : '');
-    const fecha = new Date(r.created_at);
-    const label = fecha.toLocaleDateString('es-EC', { day: 'numeric', month: 'short' });
-    chip.innerHTML = '<div class="peso-chip-val">' + r.peso_kg.toFixed(1) + ' kg</div><div class="peso-chip-fecha">' + label + '</div>';
-    container.appendChild(chip);
+function mostrarPesosRecientes(rows){
+  const wrap=document.getElementById('pesos-recientes');wrap.innerHTML='';
+  rows.slice(-6).forEach((r,i,arr)=>{
+    const chip=document.createElement('div');
+    chip.className='peso-chip'+(i===arr.length-1?' latest':'');
+    const f=new Date(r.created_at).toLocaleDateString('es-EC',{day:'numeric',month:'short'});
+    chip.innerHTML='<div class="peso-chip-val">'+r.peso_kg.toFixed(1)+' kg</div><div class="peso-chip-lbl">'+f+'</div>';
+    wrap.appendChild(chip);
   });
 }
 
-function calcularStreak(registros) {
-  if (registros.length < 2) return;
-  const hoy = new Date();
-  let streak = 1;
-  for (let i = registros.length - 1; i > 0; i--) {
-    const diff = Math.abs(new Date(registros[i].created_at) - new Date(registros[i-1].created_at));
-    if (diff <= 8 * 24 * 60 * 60 * 1000) streak++;
-    else break;
+function calcStreak(rows){
+  if(rows.length<2)return;
+  let s=1;
+  for(let i=rows.length-1;i>0;i--){
+    const d=Math.abs(new Date(rows[i].created_at)-new Date(rows[i-1].created_at));
+    if(d<=8*864e5) s++; else break;
   }
-  if (streak >= 2) {
-    document.getElementById('streak-badge').style.display = 'flex';
-    document.getElementById('streak-dias').textContent = streak;
+  if(s>=2){
+    document.getElementById('h-streak').style.display='flex';
+    document.getElementById('h-streak-n').textContent=s;
   }
 }
 
-// ── ACTIVIDAD ─────────────────────────────────────────────
-function mostrarActividadDetallada(nivelActividad) {
-  const config = {
-    'Sedentario': { duracion: '15-20 min', intensidad: 'Baja', dias: '4x/sem', desc: 'Caminatas suaves a paso firme. Ideal para empezar sin riesgo de lesiones.' },
-    'Ligero':     { duracion: '25-30 min', intensidad: 'Moderada', dias: '4-5x/sem', desc: 'Caminata rápida o bicicleta suave. Combina con estiramientos al final.' },
-    'Moderado':   { duracion: '30-45 min', intensidad: 'Media-alta', dias: '5x/sem', desc: 'Cardio 30 min + ejercicios de fuerza básica 2 veces por semana.' },
-    'Intenso':    { duracion: '45-60 min', intensidad: 'Alta', dias: '5-6x/sem', desc: 'Mantén tu rutina habitual. Prioriza hidratación y recuperación muscular.' }
+/* ── BODY MAP ──────────────────────────────────────────── */
+function renderBodyMap(actividad){
+  const cfg={
+    'Sedentario':{ titulo:'Caminata ligera diaria', sub:'30 min de caminata activan estos sistemas', beneficios:[
+      {dot:'#22C55E',title:'Tren inferior',desc:'Muslos, glúteos y pantorrillas se fortalecen con cada paso.'},
+      {dot:'#EF4444',title:'Sistema cardiovascular',desc:'Tu corazón bombea más eficientemente, bajando la PA.'},
+      {dot:'#3B82F6',title:'Quema de grasa',desc:'A baja intensidad, tu cuerpo usa grasa como combustible principal.'}
+    ]},
+    'Ligero':{ titulo:'Cardio moderado', sub:'30-45 min activan estas zonas', beneficios:[
+      {dot:'#22C55E',title:'Metabolismo activo',desc:'Elevas tu metabolismo basal hasta 14h después del ejercicio.'},
+      {dot:'#F97316',title:'Zona abdominal',desc:'El cardio moderado es el más eficiente para reducir grasa visceral.'},
+      {dot:'#EF4444',title:'Resistencia cardiovascular',desc:'Reduces riesgo de enfermedades cardíacas en un 35%.'}
+    ]},
+    'Moderado':{ titulo:'Cardio + fuerza', sub:'Rutina completa activa todo el cuerpo', beneficios:[
+      {dot:'#6B3EAC',title:'Músculo activo',desc:'Brazo, pecho y core se activan con los ejercicios de fuerza.'},
+      {dot:'#22C55E',title:'Metabolismo elevado',desc:'Quemas más calorías en reposo gracias al tejido muscular.'},
+      {dot:'#EF4444',title:'Densidad ósea',desc:'El ejercicio de fuerza protege los huesos a largo plazo.'}
+    ]},
+    'Intenso':{ titulo:'Entrenamiento intenso', sub:'Alta activación de todos los sistemas', beneficios:[
+      {dot:'#EF4444',title:'Modo HIIT',desc:'El exceso de consumo de oxígeno post-ejercicio quema por 24-48h.'},
+      {dot:'#22C55E',title:'Cuerpo completo',desc:'Todos los grupos musculares se activan al máximo.'},
+      {dot:'#3B82F6',title:'Endorfinas',desc:'Nivel máximo de endorfinas — tu salud mental se beneficia.'}
+    ]}
   };
-  let nivel = 'Ligero';
-  if (nivelActividad) {
-    for (const key in config) {
-      if (nivelActividad.includes(key)) { nivel = key; break; }
-    }
-  }
-  const c = config[nivel];
-  document.getElementById('act-duracion').textContent = c.duracion;
-  document.getElementById('act-intensidad').textContent = c.intensidad;
-  document.getElementById('act-dias').textContent = c.dias;
-  document.getElementById('actividad-desc').textContent = c.desc;
+  let key='Ligero';
+  for(const k in cfg) if((actividad||'').includes(k)){key=k;break;}
+  const c=cfg[key];
+  document.getElementById('body-sub').textContent=c.sub;
+  const cont=document.getElementById('body-benefits');
+  cont.innerHTML=c.beneficios.map(b=>`
+    <div class="benefit-item">
+      <div class="benefit-dot" style="background:${b.dot}"></div>
+      <div class="benefit-text"><span class="benefit-title">${b.title}</span>${b.desc}</div>
+    </div>`).join('');
 }
 
-function renderizarSemana() {
-  const dias = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-  const hoy = new Date().getDay();
-  const diaHoyIdx = hoy === 0 ? 6 : hoy - 1;
-  const container = document.getElementById('semana-dots');
-  container.innerHTML = '';
-  dias.forEach((d, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'semana-dot ' + (i < diaHoyIdx ? 'hecho' : i === diaHoyIdx ? 'hoy' : 'no-hecho');
-    dot.textContent = d;
-    container.appendChild(dot);
-  });
-}
-
-// ── RECONEXIÓN ───────────────────────────────────────────
-function verificarReconexion(paciente) {
-  const ultima = paciente.ultima_conexion ? new Date(paciente.ultima_conexion) : new Date(paciente.created_at);
-  const hoy = new Date();
-  const dias = Math.floor((hoy - ultima) / (1000*60*60*24));
-  const banner = document.getElementById('reconexion-banner');
-  const texto = document.getElementById('reconexion-texto');
-  const nombre = paciente.nombre.split(' ')[0];
-
-  if (dias >= 14) {
-    banner.className = 'reconexion-banner rojo show';
-    banner.querySelector('i').style.color = '#791F1F';
-    texto.style.color = '#791F1F';
-    texto.innerHTML = '2 semanas de ausencia, <strong>' + nombre + '</strong>. Es momento de decidir: retomas hoy o el objetivo se aleja más. Tu equipo médico está aquí cuando estés listo.';
-  } else if (dias >= 5) {
-    banner.className = 'reconexion-banner amarillo show';
-    banner.querySelector('i').style.color = '#633806';
-    texto.style.color = '#633806';
-    texto.innerHTML = '<strong>' + nombre + '</strong>, una semana sin registrar. Los resultados se construyen con constancia, no con perfección.';
-  } else if (dias >= 2) {
-    banner.className = 'reconexion-banner gris show';
-    banner.querySelector('i').style.color = 'var(--ink-lt)';
-    texto.style.color = 'var(--ink-mid)';
-    texto.innerHTML = nombre + ', llevas ' + dias + ' días sin entrar. Tu menú de hoy está listo — no dejes que se enfríe el progreso.';
-  }
-}
-
-// ── PLAN DEL DÍA ──────────────────────────────────────────
-async function verificarAccesoVigente() {
-  const fechaInicio = new Date(pacienteActual.created_at);
-  const hoy = new Date();
-  const diasTranscurridos = Math.floor((hoy - fechaInicio) / (1000*60*60*24));
-  const limite = pacienteActual.plan_elegido === 'free' ? 7 : 30;
-  if (diasTranscurridos >= limite) {
-    document.getElementById('plan-vencido-msg').classList.remove('hidden');
-    document.getElementById('plan-hoy-vacio').classList.add('hidden');
-    return false;
-  }
-  return true;
-}
-
-async function cargarPlanHoy(pacienteId) {
-  const vigente = await verificarAccesoVigente();
-  if (!vigente) return;
-
-  const hoy = new Date().toISOString().split('T')[0];
-  const { data: planHoy } = await supabaseClient
-    .from('planes_diarios')
-    .select('*')
-    .eq('paciente_id', pacienteId)
-    .eq('fecha', hoy)
-    .maybeSingle();
-
-  if (planHoy) {
-    mostrarPlanDelDia(planHoy);
-    document.getElementById('plan-hoy-vacio').classList.add('hidden');
-    document.getElementById('ya-generado-hoy-msg').style.display = 'block';
-  } else {
-    document.getElementById('plan-hoy-vacio').classList.remove('hidden');
-  }
-}
-
-function mostrarPlanDelDia(planData) {
-  if (!planData) return;
-  document.getElementById('plan-hoy-vacio').classList.add('hidden');
-  document.getElementById('plan-hoy-contenido').classList.remove('hidden');
-
-  const lista = document.getElementById('lista-comidas');
-  lista.innerHTML = '';
-  const tipos = { desayuno:'Desayuno', merienda_manana:'Merienda AM', almuerzo:'Almuerzo', merienda_tarde:'Merienda PM', cena:'Cena' };
-  let totalKcal = 0;
-
-  for (const key in (planData.comidas || {})) {
-    const c = planData.comidas[key];
-    totalKcal += c.calorias || 0;
-    const item = document.createElement('div');
-    item.className = 'meal-item';
-    item.innerHTML = '<div><div class="meal-tipo">' + (tipos[key] || key) + '</div><div class="meal-desc">' + c.descripcion + '</div></div><span class="meal-cal">' + c.calorias + ' kcal</span>';
-    lista.appendChild(item);
-  }
-
-  if (totalKcal > 0) {
-    document.getElementById('meal-total-row').style.display = 'flex';
-    document.getElementById('meal-total-kcal').textContent = totalKcal + ' kcal';
-  }
-
-  const metaTexto = planData.meta_dia || planData.meta_hoy;
-  if (metaTexto) {
-    document.getElementById('meta-hoy-card').style.display = 'block';
-    document.getElementById('meta-hoy-texto').textContent = metaTexto;
-  }
-
-  if (planData.calorias_objetivo && pacienteActual) {
-    const proyeccion = calcularProyeccion(planData.calorias_objetivo, pacienteActual.peso, pacienteActual.actividad);
-    document.getElementById('proyeccion-strip').style.display = 'flex';
-    document.getElementById('proyeccion-texto').innerHTML = 'Podrías perder <strong>' + proyeccion + ' kg</strong> en 4 semanas';
-  }
-}
-
-function calcularProyeccion(caloriasObjetivo, pesoActual, actividad) {
-  const mantenimiento = actividad && actividad.includes('Sedentario') ? caloriasObjetivo + 350 :
-                        actividad && actividad.includes('Intenso') ? caloriasObjetivo + 700 :
-                        caloriasObjetivo + 500;
-  const deficit = mantenimiento - caloriasObjetivo;
-  const kgSemana = (deficit * 7) / 7700;
-  return (kgSemana * 4).toFixed(1);
-}
-
-async function generarMenuHoy() {
-  const btn = document.getElementById('btn-generar-menu');
-  btn.disabled = true;
-  btn.innerHTML = '<div style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></div> Generando...';
-
-  try {
-    const response = await fetch('/.netlify/functions/generar-plan', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ pacienteId: pacienteActual.id, enviarEmail: false })
-    });
-    const result = await response.json();
-    if (result.success && result.plan) {
-      mostrarPlanDelDia({
-        comidas: result.plan.comidas,
-        meta_dia: result.plan.meta_dia,
-        calorias_objetivo: result.plan.calorias_objetivo
-      });
-      document.getElementById('ya-generado-hoy-msg').style.display = 'block';
-    } else {
-      throw new Error(result.error || 'Error desconocido');
-    }
-  } catch (err) {
-    alert('No pudimos generar tu menú. Intenta de nuevo.');
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-sparkles"></i> Generar mi menú de hoy';
-  }
-}
-
-// ── REGISTRO DE PESO ─────────────────────────────────────
-async function registrarPeso() {
-  const val = document.getElementById('peso-input').value;
-  if (!val) { alert('Ingresa tu peso'); return; }
-
-  try {
-    await supabaseClient.from('seguimiento_peso').insert([{
-      paciente_id: pacienteActual.id,
-      peso_kg: parseFloat(val),
-      semana: Math.ceil((new Date() - new Date(pacienteActual.created_at)) / (7*24*60*60*1000))
-    }]);
-    document.getElementById('peso-input').value = '';
-    await cargarSeguimientoPeso(pacienteActual.id, pacienteActual.peso);
-    renderizarMetaPeso(pacienteActual);
-  } catch (err) {
-    alert('Error al registrar tu peso. Intenta de nuevo.');
-  }
-}
-
-// ── TELECONSULTA ─────────────────────────────────────────
-const LINK_PAGO_TELECONSULTA = 'https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ';
-
-function configurarTeleconsulta(paciente, NOMBRES_PLAN) {
-  const disponibles = Math.max(0, (paciente.teleconsultas_disponibles || 0) - (paciente.teleconsultas_usadas || 0));
-  const tel = '593990932502';
-  const nombrePlan = NOMBRES_PLAN[paciente.plan_elegido] || 'Gratuito';
-
-  document.getElementById('tele-count').textContent = disponibles;
-
-  if (disponibles > 0) {
-    const msg = encodeURIComponent('Hola, soy ' + paciente.nombre + ' (' + nombrePlan + '). Quiero agendar mi teleconsulta médica NutriSLIM.');
-    document.getElementById('btn-whatsapp-tele').href = 'https://wa.me/' + tel + '?text=' + msg;
-    document.getElementById('tele-strip').style.display = 'flex';
-    if (paciente.plan_elegido === '49' && disponibles <= 0) {
-      document.getElementById('tele-strip').style.display = 'none';
-      document.getElementById('tele-vip-agotado').classList.remove('hidden');
-    }
-  } else {
-    document.getElementById('tele-count').textContent = '0';
-    document.getElementById('tele-info-text').textContent = 'Sin teleconsultas incluidas';
-    document.getElementById('tele-info-sub').textContent = 'Sesión adicional: $35';
-    document.getElementById('tele-strip').style.background = '#F5F5F5';
-    document.getElementById('tele-strip').style.color = 'var(--ink-lt)';
-    document.getElementById('tele-count').style.background = 'var(--ink-lt)';
-    document.getElementById('btn-whatsapp-tele').href = LINK_PAGO_TELECONSULTA;
-    document.getElementById('btn-whatsapp-tele').textContent = 'Pagar $35 y agendar →';
-    document.getElementById('btn-whatsapp-tele').target = '_self';
-  }
-}
-
-// ── EXÁMENES ─────────────────────────────────────────────
-const LINK_PAGO_EXAMENES = 'https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw';
-
-function configurarExamenesLaboratorio(paciente) {
-  const fechaRegistro = new Date(paciente.created_at);
-  const hoy = new Date();
-  const meses = (hoy.getFullYear() - fechaRegistro.getFullYear()) * 12 + (hoy.getMonth() - fechaRegistro.getMonth());
-  const ciclo = Math.floor(meses / 3);
-  const esPrimero = ciclo === 0;
-
-  const proxima = new Date(fechaRegistro);
-  proxima.setMonth(proxima.getMonth() + (ciclo + 1) * 3);
-  const diasProximo = Math.ceil((proxima - hoy) / (1000*60*60*24));
-
-  const lugar = paciente.es_guayaquil
-    ? 'Realizados presencialmente en Fundación Médica CMS, Guayaquil.'
-    : 'Realizados en el laboratorio partner más cercano a ' + (paciente.ciudad || 'tu ciudad') + '.';
-
-  const badge = document.getElementById('examenes-badge');
-  const estado = document.getElementById('examenes-estado');
-  const texto = document.getElementById('examenes-texto');
-
-  if (esPrimero) {
-    texto.textContent = 'Examen inicial obligatorio para calibrar tu plan nutricional. ' + lugar;
-    badge.textContent = 'Pendiente';
-    badge.style.background = '#FEF3E2'; badge.style.color = '#854F0B';
-    estado.textContent = '⚠️ Examen base aún no realizado';
-  } else if (diasProximo <= 14) {
-    texto.textContent = 'Tu examen de seguimiento trimestral está por vencer. ' + lugar;
-    badge.textContent = 'Vence pronto';
-    badge.style.background = '#FEE2E2'; badge.style.color = '#DC2626';
-    estado.textContent = '🔴 Vence en ' + diasProximo + ' día(s)';
-  } else {
-    texto.textContent = 'Próximo examen en ' + diasProximo + ' días. ' + lugar;
-    badge.textContent = 'Al día ✓';
-    badge.style.background = '#E6F5EE'; badge.style.color = '#085041';
-    estado.textContent = '✓ Próximo seguimiento en ' + diasProximo + ' días';
-  }
-
-  document.getElementById('btn-examenes').href = LINK_PAGO_EXAMENES;
-}
-
-// ── FOTOS ─────────────────────────────────────────────────
-function configurarFotos(plan) {
-  const esPago = plan === '19' || plan === '49';
-  document.getElementById('fotos-bloqueadas-msg').style.display = esPago ? 'none' : 'block';
-  document.getElementById('fotos-upload').classList.toggle('hidden', !esPago);
-  if (esPago) {
-    document.getElementById('fotos-badge').textContent = '✓ Incluido';
-    document.getElementById('fotos-badge').style.background = 'var(--green-lt)';
-    document.getElementById('fotos-badge').style.color = 'var(--green)';
-    document.querySelectorAll('.foto-slot').forEach(s => { s.classList.remove('locked'); s.querySelector('.foto-lock-overlay').remove(); });
-  }
-}
-
-// ── BLOQUEOS ─────────────────────────────────────────────
-function mostrarBloqueosPorPlan(plan) {
-  const items = {
-    free: [
-      { icon: '📸', texto: 'Fotos de avance semanales', link: 'onboarding.html' },
-      { icon: '🤳', texto: 'Compartir en redes sociales', link: 'onboarding.html' },
-      { icon: '📊', texto: 'Reportes de progreso PDF', link: 'onboarding.html' },
-      { icon: '📜', texto: 'Certificado médico de seguimiento', link: 'onboarding.html' },
-      { icon: '🧪', texto: 'Descuento en exámenes', link: 'onboarding.html' },
-      { icon: '💬', texto: 'Chat directo con tu nutricionista', link: 'onboarding.html' }
-    ],
-    '19': [
-      { icon: '🧪', texto: 'Exámenes con descuento prioritario', link: 'onboarding.html' },
-      { icon: '📜', texto: 'Certificado médico con sello clínico', link: 'onboarding.html' }
-    ],
-    '49': []
+/* ── ACTIVIDAD ─────────────────────────────────────────── */
+function renderActividad(act){
+  const map={
+    'Sedentario':{dur:'20 min',int:'Baja',dias:'4x/sem',desc:'Caminatas a ritmo cómodo. El objetivo inicial es crear el hábito — la duración e intensidad aumentan gradualmente.'},
+    'Ligero':{dur:'30 min',int:'Moderada',dias:'4-5x/sem',desc:'Caminata rápida o bicicleta suave. Combina 25 min de cardio + 5 min de estiramiento al finalizar.'},
+    'Moderado':{dur:'40 min',int:'Media-alta',dias:'5x/sem',desc:'30 min de cardio + 10 min de fuerza dos veces por semana para preservar la masa muscular.'},
+    'Intenso':{dur:'50 min',int:'Alta',dias:'5-6x/sem',desc:'Mantén tu rutina habitual. Prioriza la recuperación — duerme 7-8h y consume proteínas post-entreno.'}
   };
+  let k='Ligero';for(const kk in map)if((act||'').includes(kk)){k=kk;break;}
+  const c=map[k];
+  document.getElementById('act-duracion').textContent=c.dur;
+  document.getElementById('act-intensidad').textContent=c.int;
+  document.getElementById('act-dias').textContent=c.dias;
+  document.getElementById('act-desc').textContent=c.desc;
+}
 
-  const lista = items[plan] || items.free;
-  if (lista.length === 0) {
-    document.getElementById('seccion-bloqueada').style.display = 'none';
-    return;
-  }
-
-  const grid = document.getElementById('lista-bloqueos');
-  grid.innerHTML = '';
-  lista.forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'bloqueo-item';
-    el.innerHTML = '<div class="bloqueo-icon">' + item.icon + '</div>' +
-                   '<div class="bloqueo-text">' + item.texto + '</div>' +
-                   '<a href="' + item.link + '" class="bloqueo-link">Mejorar →</a>';
-    grid.appendChild(el);
+function renderSemana(){
+  const dias=['L','M','X','J','V','S','D'];
+  const hoyIdx=new Date().getDay()===0?6:new Date().getDay()-1;
+  const wrap=document.getElementById('semana-row');wrap.innerHTML='';
+  dias.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='dia '+(i<hoyIdx?'done':i===hoyIdx?'today':'pending');
+    el.textContent=d;
+    wrap.appendChild(el);
   });
 }
 
-// ── INIT ──────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', async () => {
-  await inicializarSupabase();
+/* ── MENÚ ──────────────────────────────────────────────── */
+async function cargarMenu(pid){
+  const vigente=await checkVigente();
+  if(!vigente){document.getElementById('menu-vencido').classList.remove('hidden');document.getElementById('menu-generar').classList.add('hidden');return;}
+  const hoy=new Date().toISOString().split('T')[0];
+  const{data:plan}=await sb.from('planes_diarios').select('*').eq('paciente_id',pid).eq('fecha',hoy).maybeSingle();
+  if(plan) mostrarMenu(plan);
+  else document.getElementById('menu-generar').classList.remove('hidden');
+}
 
-  const hash = window.location.hash;
+async function checkVigente(){
+  const p=paciente;
+  const dias=Math.floor((new Date()-new Date(p.created_at))/864e5);
+  const limite=p.plan_elegido==='free'?7:30;
+  return dias<limite;
+}
 
-  if (hash.includes('error=')) {
-    const errorEl = document.getElementById('login-error');
-    errorEl.textContent = 'El enlace expiró. Ingresa con tu correo y contraseña, o usa "Olvidé mi contraseña".';
-    errorEl.classList.add('show');
+function mostrarMenu(plan){
+  document.getElementById('menu-generar').classList.add('hidden');
+  document.getElementById('menu-contenido').classList.remove('hidden');
+  const lista=document.getElementById('lista-meals');lista.innerHTML='';
+  const comidas=plan.comidas||{};
+  let total=0;
+  const ORDER=['desayuno','merienda_manana','almuerzo','merienda_tarde','cena'];
+  ORDER.forEach(k=>{
+    if(!comidas[k])return;
+    const c=comidas[k];total+=c.calorias||0;
+    const el=document.createElement('div');
+    el.className='meal-item '+(CLASSMEAL[k]||'');
+    el.innerHTML=`<div class="meal-emoji">${EMOJICOMIDA[k]||'🍴'}</div>
+      <div class="meal-info">
+        <div class="meal-tipo">${k.replace('_',' ').replace('mana','mañana')}</div>
+        <div class="meal-desc">${c.descripcion}</div>
+      </div>
+      <span class="meal-kcal">${c.calorias} kcal</span>`;
+    lista.appendChild(el);
+  });
+  if(total>0){
+    document.getElementById('meal-total').style.display='flex';
+    document.getElementById('meal-total-val').textContent=total+' kcal';
+  }
+  if(plan.calorias_objetivo){
+    const mant=plan.calorias_objetivo+500;
+    const deficit=mant-plan.calorias_objetivo;
+    const kgMes=((deficit*30)/7700).toFixed(1);
+    document.getElementById('proy-box').style.display='flex';
+    document.getElementById('proy-val').textContent='Perderías ≈ '+kgMes+' kg este mes';
+  }
+  document.getElementById('menu-ya-generado').style.display='block';
+}
+
+async function generarMenu(){
+  const btn=document.getElementById('btn-generar');
+  btn.disabled=true;
+  btn.innerHTML='<div style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block"></div> Generando tu menú con IA...';
+  try{
+    const r=await fetch('/.netlify/functions/generar-plan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pacienteId:paciente.id,enviarEmail:false})});
+    const d=await r.json();
+    if(d.success&&d.plan) mostrarMenu({comidas:d.plan.comidas,calorias_objetivo:d.plan.calorias_objetivo});
+    else throw new Error(d.error);
+  }catch(e){
+    alert('No pudimos generar el menú. Intenta de nuevo.');
+    btn.disabled=false;
+    btn.innerHTML='✨ Generar mi menú personalizado de hoy';
+  }
+}
+
+/* ── GUARDAR PESO ──────────────────────────────────────── */
+async function guardarPeso(){
+  const v=document.getElementById('peso-input').value;
+  if(!v){alert('Ingresa tu peso');return;}
+  await sb.from('seguimiento_peso').insert([{paciente_id:paciente.id,peso_kg:parseFloat(v),semana:Math.ceil((new Date()-new Date(paciente.created_at))/(7*864e5))}]);
+  document.getElementById('peso-input').value='';
+  await cargarPesos(paciente.id, paciente.peso);
+  renderMeta(paciente);
+}
+
+/* ── TELECONSULTA ──────────────────────────────────────── */
+function renderTele(p, planNombre){
+  const disp=Math.max(0,(p.teleconsultas_disponibles||0)-(p.teleconsultas_usadas||0));
+  document.getElementById('tele-n').textContent=disp;
+  if(disp>0){
+    document.getElementById('tele-txt').textContent=disp===1?'1 consulta disponible este mes':disp+' consultas disponibles';
+    const msg=encodeURIComponent('Hola, soy '+p.nombre+' ('+planNombre+'). Quiero agendar mi teleconsulta NutriSLIM.');
+    document.getElementById('btn-tele').href='https://wa.me/'+TEL_WA+'?text='+msg;
+  } else {
+    document.getElementById('tele-txt').textContent='Sin teleconsultas incluidas en tu plan';
+    document.getElementById('tele-banner').style.background='#F0F4F0';
+    document.getElementById('tele-n').style.background='#9CA3AF';
+    document.getElementById('btn-tele').href=LINK_TELE;
+    document.getElementById('btn-tele').textContent='💳 Pagar $35 y agendar consulta';
+  }
+}
+
+/* ── LABORATORIO ───────────────────────────────────────── */
+function renderLab(p){
+  const inicio=new Date(p.created_at),hoy=new Date();
+  const meses=(hoy.getFullYear()-inicio.getFullYear())*12+(hoy.getMonth()-inicio.getMonth());
+  const ciclo=Math.floor(meses/3);
+  const prox=new Date(inicio);prox.setMonth(prox.getMonth()+(ciclo+1)*3);
+  const dias=Math.ceil((prox-hoy)/864e5);
+  const lugar=p.es_guayaquil?'Fundación Médica CMS, Guayaquil':'laboratorio partner en '+(p.ciudad||'tu ciudad');
+  const badge=document.getElementById('lab-badge');
+  const estado=document.getElementById('lab-estado');
+  if(ciclo===0){
+    document.getElementById('lab-desc').textContent='Examen base obligatorio para calibrar tu plan. Se realiza en '+lugar+'.';
+    badge.textContent='⚠ Pendiente';badge.style.background='#FEE2E2';badge.style.color='#991B1B';
+    estado.textContent='Tu examen inicial aún no está realizado';
+  } else if(dias<=14){
+    document.getElementById('lab-desc').textContent='Tu seguimiento trimestral está por vencer en '+dias+' días. '+lugar+'.';
+    badge.textContent='🔴 Vence pronto';badge.style.background='#FEE2E2';badge.style.color='#991B1B';
+    estado.textContent='Agenda antes del '+prox.toLocaleDateString('es-EC',{day:'numeric',month:'long'});
+  } else {
+    document.getElementById('lab-desc').textContent='Próximo examen trimestral en '+dias+' días. '+lugar+'.';
+    badge.textContent='✓ Al día';badge.style.background='#E6F7EE';badge.style.color='#064E3B';
+    estado.textContent='Próximo: '+prox.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'});
+  }
+}
+
+/* ── BLOQUEOS ──────────────────────────────────────────── */
+function renderBloqueos(plan){
+  const items={
+    free:[
+      {e:'📊',t:'Reportes de progreso PDF'},
+      {e:'📸',t:'Registro fotográfico mensual'},
+      {e:'📜',t:'Certificado médico de seguimiento'},
+      {e:'💬',t:'Chat con nutricionista'},
+      {e:'🧪',t:'Descuento en exámenes'},
+      {e:'🤝',t:'Programa de referidos con bonos'}
+    ],
+    '19':[
+      {e:'📜',t:'Certificado con sello clínico'},
+      {e:'🧪',t:'Exámenes prioritarios con descuento'}
+    ],
+    '49':[]
+  };
+  const lista=items[plan]||items.free;
+  if(!lista.length){document.getElementById('bloqueos-card').style.display='none';return;}
+  const g=document.getElementById('bloqueos-grid');g.innerHTML='';
+  lista.forEach(x=>{
+    const el=document.createElement('div');
+    el.className='bloqueo';
+    el.innerHTML='<div class="bloqueo-emo">'+x.e+'</div><div class="bloqueo-text">'+x.t+'</div><a href="onboarding.html" class="bloqueo-link">Mejorar →</a>';
+    g.appendChild(el);
+  });
+}
+
+/* ── BANNERS ───────────────────────────────────────────── */
+function renderBanners(p, nombre){
+  const ultima=p.ultima_conexion?new Date(p.ultima_conexion):new Date(p.created_at);
+  const dias=Math.floor((new Date()-ultima)/864e5);
+  if(dias>=14){
+    document.getElementById('b-rojo').classList.add('show');
+    document.getElementById('b-rojo-txt').innerHTML='Han pasado <strong>'+dias+' días</strong> desde tu última visita, '+nombre+'. Los resultados necesitan constancia. Tu equipo médico está disponible.';
+  } else if(dias>=5){
+    document.getElementById('b-amber').classList.add('show');
+    document.getElementById('b-amber-txt').innerHTML='Una semana sin actividad, <strong>'+nombre+'</strong>. El progreso se construye con pequeños pasos diarios.';
+  }
+  if(p.plan_vence_en){
+    const dv=Math.ceil((new Date(p.plan_vence_en)-new Date())/864e5);
+    if(dv>0&&dv<=7){
+      document.getElementById('b-verde').classList.add('show');
+      document.getElementById('b-verde-txt').innerHTML='Tu plan vence en <strong>'+dv+' días</strong>. <a href="onboarding.html" style="color:var(--g2);font-weight:700">Renovar →</a>';
+    }
+  }
+}
+
+/* ── INIT ──────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded',async()=>{
+  await initSB();
+  const hash=window.location.hash;
+  if(hash.includes('error=')){
+    const e=document.getElementById('login-error');
+    e.textContent='El enlace ha expirado. Usa "Olvidé mi contraseña" para obtener uno nuevo.';
+    e.classList.add('show');
     document.getElementById('login-screen').classList.remove('hidden');
     return;
   }
-
-  if (hash.includes('type=recovery')) {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) {
+  if(hash.includes('type=recovery')){
+    const{data:{session}}=await sb.auth.getSession();
+    if(session){
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('reset-password-screen').classList.remove('hidden');
       return;
     }
   }
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    mostrarPortal();
-  } else {
-    document.getElementById('login-screen').classList.remove('hidden');
-  }
+  const{data:{session}}=await sb.auth.getSession();
+  if(session) mostrarPortal();
+  else document.getElementById('login-screen').classList.remove('hidden');
 });
 </script>
 </body>
