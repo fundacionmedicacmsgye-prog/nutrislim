@@ -101,7 +101,22 @@
     <input type="email" id="login-email" placeholder="tu@correo.com">
     <label class="field-label">Contraseña</label>
     <input type="password" id="login-password" placeholder="••••••••">
-    <button class="btn-primary" id="btn-login" onclick="hacerLogin()">Ingresar a mi portal</button>
+    <button class="btn-primary" id="btn-login" onclick="iniciarSesion()">Ingresar a mi portal</button>
+    <p style="text-align:center;margin-top:14px;font-size:13px;color:var(--ink-lt)">
+      <a href="#" onclick="enviarRecuperacion();return false;" style="color:var(--green);text-decoration:none">Olvidé mi contraseña</a>
+    </p>
+    <p style="text-align:center;margin-top:8px;font-size:12px;color:var(--ink-lt)">¿No tienes cuenta? <a href="onboarding.html" style="color:var(--green);text-decoration:none">Regístrate gratis</a></p>
+  </div>
+</div>
+
+<div id="reset-password-screen" class="login-wrap hidden">
+  <div class="login-logo">Nutri<span>SLIM</span></div>
+  <p class="login-sub">Crea tu nueva contraseña</p>
+  <div class="login-card">
+    <div class="login-error" id="reset-error"></div>
+    <label class="field-label">Nueva contraseña</label>
+    <input type="password" id="nueva-password" placeholder="Mínimo 6 caracteres">
+    <button class="btn-primary" id="btn-guardar-password" onclick="guardarNuevaContrasena()">Guardar contraseña</button>
   </div>
 </div>
 
@@ -692,11 +707,107 @@ function mostrarBloqueosPorPlan(plan) {
   });
 }
 
+// ── RESET DE CONTRASEÑA ─────────────────────────────────────
+async function guardarNuevaContrasena() {
+  const nueva = document.getElementById('nueva-password').value;
+  const errorEl = document.getElementById('reset-error');
+  const btn = document.getElementById('btn-guardar-password');
+  if (nueva.length < 6) {
+    errorEl.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+    errorEl.classList.add('show');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  const { error } = await supabaseClient.auth.updateUser({ password: nueva });
+  if (error) {
+    errorEl.textContent = 'Error al guardar. Intenta de nuevo.';
+    errorEl.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Guardar contraseña';
+  } else {
+    mostrarPortal();
+  }
+}
+
+// ── LOGIN CON EMAIL + PASSWORD ──────────────────────────────
+async function iniciarSesion() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errorEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-login');
+
+  errorEl.classList.remove('show');
+  if (!email || !password) {
+    errorEl.textContent = 'Ingresa tu correo y contraseña.';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Ingresando...';
+
+  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    errorEl.textContent = 'Correo o contraseña incorrectos. ¿Olvidaste tu contraseña?';
+    errorEl.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = 'Ingresar';
+  } else {
+    mostrarPortal();
+  }
+}
+
+async function enviarRecuperacion() {
+  const email = document.getElementById('login-email').value.trim();
+  const errorEl = document.getElementById('login-error');
+  if (!email) {
+    errorEl.textContent = 'Escribe tu correo arriba y luego haz clic en "Olvidé mi contraseña".';
+    errorEl.classList.add('show');
+    return;
+  }
+  await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://nutrislimed.netlify.app/portal'
+  });
+  errorEl.style.background = '#E6F5EE';
+  errorEl.style.color = '#1A7A52';
+  errorEl.textContent = '✓ Revisa tu correo — te enviamos el enlace para crear tu contraseña.';
+  errorEl.classList.add('show');
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
   await inicializarSupabase();
+
+  const hash = window.location.hash;
+
+  // Si hay error en el hash (magic link expirado, etc.) — mostrar login
+  if (hash.includes('error=')) {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('portal-screen').classList.add('hidden');
+    const errorEl = document.getElementById('login-error');
+    errorEl.textContent = 'El enlace expiró. Ingresa con tu correo y contraseña, o usa "Olvidé mi contraseña".';
+    errorEl.classList.add('show');
+    return;
+  }
+
+  // Si viene de reset de contraseña
+  if (hash.includes('type=recovery')) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('portal-screen').classList.add('hidden');
+      document.getElementById('reset-password-screen').classList.remove('hidden');
+      return;
+    }
+  }
+
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (session) {
     mostrarPortal();
+  } else {
+    document.getElementById('login-screen').classList.remove('hidden');
+    document.getElementById('portal-screen').classList.add('hidden');
   }
 });
 </script>
