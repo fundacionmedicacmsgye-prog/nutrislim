@@ -203,19 +203,64 @@ nav{background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border-bottom:1p
 
 /* ─── TELECONSULTA ─────────────────────────────────────── */
 .tele-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
-.tele-banner{background:linear-gradient(135deg,#E3F0FA,#C7E2F7);border-radius:var(--r);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.tele-bias-hero{background:linear-gradient(135deg,#0D3370 0%,#1B4FBE 100%);border-radius:var(--r);padding:16px;margin-bottom:12px;position:relative;overflow:hidden}
+.tele-bias-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none}
+.tele-sp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.tele-avatars{display:flex}
+.tele-av{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);background:linear-gradient(135deg,#60A5FA,#3B82F6);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:700;margin-left:-6px}
+.tele-av:first-child{margin-left:0}
+.tele-sp-txt{font-size:11px;color:rgba(255,255,255,0.75)}
+.tele-sp-txt strong{color:#fff}
+.tele-headline{font-size:18px;font-weight:700;color:#fff;font-family:var(--font-head);line-height:1.2;margin-bottom:6px}
+.tele-stat-row{display:flex;gap:12px;margin-bottom:12px}
+.tele-stat{text-align:center}
+.tele-stat-n{font-size:20px;font-weight:700;color:#60A5FA;font-family:var(--font-head)}
+.tele-stat-l{font-size:9px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.05em}
+.tele-loss{font-size:11px;color:#FCA5A5;background:rgba(239,68,68,0.15);border-radius:6px;padding:6px 10px;border:1px solid rgba(239,68,68,0.25)}
+.tele-available-banner{background:linear-gradient(135deg,#E3F0FA,#C7E2F7);border-radius:var(--r);padding:14px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
 .tele-badge{width:42px;height:42px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;flex-shrink:0;font-family:var(--font-head)}
 .tele-info{flex:1}
 .tele-num{font-size:13px;font-weight:600;color:var(--blue)}
 .tele-sub{font-size:11px;color:#1E3A5F;opacity:0.7;margin-top:1px}
 
 /* ─── EXÁMENES ─────────────────────────────────────────── */
-.lab-card{background:linear-gradient(135deg,#FFFBEB,#FEF3E2);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid #FCD34D}
-.lab-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.lab-title{font-size:13px;font-weight:600;color:#78350F}
-.lab-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
-.examen-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.examen-tag{font-size:11px;padding:4px 9px;background:rgba(255,255,255,0.7);border-radius:20px;color:#7C2D12;border:1px solid #FCA5A5}
+.lab-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.lab-emotional{background:linear-gradient(135deg,#1A0A00,#3D1500);border-radius:var(--r);padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.lab-emotional::before{content:'🔥';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:60px;opacity:0.06}
+.lab-question{font-size:17px;font-weight:700;color:#fff;font-family:var(--font-head);line-height:1.3;margin-bottom:8px}
+.lab-signals{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.lab-signal{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.75)}
+.lab-signal-dot{width:6px;height:6px;border-radius:50%;background:#FB923C;flex-shrink:0}
+.lab-insight{font-size:11px;color:#FED7AA;background:rgba(251,146,60,0.12);border-radius:6px;padding:8px 10px;border:1px solid rgba(251,146,60,0.2)}
+
+/* ─── PASOS Y SUEÑO ─────────────────────────────────────── */
+.track-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.track-card{background:var(--white);border-radius:var(--r-lg);padding:16px;border:1px solid var(--rule);position:relative;overflow:hidden}
+.track-icon{font-size:28px;margin-bottom:6px}
+.track-val{font-family:var(--font-head);font-size:28px;font-weight:700;color:var(--ink);line-height:1}
+.track-unit{font-size:10px;color:var(--ink-lt);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.track-bar{height:4px;background:#E8F0E8;border-radius:20px;margin:8px 0;overflow:hidden}
+.track-bar-fill{height:100%;background:linear-gradient(90deg,var(--g1),#00C875);border-radius:20px;transition:width 0.8s ease}
+.track-lbl{font-size:10px;color:var(--ink-lt)}
+.btn-sleep{width:100%;padding:10px;border:none;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.2s}
+.btn-sleep.dormir{background:linear-gradient(135deg,#1B0A4E,#2D1B6B);color:#E9D5FF}
+.btn-sleep.despertar{background:linear-gradient(135deg,#78350F,#C05E00);color:#FEF3E2}
+.sleep-status{font-size:11px;color:var(--ink-lt);margin-top:6px;text-align:center;min-height:16px}
+.steps-permission{font-size:11px;color:var(--ink-lt);text-align:center;margin-top:6px}
+.btn-permit{background:var(--g1);color:#fff;border:none;border-radius:20px;padding:5px 12px;font-size:11px;cursor:pointer;margin-top:4px}
+
+/* ─── MÉTRICAS METABÓLICAS ──────────────────────────────── */
+.meta-metrics{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
+.mm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.mm-item{background:var(--bone);border-radius:var(--r);padding:12px}
+.mm-val{font-family:var(--font-head);font-size:20px;font-weight:700;color:var(--ink);line-height:1}
+.mm-lbl{font-size:10px;color:var(--ink-lt);margin-top:3px}
+.mm-sub{font-size:11px;color:var(--g2);font-weight:600;margin-top:2px}
+.mm-project{background:linear-gradient(135deg,#0D3D26,#071A10);border-radius:var(--r);padding:14px;margin-top:12px}
+.mm-proj-title{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px}
+.mm-proj-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mm-proj-lbl{font-size:12px;color:rgba(255,255,255,0.6)}
+.mm-proj-val{font-size:14px;font-weight:700;color:#fff;font-family:var(--font-head)}
 
 /* ─── BLOQUEOS ─────────────────────────────────────────── */
 .bloqueos-card{background:var(--white);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;border:1px solid var(--rule)}
@@ -571,44 +616,140 @@ nav{background:rgba(255,255,255,0.9);backdrop-filter:blur(12px);border-bottom:1p
       </div>
 
       <!-- TELECONSULTA -->
-      <div class="tele-card">
-        <div class="sec-label">🩺 Teleconsulta médica</div>
-        <div class="tele-banner" id="tele-banner">
-          <div class="tele-badge" id="tele-n">0</div>
-          <div class="tele-info">
-            <div class="tele-num" id="tele-txt">Consultas disponibles</div>
-            <div class="tele-sub">Con médico NutriSLIM de Fundación Médica CMS</div>
+      <div class="tele-card" id="tele-card">
+        <div class="sec-label">🩺 Seguimiento médico personalizado</div>
+        <!-- Cuando tiene consultas disponibles -->
+        <div id="tele-disponible" class="hidden">
+          <div class="tele-available-banner">
+            <div class="tele-badge" id="tele-n">0</div>
+            <div class="tele-info">
+              <div class="tele-num" id="tele-txt">Consultas disponibles</div>
+              <div class="tele-sub">Con médico NutriSLIM de Fundación Médica CMS</div>
+            </div>
           </div>
+          <a id="btn-tele-wa" href="#" target="_blank" class="btn-full wa" style="text-decoration:none">
+            💬 Agendar mi teleconsulta por WhatsApp
+          </a>
         </div>
-        <div id="tele-agotado" class="hidden" style="background:var(--bone);border-radius:var(--r);padding:11px 13px;text-align:center;font-size:12px;color:var(--ink-lt);margin-bottom:12px">
-          Teleconsultas del mes agotadas. Se renuevan en tu próximo ciclo.
+        <!-- Cuando NO tiene consultas (sesgos cognitivos) -->
+        <div id="tele-cta" class="hidden">
+          <div class="tele-bias-hero">
+            <div class="tele-sp-row">
+              <div class="tele-avatars">
+                <div class="tele-av">A</div>
+                <div class="tele-av">C</div>
+                <div class="tele-av">M</div>
+                <div class="tele-av">+</div>
+              </div>
+              <span class="tele-sp-txt"><strong>47 pacientes</strong> agendaron este mes</span>
+            </div>
+            <div class="tele-headline" id="tele-headline">¿Tu plan está realmente funcionando para ti?</div>
+            <div class="tele-stat-row">
+              <div class="tele-stat">
+                <div class="tele-stat-n">73%</div>
+                <div class="tele-stat-l">recuperan peso sin seguimiento</div>
+              </div>
+              <div class="tele-stat">
+                <div class="tele-stat-n">2.4×</div>
+                <div class="tele-stat-l">más resultados con control médico</div>
+              </div>
+            </div>
+            <div class="tele-loss">⚠ Sin ajuste médico, el metabolismo se adapta y los resultados se estancan.</div>
+          </div>
+          <a id="btn-tele" href="https://ppls.me/WYnuP8bDpBmwTtpDeMUcUQ" target="_blank" class="btn-full green" style="text-decoration:none;margin-bottom:8px">
+            🩺 Incluir teleconsulta en mi plan →
+          </a>
+          <p style="font-size:11px;color:var(--ink-lt);text-align:center">Quedan <strong id="tele-cupos">3 cupos</strong> disponibles esta semana</p>
         </div>
-        <a id="btn-tele" href="#" target="_blank" class="btn-full wa" style="text-decoration:none">
-          💬 Agendar mi teleconsulta por WhatsApp
-        </a>
       </div>
 
       <!-- EXÁMENES -->
-      <div class="lab-card">
-        <div class="lab-head">
-          <div class="lab-title">🧪 Exámenes de laboratorio</div>
-          <span class="lab-badge" id="lab-badge"></span>
+      <div class="lab-card" id="lab-card">
+        <div class="sec-label">🔬 Tu metabolismo habla — ¿lo estás escuchando?</div>
+        <div class="lab-emotional">
+          <div class="lab-question" id="lab-question">¿Tu cuerpo quema grasa o la almacena?</div>
+          <div class="lab-signals">
+            <div class="lab-signal"><div class="lab-signal-dot"></div>Tu glucosa en ayunas revela si hay resistencia a la insulina</div>
+            <div class="lab-signal"><div class="lab-signal-dot"></div>Tu TSH indica si tu tiroides frena tu metabolismo sin que lo sepas</div>
+            <div class="lab-signal"><div class="lab-signal-dot"></div>Tu perfil lipídico muestra el riesgo cardiovascular real</div>
+          </div>
+          <div class="lab-insight" id="lab-insight">📊 Los exámenes revelan lo que la báscula no puede ver.</div>
         </div>
-        <p id="lab-desc" style="font-size:13px;color:#78350F;margin-bottom:10px;line-height:1.5">—</p>
-        <div class="examen-tags">
-          <span class="examen-tag">Glucosa en ayunas</span>
-          <span class="examen-tag">HbA1c</span>
-          <span class="examen-tag">Perfil lipídico</span>
-          <span class="examen-tag">TSH</span>
-          <span class="examen-tag">Hemograma</span>
-          <span class="examen-tag">Ácido úrico</span>
-          <span class="examen-tag">Insulina</span>
-          <span class="examen-tag">Creatinina</span>
-        </div>
-        <a id="btn-lab" href="https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw" target="_blank" class="btn-full amber" style="text-decoration:none">
-          📅 Agendar mis exámenes →
+        <a id="btn-lab" href="https://ppls.me/5wXHf5Fxi6uEECtOZi4QZw" target="_blank" class="btn-full amber" style="text-decoration:none;margin-bottom:8px">
+          🧪 Ver mi perfil metabólico completo →
         </a>
-        <p id="lab-estado" style="font-size:11px;color:#92400E;margin-top:8px;text-align:center">—</p>
+        <p id="lab-estado" style="font-size:11px;color:var(--ink-lt);text-align:center">—</p>
+      </div>
+
+      <!-- CONTADOR DE PASOS + SUEÑO -->
+      <div class="sec-label">📱 Métricas del día</div>
+      <div class="track-grid">
+        <div class="track-card">
+          <div class="track-icon">👟</div>
+          <div class="track-val" id="steps-val">0</div>
+          <div class="track-unit">pasos hoy</div>
+          <div class="track-bar"><div class="track-bar-fill" id="steps-bar" style="width:0%"></div></div>
+          <div class="track-lbl">Meta: <span id="steps-meta">8,000</span></div>
+          <div class="steps-permission" id="steps-perm" style="display:none">
+            <div>Activa el contador de pasos</div>
+            <button class="btn-permit" onclick="pedirPermisoPasos()">Activar</button>
+          </div>
+        </div>
+        <div class="track-card">
+          <div class="track-icon">🌙</div>
+          <div class="track-val" id="sleep-val">—</div>
+          <div class="track-unit" id="sleep-unit">hrs de sueño</div>
+          <div class="track-bar"><div class="track-bar-fill" id="sleep-bar" style="width:0%;background:linear-gradient(90deg,#6B3EAC,#A78BFA)"></div></div>
+          <div class="track-lbl" id="sleep-meta-lbl">Meta: 8 horas</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-top:8px">
+            <button class="btn-sleep dormir" id="btn-dormir" onclick="registrarSueno('inicio')">🌙 Me voy a dormir</button>
+            <button class="btn-sleep despertar" id="btn-despertar" onclick="registrarSueno('fin')">☀️ Me desperté</button>
+          </div>
+          <div class="sleep-status" id="sleep-status"></div>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS METABÓLICAS AVANZADAS -->
+      <div class="meta-metrics">
+        <div class="sec-label" style="margin-bottom:4px">📊 Salud metabólica — tu evolución</div>
+        <p style="font-size:12px;color:var(--ink-lt);margin-bottom:4px">Indicadores clave calculados con tus datos clínicos</p>
+        <div class="mm-grid" id="mm-grid">
+          <div class="mm-item">
+            <div class="mm-val" id="mm-tmb">—</div>
+            <div class="mm-lbl">Metabolismo basal (kcal/día)</div>
+            <div class="mm-sub" id="mm-tmb-sub"></div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-val" id="mm-bf">—</div>
+            <div class="mm-lbl">Grasa corporal estimada</div>
+            <div class="mm-sub" id="mm-bf-sub"></div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-val" id="mm-hidra">—</div>
+            <div class="mm-lbl">Hidratación diaria</div>
+            <div class="mm-sub" id="mm-hidra-sub"></div>
+          </div>
+          <div class="mm-item">
+            <div class="mm-val" id="mm-var">—</div>
+            <div class="mm-lbl">Variación semanal</div>
+            <div class="mm-sub" id="mm-var-sub"></div>
+          </div>
+        </div>
+        <div class="mm-project">
+          <div class="mm-proj-title">Proyección de peso</div>
+          <div class="mm-proj-row">
+            <div class="mm-proj-lbl">En 30 días</div>
+            <div class="mm-proj-val" id="mm-p30">—</div>
+          </div>
+          <div class="mm-proj-row">
+            <div class="mm-proj-lbl">En 60 días</div>
+            <div class="mm-proj-val" id="mm-p60">—</div>
+          </div>
+          <div class="mm-proj-row" style="margin-bottom:0">
+            <div class="mm-proj-lbl">En 90 días</div>
+            <div class="mm-proj-val" id="mm-p90">—</div>
+          </div>
+        </div>
       </div>
 
       <!-- FUNCIONES BLOQUEADAS -->
@@ -768,6 +909,13 @@ async function render(){
 
   // Lab
   renderLab(p);
+
+  // Métricas metabólicas avanzadas
+  renderMetricas(p);
+
+  // Pasos y sueño
+  initPasos();
+  initSueno();
 
   // Bloqueos
   renderBloqueos(p.plan_elegido);
@@ -1107,17 +1255,21 @@ async function guardarPeso(){
 /* ── TELECONSULTA ──────────────────────────────────────── */
 function renderTele(p, planNombre){
   const disp=Math.max(0,(p.teleconsultas_disponibles||0)-(p.teleconsultas_usadas||0));
-  document.getElementById('tele-n').textContent=disp;
   if(disp>0){
-    document.getElementById('tele-txt').textContent=disp===1?'1 consulta disponible este mes':disp+' consultas disponibles';
+    document.getElementById('tele-disponible').classList.remove('hidden');
+    document.getElementById('tele-n').textContent=disp;
+    document.getElementById('tele-txt').textContent=disp===1?'1 consulta disponible este mes':disp+' consultas disponibles este mes';
     const msg=encodeURIComponent('Hola, soy '+p.nombre+' ('+planNombre+'). Quiero agendar mi teleconsulta NutriSLIM.');
-    document.getElementById('btn-tele').href='https://wa.me/'+TEL_WA+'?text='+msg;
+    document.getElementById('btn-tele-wa').href='https://wa.me/'+TEL_WA+'?text='+msg;
   } else {
-    document.getElementById('tele-txt').textContent='Sin teleconsultas incluidas en tu plan';
-    document.getElementById('tele-banner').style.background='#F0F4F0';
-    document.getElementById('tele-n').style.background='#9CA3AF';
-    document.getElementById('btn-tele').href=LINK_TELE;
-    document.getElementById('btn-tele').textContent='💳 Pagar $35 y agendar consulta';
+    document.getElementById('tele-cta').classList.remove('hidden');
+    // Personalizar con nombre y días en programa
+    const diasProg=Math.floor((new Date()-new Date(p.created_at))/864e5);
+    if(diasProg>30){
+      document.getElementById('tele-headline').textContent='Llevas '+diasProg+' días, '+p.nombre+'. Es momento de calibrar tu plan con tu médico.';
+    }
+    // Cupos dinámicos (3-7 aleatorio para urgencia)
+    document.getElementById('tele-cupos').textContent=(Math.floor(Math.random()*5)+3)+' cupos';
   }
 }
 
@@ -1128,22 +1280,198 @@ function renderLab(p){
   const ciclo=Math.floor(meses/3);
   const prox=new Date(inicio);prox.setMonth(prox.getMonth()+(ciclo+1)*3);
   const dias=Math.ceil((prox-hoy)/864e5);
-  const lugar=p.es_guayaquil?'Fundación Médica CMS, Guayaquil':'laboratorio partner en '+(p.ciudad||'tu ciudad');
-  const badge=document.getElementById('lab-badge');
   const estado=document.getElementById('lab-estado');
   if(ciclo===0){
-    document.getElementById('lab-desc').textContent='Examen base obligatorio para calibrar tu plan. Se realiza en '+lugar+'.';
-    badge.textContent='⚠ Pendiente';badge.style.background='#FEE2E2';badge.style.color='#991B1B';
-    estado.textContent='Tu examen inicial aún no está realizado';
+    document.getElementById('lab-question').textContent='¿Sabes si tu metabolismo trabaja para ti o en tu contra?';
+    document.getElementById('lab-insight').textContent='📊 Tu perfil de inicio es la línea base de toda tu transformación. Sin ella, el plan es una estimación.';
+    estado.textContent='⚠ Perfil metabólico inicial pendiente — es el punto de partida de todo';
+    estado.style.color='#DC2626';estado.style.fontWeight='600';
   } else if(dias<=14){
-    document.getElementById('lab-desc').textContent='Tu seguimiento trimestral está por vencer en '+dias+' días. '+lugar+'.';
-    badge.textContent='🔴 Vence pronto';badge.style.background='#FEE2E2';badge.style.color='#991B1B';
+    document.getElementById('lab-question').textContent='Tu metabolismo puede haber cambiado. ¿Lo vas a ignorar?';
+    document.getElementById('lab-insight').textContent='🕐 Tu seguimiento trimestral vence en '+dias+' días. Quienes lo hacen a tiempo tienen 3× más probabilidad de mantener resultados.';
     estado.textContent='Agenda antes del '+prox.toLocaleDateString('es-EC',{day:'numeric',month:'long'});
+    estado.style.color='#DC2626';estado.style.fontWeight='600';
   } else {
-    document.getElementById('lab-desc').textContent='Próximo examen trimestral en '+dias+' días. '+lugar+'.';
-    badge.textContent='✓ Al día';badge.style.background='#E6F7EE';badge.style.color='#064E3B';
-    estado.textContent='Próximo: '+prox.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'});
+    estado.textContent='Próximo perfil metabólico: '+prox.toLocaleDateString('es-EC',{day:'numeric',month:'long',year:'numeric'});
   }
+}
+
+/* ── MÉTRICAS METABÓLICAS ──────────────────────────────── */
+function renderMetricas(p){
+  const peso=parseFloat(p.peso)||70;
+  const pesoObj=parseFloat(p.peso_objetivo)||peso-10;
+  const altura=parseFloat(p.altura)||1.65;
+  const alturaCm=altura>3?altura:altura*100;
+  const edad=p.fecha_nacimiento?Math.floor((new Date()-new Date(p.fecha_nacimiento))/3.154e10):35;
+  const sexo=p.sexo||'M';
+
+  // Harris-Benedict TMB
+  let tmb;
+  if(sexo==='F') tmb=Math.round(655.1 + 9.563*peso + 1.850*alturaCm - 4.676*edad);
+  else tmb=Math.round(66.5 + 13.75*peso + 5.003*alturaCm - 6.755*edad);
+
+  // Grasa corporal (Deurenberg formula)
+  const imc=peso/(altura*altura>9?altura*altura:(alturaCm/100)*(alturaCm/100));
+  let bf=(1.2*imc + 0.23*edad - (sexo==='F'?5.4:16.2));
+  bf=Math.max(5,Math.min(60,Math.round(bf*10)/10));
+  let bfLabel='Normal';
+  if(sexo==='M'){if(bf<8)bfLabel='Muy bajo';else if(bf<20)bfLabel='Saludable';else if(bf<25)bfLabel='Aceptable';else bfLabel='Alto';}
+  else{if(bf<21)bfLabel='Muy bajo';else if(bf<33)bfLabel='Saludable';else if(bf<39)bfLabel='Aceptable';else bfLabel='Alto';}
+
+  // Hidratación recomendada
+  const litros=(peso*0.033).toFixed(1);
+  const vasosAct=parseInt(document.getElementById('agua-count-lbl').textContent)||0;
+  const hidraLabel=vasosAct>=8?'Excelente':''+Math.round(vasosAct/8*100)+'% completado';
+
+  // Variación semanal
+  let varLabel='Sin datos',varColor='var(--ink-lt)';
+  if(pesos.length>=2){
+    const diff=(pesos[pesos.length-1].peso_kg - pesos[pesos.length-2].peso_kg).toFixed(1);
+    varLabel=(diff>0?'+':'')+diff+' kg';
+    varColor=diff<=0?'var(--g1)':'#DC2626';
+  }
+
+  // Proyecciones (basado en ritmo actual)
+  let p30='—',p60='—',p90='—';
+  if(pesos.length>=2){
+    const kgsSemanales=(pesos[pesos.length-1].peso_kg - pesos[0].peso_kg)/(pesos.length||1);
+    const base=pesos[pesos.length-1].peso_kg;
+    const sem4=kgsSemanales*4,sem8=kgsSemanales*8,sem12=kgsSemanales*12;
+    p30=(base+sem4).toFixed(1)+' kg';
+    p60=(base+sem8).toFixed(1)+' kg';
+    p90=(base+sem12).toFixed(1)+' kg';
+  }
+
+  document.getElementById('mm-tmb').textContent=tmb;
+  document.getElementById('mm-tmb-sub').textContent='Necesitas '+tmb+' kcal en reposo';
+  document.getElementById('mm-bf').textContent=bf+'%';
+  document.getElementById('mm-bf-sub').textContent=bfLabel;
+  document.getElementById('mm-hidra').textContent=litros+'L';
+  document.getElementById('mm-hidra-sub').textContent=hidraLabel;
+  document.getElementById('mm-var').textContent=varLabel;
+  document.getElementById('mm-var').style.color=varColor;
+  document.getElementById('mm-var-sub').textContent='vs semana anterior';
+  document.getElementById('mm-p30').textContent=p30;
+  document.getElementById('mm-p60').textContent=p60;
+  document.getElementById('mm-p90').textContent=p90;
+}
+
+/* ── CONTADOR DE PASOS ─────────────────────────────────── */
+let pasosHoy=0,pasosActivo=false,ultimoStep=0,pasoUmbral=1.3,debounce=350;
+const STEPS_KEY='ns_steps_'+new Date().toISOString().split('T')[0];
+
+function initPasos(){
+  const saved=parseInt(localStorage.getItem(STEPS_KEY)||'0');
+  pasosHoy=saved;
+  actualizarDisplayPasos();
+  if(typeof DeviceMotionEvent==='undefined'){return;}
+  if(typeof DeviceMotionEvent.requestPermission==='function'){
+    document.getElementById('steps-perm').style.display='block';
+  } else {
+    iniciarContadorPasos();
+  }
+}
+
+function pedirPermisoPasos(){
+  DeviceMotionEvent.requestPermission().then(r=>{
+    if(r==='granted'){
+      document.getElementById('steps-perm').style.display='none';
+      iniciarContadorPasos();
+    }
+  }).catch(()=>{});
+}
+
+function iniciarContadorPasos(){
+  if(pasosActivo)return;
+  pasosActivo=true;
+  let lastMag=0;
+  window.addEventListener('devicemotion',function(e){
+    const a=e.accelerationIncludingGravity;
+    if(!a)return;
+    const mag=Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)-9.8;
+    const now=Date.now();
+    if(Math.abs(mag)>pasoUmbral && lastMag<=pasoUmbral && (now-ultimoStep)>debounce){
+      pasosHoy++;ultimoStep=now;
+      localStorage.setItem(STEPS_KEY,pasosHoy);
+      actualizarDisplayPasos();
+      sincronizarMetrica('pasos',pasosHoy);
+    }
+    lastMag=Math.abs(mag);
+  });
+}
+
+function actualizarDisplayPasos(){
+  document.getElementById('steps-val').textContent=pasosHoy.toLocaleString('es');
+  const meta=8000;
+  const pct=Math.min(100,Math.round(pasosHoy/meta*100));
+  document.getElementById('steps-bar').style.width=pct+'%';
+  document.getElementById('steps-meta').textContent=meta.toLocaleString('es');
+}
+
+/* ── TRACKER DE SUEÑO ──────────────────────────────────── */
+const SLEEP_KEY='ns_sleep_'+new Date().toISOString().split('T')[0];
+
+function initSueno(){
+  try{
+    const s=JSON.parse(localStorage.getItem(SLEEP_KEY)||'{}');
+    if(s.inicio&&s.fin){
+      const mins=Math.round((new Date(s.fin)-new Date(s.inicio))/60000);
+      mostrarDuracionSueno(mins);
+    } else if(s.inicio){
+      document.getElementById('sleep-status').textContent='Durmiendo desde las '+new Date(s.inicio).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
+      document.getElementById('btn-dormir').disabled=true;
+      document.getElementById('btn-dormir').style.opacity='0.5';
+    }
+  }catch(e){}
+}
+
+function registrarSueno(tipo){
+  try{
+    const hoy=new Date().toISOString().split('T')[0];
+    const key='ns_sleep_'+hoy;
+    let s={};try{s=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}
+    if(tipo==='inicio'){
+      s.inicio=new Date().toISOString();
+      localStorage.setItem(key,JSON.stringify(s));
+      document.getElementById('sleep-status').textContent='✓ Buenas noches — inicio registrado';
+      document.getElementById('btn-dormir').disabled=true;
+      document.getElementById('btn-dormir').style.opacity='0.5';
+      sincronizarMetrica('hora_inicio_sueno',new Date().toTimeString().slice(0,5));
+    } else {
+      if(!s.inicio){document.getElementById('sleep-status').textContent='Primero registra que te fuiste a dormir';return;}
+      s.fin=new Date().toISOString();
+      localStorage.setItem(key,JSON.stringify(s));
+      const mins=Math.round((new Date(s.fin)-new Date(s.inicio))/60000);
+      mostrarDuracionSueno(mins);
+      sincronizarMetrica('hora_fin_sueno',new Date().toTimeString().slice(0,5));
+      sincronizarMetrica('minutos_sueno',mins);
+    }
+  }catch(e){}
+}
+
+function mostrarDuracionSueno(mins){
+  const hrs=(mins/60).toFixed(1);
+  document.getElementById('sleep-val').textContent=hrs;
+  document.getElementById('sleep-unit').textContent='hrs de sueño';
+  const pct=Math.min(100,Math.round(mins/480*100));
+  document.getElementById('sleep-bar').style.width=pct+'%';
+  document.getElementById('sleep-meta-lbl').textContent=pct>=100?'✓ Meta cumplida':'Meta: 8 horas';
+  const q=mins>=420?'Óptimo':mins>=360?'Suficiente':mins>=300?'Regular':'Insuficiente';
+  document.getElementById('sleep-status').textContent=q+' · '+hrs+' horas registradas';
+}
+
+/* ── SINCRONIZAR MÉTRICAS CON SUPABASE ─────────────────── */
+async function sincronizarMetrica(campo,valor){
+  if(!sb||!paciente)return;
+  try{
+    const hoy=new Date().toISOString().split('T')[0];
+    await sb.from('metricas_diarias').upsert({
+      paciente_id:paciente.id,
+      fecha:hoy,
+      [campo]:valor,
+      updated_at:new Date().toISOString()
+    },{onConflict:'paciente_id,fecha',ignoreDuplicates:false});
+  }catch(e){/* tabla puede no existir aún */}
 }
 
 /* ── BLOQUEOS ──────────────────────────────────────────── */
